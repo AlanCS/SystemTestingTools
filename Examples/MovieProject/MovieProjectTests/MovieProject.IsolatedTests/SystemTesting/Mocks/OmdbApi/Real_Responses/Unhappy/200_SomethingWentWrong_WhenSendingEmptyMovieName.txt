@@ -1,0 +1,22 @@
+HTTP/1.1 200 OK
+Date: Wed, 27 Feb 2019 10:42:54 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 52
+Connection: keep-alive
+Set-Cookie: __cfduid=d5bb69779321c06d0c310a48d15b52dcd1551264174; expires=Thu, 27-Feb-20 10:42:54 GMT; path=/; domain=.omdbapi.com; HttpOnly
+Cache-Control: public, max-age=86400
+Expires: Thu, 28 Feb 2019 10:42:54 GMT
+Last-Modified: Wed, 27 Feb 2019 10:42:54 GMT
+Vary: *
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+CF-Cache-Status: MISS
+Accept-Ranges: bytes
+Server: cloudflare
+CF-RAY: 4afa0c1f88e56563-SYD
+
+{
+  "Response": "False",
+  "Error": "Something went wrong."
+}

@@ -1,0 +1,45 @@
+HTTP/1.1 200 OK
+Date: Wed, 27 Feb 2019 10:39:27 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 1053
+Connection: keep-alive
+Set-Cookie: __cfduid=d67a59df2f05c40c80b002685e23e72f61551263967; expires=Thu, 27-Feb-20 10:39:27 GMT; path=/; domain=.omdbapi.com; HttpOnly
+Cache-Control: public, max-age=86400
+Expires: Thu, 28 Feb 2019 10:39:27 GMT
+Last-Modified: Mon, 25 Feb 2019 20:28:08 GMT
+Vary: *
+X-AspNet-Version: 4.0.30319
+X-Powered-By: ASP.NET
+Access-Control-Allow-Origin: *
+CF-Cache-Status: HIT
+Accept-Ranges: bytes
+Server: cloudflare
+CF-RAY: 4afa0711cd596563-SYD
+
+{
+  "Title": "Fantastika vs. Wonderwoman",
+  "Year": "1887",
+  "Rated": "N/A",
+  "Released": "08 Oct 1887",
+  "Runtime": "N/A",
+  "Genre": "Action, Fantasy",
+  "Director": "Johnny Pangilinan",
+  "Writer": "Wilfred Schneider (story and screenplay)",
+  "Actors": "Pinky Montilla, Alma Moreno, Celia Rodriguez, Marissa Delgado",
+  "Plot": "N/A",
+  "Language": "Filipino, Tagalog",
+  "Country": "Philippines",
+  "Awards": "N/A",
+  "Poster": "N/A",
+  "Ratings": [],
+  "Metascore": "N/A",
+  "imdbRating": "N/A",
+  "imdbVotes": "N/A",
+  "imdbID": "tt1185643",
+  "Type": "movie",
+  "DVD": "N/A",
+  "BoxOffice": "$50",
+  "Production": "N/A",
+  "Website": "N/A",
+  "Response": "True"
+}

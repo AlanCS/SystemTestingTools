@@ -1,0 +1,13 @@
+HTTP/1.1 401 Unauthorized
+Server: Kestrel
+Request-Context: appId=cid-v1:494f2efb-2457-4434-a651-e820e8fa4933
+Strict-Transport-Security: max-age=2592000
+Request-Id: |27bb47e5-4fd78bc240436a6d.
+X-Powered-By: ASP.NET
+Content-Length: 0
+Cache-Control: no-cache, no-store, must-revalidate
+Expires: Sat, 02 Mar 2019 02:53:56 GMT
+Date: Sat, 02 Mar 2019 02:53:56 GMT
+Connection: keep-alive
+x-cache-hit: false
+

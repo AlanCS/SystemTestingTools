@@ -1,0 +1,71 @@
+METADATA
+Date: 2019-03-24 21:30:52.878 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 0.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Observations: 
+
+REQUEST
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=memento
+Referer:https://github.com/AlanCS/SystemTestingTools
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Sun, 24 Mar 2019 10:30:52 GMT
+Connection:keep-alive
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:HIT
+Accept-Ranges:bytes
+Server:cloudflare
+CF-RAY:4bc7f8e3df1d6533-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:1024
+Expires:Mon, 25 Mar 2019 10:30:52 GMT
+Last-Modified:Sat, 23 Mar 2019 22:26:55 GMT
+
+{
+    "Title": "Memento",
+    "Year": "2000",
+    "Rated": "R",
+    "Released": "25 May 2001",
+    "Runtime": "113 min",
+    "Genre": "Mystery, Thriller",
+    "Director": "Christopher Nolan",
+    "Writer": "Christopher Nolan (screenplay), Jonathan Nolan (short story \"Memento Mori\")",
+    "Actors": "Guy Pearce, Carrie-Anne Moss, Joe Pantoliano, Mark Boone Junior",
+    "Plot": "A man with short-term memory loss attempts to track down his wife's murderer.",
+    "Language": "English",
+    "Country": "USA",
+    "Awards": "Nominated for 2 Oscars. Another 56 wins & 55 nominations.",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BZTcyNjk1MjgtOWI3Mi00YzQwLWI5MTktMzY4ZmI2NDAyNzYzXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+    "Ratings": [
+        {
+            "Source": "Internet Movie Database",
+            "Value": "8.5/10"
+        },
+        {
+            "Source": "Rotten Tomatoes",
+            "Value": "92%"
+        },
+        {
+            "Source": "Metacritic",
+            "Value": "80/100"
+        }
+    ],
+    "Metascore": "80",
+    "imdbRating": "8.5",
+    "imdbVotes": "1,017,832",
+    "imdbID": "tt0209144",
+    "Type": "movie",
+    "DVD": "04 Sep 2001",
+    "BoxOffice": "$23,844,220",
+    "Production": "Newmarket Films",
+    "Website": "http://www.otnemem.com",
+    "Response": "True"
+}

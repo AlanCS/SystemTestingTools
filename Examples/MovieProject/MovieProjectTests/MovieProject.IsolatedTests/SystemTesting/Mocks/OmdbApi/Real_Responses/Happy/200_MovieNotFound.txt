@@ -1,0 +1,35 @@
+METADATA
+Date: 2019-03-24 21:32:09.621 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 0.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Observations: 
+
+REQUEST
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=giberish should not exist
+Referer:https://github.com/AlanCS/SystemTestingTools
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Sun, 24 Mar 2019 10:32:09 GMT
+Connection:keep-alive
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:MISS
+Accept-Ranges:bytes
+Server:cloudflare
+CF-RAY:4bc7fac238df6533-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:47
+Expires:Mon, 25 Mar 2019 10:32:09 GMT
+Last-Modified:Sun, 24 Mar 2019 10:32:09 GMT
+
+{
+    "Response": "False",
+    "Error": "Movie not found!"
+}

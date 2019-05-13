@@ -1,0 +1,63 @@
+METADATA
+Date: 2019-03-26 07:56:11.008 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 0.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Observations: one of the first movies ever made
+
+REQUEST
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=come along, do
+Referer:https://github.com/AlanCS/SystemTestingTools
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Mon, 25 Mar 2019 20:56:10 GMT
+Connection:keep-alive
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:MISS
+Accept-Ranges:bytes
+Server:cloudflare
+CF-RAY:4bd3ca360905652d-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:687
+Expires:Tue, 26 Mar 2019 20:56:10 GMT
+Last-Modified:Mon, 25 Mar 2019 20:56:10 GMT
+
+{
+    "Title": "Come Along, Do!",
+    "Year": "1898",
+    "Rated": "NOT RATED",
+    "Released": "N/A",
+    "Runtime": "1 min",
+    "Genre": "Short, Comedy",
+    "Director": "Robert W. Paul",
+    "Writer": "N/A",
+    "Actors": "N/A",
+    "Plot": "A couple look at a statue while eating in an art gallery.",
+    "Language": "N/A",
+    "Country": "UK",
+    "Awards": "N/A",
+    "Poster": "https://images-na.ssl-images-amazon.com/images/M/MV5BYTQ4ZWY2YWItMzkxOS00ZTkwLWI4M2ItZjNiMDk4MjY1OWI3XkEyXkFqcGdeQXVyNTIzOTk5ODM@._V1_SX300.jpg",
+    "Ratings": [
+        {
+            "Source": "Internet Movie Database",
+            "Value": "5.0/10"
+        }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "5.0",
+    "imdbVotes": "316",
+    "imdbID": "tt0000182",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+}

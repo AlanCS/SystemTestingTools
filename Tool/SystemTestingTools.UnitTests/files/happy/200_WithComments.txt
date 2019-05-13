@@ -1,0 +1,30 @@
+METADATA
+Date: 2019-03-16 17:40:16.711 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\AlanPC\Documents\GitHub\NextLevelSystemTestings\Examples\MovieProject\MovieProject.Web\Startup.cs
+Local machine: DESKTOP-OGVA1EU
+User: DESKTOP-OGVA1EU\AlanPC
+Using tool: https://github.com/AlanCS/SystemTestingTools/
+
+REQUEST: GET http://www.omdbapi.com/?apikey=XXX&type=movie&t=big bang theory
+Referer:https://github.com/AlanCS/SystemTestingTools
+
+--!?@Divider: Any text BEFORE this line is comments, after is the response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Sun, 03 Mar 2019 07:17:49 GMT
+Connection:keep-alive
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:MISS
+Accept-Ranges:bytes
+Server:cloudflare
+CF-RAY:4b19d532ce5419aa-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:1307
+Expires:Mon, 04 Mar 2019 07:17:49 GMT
+Last-Modified:Sun, 03 Mar 2019 07:17:48 GMT
+
+{"Content":"testing comments"}
