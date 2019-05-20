@@ -14,6 +14,26 @@ Recommended video presentation to understand the philosophy behind T shaped test
 
 [![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/zdfw6oRGHOE/0.jpg)](https://www.youtube.com/watch?v=zdfw6oRGHOE)
 
+In summary, you are better off using T shaped testing (focusing mainly system testing and using unit tests to complement those + contract testing) instead of the traditional testing pyramid, here is a summary of pros and cons:
+
+| Benefit        | Test pyramid           | T shaped tests  | Remediation |
+| ------------- |:-------------:|:-------------:| -----:|
+| Execution speed     | :heavy_check_mark:  | :heavy_check_mark: |
+| Ease of refactoring     | :x: | :heavy_check_mark: |
+| Test all “your” code, like real users: more confidence      | :x: | :heavy_check_mark: |
+| Documentation of external dependencies +++      | :x: | :heavy_check_mark: |
+| Balance between production code and testing code     | :x: | :heavy_check_mark: |
+| Assert quality logs    | :x: | :heavy_check_mark: |
+| Assert outgoing requests    | :x: | :heavy_check_mark: |
+| Ease to achieve high test coverage    | :x: | :heavy_check_mark: |
+| Document requirements for other teams (outsourcing, remote working)     | :x: | :heavy_check_mark: |
+| Prepare monolith for later break out      | :x: | :heavy_check_mark: |
+| Easier to TDD / BDD      | :x: | :heavy_check_mark: |
+| Incentive for small methods / clean code      | :heavy_check_mark: | :x: | PRs reviews, automated checks
+| Quickly find bugs      | :heavy_check_mark: | :x: | Small commits
+| Handle shared states (cache, circuit breaker)      | :heavy_check_mark: | :x: | Disable or use data so cache doesn’t matter
+
+
 # Basic capabilities
 
 You can use the extension method **HttpClient.AppendMockHttpCall()** to intercept Http calls and return a mock response, then use **HttpClient.GetSessionLogs()** and **HttpClient.GetSessionOutgoingRequests()** to get all the logs and outgoing Http calls relating to your session.
