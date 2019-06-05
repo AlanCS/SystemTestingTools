@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.Net.Http;
 
 namespace SystemTestingTools
 {
@@ -10,7 +9,7 @@ namespace SystemTestingTools
     public static class MockInstrumentation
     {
         internal static Dictionary<string, List<MockEndpoint>> MockedEndpoints = new Dictionary<string, List<MockEndpoint>>();
-        internal static Dictionary<string, List<string>> SessionLogs = new Dictionary<string, List<string>>();
+        internal static Dictionary<string, List<LoggedEvent>> SessionLogs = new Dictionary<string, List<LoggedEvent>>();
         
         internal static Dictionary<string, List<HttpRequestMessageWrapper>> OutgoingRequests = new Dictionary<string, List<HttpRequestMessageWrapper>>();
         internal static IHttpContextAccessor context;
@@ -26,6 +25,6 @@ namespace SystemTestingTools
         /// <summary>
         /// Get the logs not linked to any user session
         /// </summary>
-        public static List<string> UnsessionedLogs = new List<string>();
+        public static List<LoggedEvent> UnsessionedLogs = new List<LoggedEvent>();
     }
 }

@@ -40,7 +40,7 @@ namespace IsolatedTests.SystemTestings
             // assert logs
             var logs = client.GetSessionLogs();
             logs.Count.ShouldBe(1);
-            logs[0].ShouldStartWith($"Fatal: GET {MatrixMovieUrl} threw an exception: System.Net.Http.HttpRequestException: weird network error");
+            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} threw an exception: System.Net.Http.HttpRequestException: weird network error");
 
             // assert outgoing            
             var outgoingRequests = client.GetSessionOutgoingRequests();
@@ -84,9 +84,9 @@ namespace IsolatedTests.SystemTestings
             var logs = client.GetSessionLogs();
             logs.Count.ShouldBe(1);
             // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
-            // Fatal: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
-            logs[0].ShouldStartWith($"Fatal: GET {MatrixMovieUrl} returned invalid response: http status={(int)httpStatus} and body=[");
-            logs[0].ShouldContain(logContent);
+            // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
+            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} returned invalid response: http status={(int)httpStatus} and body=[");
+            logs[0].Message.ShouldContain(logContent);
 
             // assert outgoing            
             var outgoingRequests = client.GetSessionOutgoingRequests();
@@ -121,9 +121,9 @@ namespace IsolatedTests.SystemTestings
             var logs = client.GetSessionLogs();
             logs.Count.ShouldBe(1);
             // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
-            // Fatal: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
-            logs[0].ShouldStartWith($"Fatal: GET {MatrixMovieUrl} returned invalid response: http status=200 and body=[");
-            logs[0].ShouldContain(@"""weirdRoot"":");
+            // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
+            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} returned invalid response: http status=200 and body=[");
+            logs[0].Message.ShouldContain(@"""weirdRoot"":");
 
             // assert outgoing            
             var outgoingRequests = client.GetSessionOutgoingRequests();
@@ -153,7 +153,7 @@ namespace IsolatedTests.SystemTestings
             // assert logs
             var logs = client.GetSessionLogs();
             logs.Count.ShouldBe(1);
-            logs[0].ShouldBe($"Warn: Bad request={correctMessage} = [{culprit}]");
+            logs[0].ToString().ShouldBe($"Warning: Bad request={correctMessage} = [{culprit}]");
 
             // assert outgoing
             client.GetSessionOutgoingRequests().Count.ShouldBe(0);

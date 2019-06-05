@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using SystemTestingTools;
 using Xunit;
 using System.Linq;
+using Microsoft.Extensions.Logging;
 
 namespace IsolatedTests.SystemTestings
 {
@@ -42,7 +43,9 @@ namespace IsolatedTests.SystemTestings
                 })
                 .UseNLog()
                 .ConfigureInterceptionOfHttpCalls()
-                .IntercepNLog()
+                .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
+                                namespaceToIncludeStart: new[] { "MovieProject" },
+                                namespaceToExcludeStart: new[] { "Microsoft" })
                 .UseEnvironment("Development");
 
             Server = new TestServer(builder);   
@@ -64,7 +67,7 @@ namespace IsolatedTests.SystemTestings
             if(MockInstrumentation.UnsessionedLogs.Count > 1)
                 throw new ApplicationException("Unexpected logs are showing up when starting application");
 
-            if (MockInstrumentation.UnsessionedLogs.FirstOrDefault() != "Info: Application is starting")
+            if (MockInstrumentation.UnsessionedLogs.FirstOrDefault()?.ToString() != "Information: Application is starting")
                 throw new ApplicationException("Logs don't seem to be wired correctly");
         }
 

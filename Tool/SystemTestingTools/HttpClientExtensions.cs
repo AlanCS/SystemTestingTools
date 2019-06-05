@@ -19,7 +19,7 @@ namespace SystemTestingTools
             var sessionId = Guid.NewGuid().ToString();
             httpClient.DefaultRequestHeaders.Add(Constants.headerName, sessionId);
             MockInstrumentation.MockedEndpoints.Add(sessionId, new List<MockEndpoint>());
-            MockInstrumentation.SessionLogs.Add(sessionId, new List<string>());
+            MockInstrumentation.SessionLogs.Add(sessionId, new List<LoggedEvent>());
             MockInstrumentation.OutgoingRequests.Add(sessionId, new List<HttpRequestMessageWrapper>());
         }
 
@@ -67,7 +67,7 @@ namespace SystemTestingTools
         /// </summary>
         /// <param name="httpClient"></param>
         /// <returns></returns>
-        public static List<string> GetSessionLogs(this HttpClient httpClient)
+        public static List<LoggedEvent> GetSessionLogs(this HttpClient httpClient)
         {
             var sessionId = GetSessionFromHeader(httpClient);
 

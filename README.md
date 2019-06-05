@@ -6,7 +6,7 @@
     * intercepting of outgoing calls, returning mock responses
     * asserting outgoing calls
     * recording live outgoing calls (requests and responses)
-* asserting logs (by leveraging [NLog](https://github.com/NLog/NLog))
+* asserting logs
 
 [Nuget package](https://www.nuget.org/packages/SystemTestingTools)
 
@@ -61,7 +61,7 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
     // assert logs  (make sure the logs were exactly how we expected, no more no less)
     var logs = client.GetSessionLogs();
     logs.Count.ShouldBe(1);
-    logs[0].ShouldBe($"Info: Retrieved movie 'matrix' from downstream because it wasn't cached");
+    logs[0].ToString().ShouldBe($"Info: Retrieved movie 'matrix' from downstream because it wasn't cached");
 
     // assert outgoing (make sure the requests were exactly how we expected)
     var outgoingRequests = client.GetSessionOutgoingRequests();
@@ -121,9 +121,10 @@ Startup.GlobalLastHandler = new HttpCallsInterceptorHandler();
 And when creating your WebHostBuilder, also add
 
 ```C#
-.UseNLog()
 .ConfigureInterceptionOfHttpCalls()
-.InterceptNLogs();
+.IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
+                namespaceToIncludeStart: new[] { "MovieProject" },
+                namespaceToExcludeStart: new[] { "Microsoft" })
 ```
 [Real life example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/TestServerFixture.cs#L32)
 
@@ -182,7 +183,7 @@ var httpResponse = await client.GetAsync("/api/movie/matrix");
 // assert logs
 var logs = client.GetSessionLogs();
 logs.Count.ShouldBe(1);
-logs[0].ShouldStartWith($"Fatal: GET {MatrixMovieUrl} threw an exception: System.Net.Http.HttpRequestException: weird network error");
+logs[0].ToString().ShouldStartWith($"Fatal: GET {MatrixMovieUrl} threw an exception: System.Net.Http.HttpRequestException: weird network error");
 
 // assert outgoing            
 var outgoingRequests = client.GetSessionOutgoingRequests();

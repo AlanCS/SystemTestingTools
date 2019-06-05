@@ -1,10 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-    <Version>0.1.0</Version>
+    <Version>0.2.0</Version>
     <Authors>AlanCS</Authors>
     <Company>Open Source (MIT license)</Company>
     <Product />
@@ -12,7 +12,7 @@
 - intercepting Http calls, returning mock responses
 - asserting outgoing Http calls
 - recording outgoing Http calls (requests and responses), for documentation purposes
-- asserting logs (by leveraging NLog)</Description>
+- asserting logs</Description>
     <Copyright>https://github.com/AlanCS/SystemTestingTools/blob/master/LICENSE</Copyright>
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/AlanCS/SystemTestingTools</PackageProjectUrl>
@@ -21,22 +21,20 @@
     <PackageTags>Mock Mocking Stub Stubbing Automation Testing Test Fake Dowsntream Integration Http HttpClient TestServer</PackageTags>
 	<Title>Tool to extend the capabilities of .net core TestServer to run more comprehensive + deterministic tests, supports: HTTP mocking/assertions/recording and asserting logs.</Title>
 	<Summary>Tool to extend the capabilities of .net core TestServer to run more comprehensive + deterministic tests, supports: HTTP mocking/assertions/recording and asserting logs.</Summary>
-	<PackageReleaseNotes>First version</PackageReleaseNotes>
+	<PackageReleaseNotes>Removing dependency on NLog</PackageReleaseNotes>
 	<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 	<PackageLicenseFile>LICENSE</PackageLicenseFile>
 	<PackageIconUrl>https://i.imgur.com/DdoC5Il.png</PackageIconUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\AlanPC\Documents\GitHub\NextLevelAcceptanceTests\Tool\SystemTestingTools\SystemTestingTools.xml</DocumentationFile>
-  </PropertyGroup>
-  
-  
+  <PropertyGroup>
+    <DocumentationFile>SystemTestingTools.xml</DocumentationFile>
+  </PropertyGroup> 
 
   <ItemGroup>
-    <PackageReference Include="microsoft.aspnetcore.testhost" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="nlog" Version="4.5.8" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
   </ItemGroup>
   
   

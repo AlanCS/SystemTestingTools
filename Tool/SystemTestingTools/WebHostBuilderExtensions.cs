@@ -2,8 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using NLog;
-using NLog.Targets;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace SystemTestingTools
@@ -34,19 +33,17 @@ namespace SystemTestingTools
         /// Intercept NLog logs so we can assert those later
         /// </summary>
         /// <param name="builder"></param>
-        /// <param name="nlogFile"></param>
+        /// <param name="minimumLevelToIntercept"></param>
+        /// <param name="namespaceToIncludeStart">Beginning of namespaces sources of logs allow; if null, all  to sources will be included. Example: MyNamespaceName</param>
+        /// <param name="namespaceToExcludeStart">Beginning of namespaces sources of logs disallow; if null, no exclusion will apply. Exclusions are applied AFTER inclusion filter. Example: Microsoft</param>
         /// <returns></returns>
-        public static IWebHostBuilder IntercepNLog(this IWebHostBuilder builder, string nlogFile = "NLog.config")
+        public static IWebHostBuilder IntercepLogs(this IWebHostBuilder builder, LogLevel minimumLevelToIntercept = LogLevel.Trace, string[] namespaceToIncludeStart = null, string[] namespaceToExcludeStart = null)
         {
-            LogManager.LoadConfiguration(nlogFile);
-
-            // based on https://github.com/NLog/NLog/wiki/MethodCall-target
-            var target = new MethodCallTarget("MethodTargetCSharp", Logger.Log);
-
-            foreach (var rules in LogManager.Configuration.LoggingRules)
-                rules.Targets.Add(target);
-
-            LogManager.Configuration.Reload();
+            builder = builder.ConfigureLogging((loggingBuilder) =>
+            {
+                loggingBuilder.SetMinimumLevel(minimumLevelToIntercept);
+                loggingBuilder.AddProvider(new SystemTestingLoggerProvider(namespaceToIncludeStart, namespaceToExcludeStart));
+            });
 
             return builder;
         }
