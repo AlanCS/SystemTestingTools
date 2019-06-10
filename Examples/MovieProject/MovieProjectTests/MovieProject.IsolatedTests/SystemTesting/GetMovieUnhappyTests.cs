@@ -30,7 +30,7 @@ namespace IsolatedTests.SystemTestings
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
             var exception = new HttpRequestException("weird network error");
-            // add exception twice between we configured a retry
+            // add exception twice because we configured a retry
             client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
             client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
 
