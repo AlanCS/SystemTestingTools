@@ -10,7 +10,7 @@ using Xunit;
 namespace IsolatedTests.SystemTestings
 {
     [Collection("SharedServer collection")]
-    [Trait("Project", "MovieProject Integration Tests (Happy)")]
+    [Trait("Project", "MovieProject System Tests (Happy)")]
     public class GetMovieHappyTests
     {
         private readonly TestServerFixture Fixture;
@@ -22,7 +22,7 @@ namespace IsolatedTests.SystemTestings
             Fixture = fixture;
         }
 
-        [Fact(Skip = "example of how NOT write Integration tests, because it doesn't assert logs and outgoing requests")]
+        [Fact(Skip = "example of how NOT write System tests, because it doesn't assert logs and outgoing requests")]
         public async Task When_UserAsksForMovieWithMostFields_Then_ReturnMovieProperly_Incomplete()
         {
             // arrange
