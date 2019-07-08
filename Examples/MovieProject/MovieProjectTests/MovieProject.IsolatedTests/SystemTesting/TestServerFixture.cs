@@ -1,16 +1,15 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using MovieProject.Web;
 using NLog.Web;
 using System;
+using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using SystemTestingTools;
 using Xunit;
-using System.Linq;
-using Microsoft.Extensions.Logging;
 
 namespace IsolatedTests.SystemTestings
 {

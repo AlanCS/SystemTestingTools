@@ -48,6 +48,14 @@ namespace MovieProject.Web
                 .ConfigureHttpMessageHandlerBuilder((c) => {
                     if (GlobalLastHandler != null) c.AdditionalHandlers.Add(GlobalLastHandler);
                 });
+
+            services
+                .AddHttpClient<IUserProxy, UserProxy>()
+                .AddPolicyHandler(retryPolicy)
+                .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
+                .ConfigureHttpMessageHandlerBuilder((c) => {
+                    if (GlobalLastHandler != null) c.AdditionalHandlers.Add(GlobalLastHandler);
+                });
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
@@ -67,6 +75,7 @@ namespace MovieProject.Web
 
             services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));
             services.Configure<Logic.Option.Omdb>(_configuration.GetSection("Omdb"));
+            services.Configure<Logic.Option.User>(_configuration.GetSection("User"));
 
             AddHttpClient(services);
         }
