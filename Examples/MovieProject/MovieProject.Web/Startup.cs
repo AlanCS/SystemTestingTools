@@ -20,9 +20,8 @@ namespace MovieProject.Web
         private readonly ILogger<Startup> _logger;
         private readonly IConfiguration _configuration;
 
-        //public static DelegatingHandler GlobalLastHandler = null;
-
-        public static DelegatingHandler GlobalLastHandler = new SystemTestingTools.RequestResponseRecorder("C:\\temp");        
+        //public static Func<DelegatingHandler> GlobalLastHandlerFactory = () => new SystemTestingTools.RequestResponseRecorder("C:\\temp");
+        public static Func<DelegatingHandler> GlobalLastHandlerFactory = null;
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
@@ -46,7 +45,7 @@ namespace MovieProject.Web
                 .AddPolicyHandler(retryPolicy)
                 .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
                 .ConfigureHttpMessageHandlerBuilder((c) => {
-                    if (GlobalLastHandler != null) c.AdditionalHandlers.Add(GlobalLastHandler);
+                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
                 });
 
             services
@@ -54,7 +53,7 @@ namespace MovieProject.Web
                 .AddPolicyHandler(retryPolicy)
                 .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
                 .ConfigureHttpMessageHandlerBuilder((c) => {
-                    if (GlobalLastHandler != null) c.AdditionalHandlers.Add(GlobalLastHandler);
+                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
                 });
         }
 

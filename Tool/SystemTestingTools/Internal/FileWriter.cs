@@ -58,12 +58,12 @@ namespace SystemTestingTools
 
             // details about request
             content.AppendLine($"METADATA");
+            content.AppendLine($"Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!");
             content.AppendLine($"Date: {log.Metadata.DateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")} {log.Metadata.Timezone}");
             content.AppendLine($"Requested by code: {log.Metadata.RequestedByCode}");
             content.AppendLine($"Local machine: {log.Metadata.LocalMachine}");
             content.AppendLine($"User: {log.Metadata.User}");
-            content.AppendLine($"Using tool: {log.Metadata.ToolNameAndVersion} ({log.Metadata.ToolUrl})");
-            content.AppendLine($"Observations:");
+            content.AppendLine($"Using tool: {log.Metadata.ToolNameAndVersion} ({log.Metadata.ToolUrl})");            
 
             content.AppendLine();
             content.AppendLine($"REQUEST");

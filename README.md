@@ -92,7 +92,7 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
 Setup a static DelegatingHandler:
 
 ```C#
-public static DelegatingHandler GlobalLastHandler = null;
+public static Func<DelegatingHandler> GlobalLastHandlerFactory = null;
 ```
 
 then for every HttpClient you configure, add the above Handler if not null as the last handler (if you have others):
@@ -104,7 +104,7 @@ services.AddHttpClient("movieApi", c =>
     c.DefaultRequestHeaders.Add("User-Agent", "My app Name");
 })
 .ConfigureHttpMessageHandlerBuilder((c) => {
-    if (GlobalLastHandler != null) c.AdditionalHandlers.Add(GlobalLastHandler);
+    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
 });
 ```
 
@@ -115,7 +115,7 @@ services.AddHttpClient("movieApi", c =>
 Add the line
 
 ```C#
-Startup.GlobalLastHandler = new HttpCallsInterceptorHandler();
+Startup.GlobalLastHandlerFactory = () => new HttpCallsInterceptorHandler();
 ```
 
 And when creating your WebHostBuilder, also add
@@ -203,7 +203,7 @@ If you have an existing solution, you might find useful to use a recorder to sto
 Once you are setup your  Startup.cs file (as per instructions above), just setup the GlobalHandler to record like this:
 
 ```C#
-public static DelegatingHandler GlobalHttpRequestsHandler = new SystemTestingTools.RequestResponseRecorder("C:\\temp");
+public static Func<DelegatingHandler> GlobalLastHandlerFactory = () => new SystemTestingTools.RequestResponseRecorder("C:\\temp");
 ```
 
 It's recommended you don't commit this code to production :) use it only for quickly creating mock responses for loading later using the ResponseFactory.FromFiddlerLikeResponseFile() method

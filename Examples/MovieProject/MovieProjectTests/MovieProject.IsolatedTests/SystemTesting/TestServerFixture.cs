@@ -29,7 +29,7 @@ namespace IsolatedTests.SystemTestings
         {
             MocksFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\SystemTesting\Mocks";
 
-            Startup.GlobalLastHandler = new HttpCallsInterceptorHandler();
+            Startup.GlobalLastHandlerFactory = () => new HttpCallsInterceptorHandler();
 
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>()

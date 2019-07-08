@@ -13,12 +13,12 @@ namespace SystemTestingTools.UnitTests
     {
         readonly string folder = Path.Combine(Path.GetTempPath(),"SystemTestingTools");
         readonly string expectedFileContent = @"METADATA
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
 Date: 2019-03-17 15:44:37.597 my_time_zone
 Requested by code: C:\temp\code.cs
 Local machine: Machine001
 User: A01/MyUser
 Using tool: SystemTestingTools 0.1.0.0 (http://www.whatever.com)
-Observations:
 
 REQUEST
 post https://www.whatever.com/someendpoint
