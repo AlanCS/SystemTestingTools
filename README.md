@@ -10,7 +10,7 @@
 
 [Nuget package](https://www.nuget.org/packages/SystemTestingTools)
 
-[Recommended article to understand the philosophy behind T shaped testing, and how to best leverage this tool] (https://www.linkedin.com/pulse/evolving-past-test-pyramid-shaped-testing-alan-sarli)
+Recommended article to understand the philosophy behind T shaped testing, and how to best leverage this tool:  https://www.linkedin.com/pulse/evolving-past-test-pyramid-shaped-testing-alan-sarli
 
 In summary, you are better off using T shaped testing (focusing mainly component testing and using unit tests to complement those + contract testing) instead of the traditional testing pyramid, here is a summary of pros and cons:
 
