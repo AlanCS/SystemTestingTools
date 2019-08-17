@@ -98,7 +98,7 @@ namespace MovieProject.Web
             // useful for many purposes
             // - see cloud consumption and analyse bugs where application restarts unexpectely
             // - test logging is working correctly easily
-            // -- check if system tests can intercept logs
+            // -- check if component tests can intercept logs
             _logger.LogInformation("Application is starting"); 
         }
     }

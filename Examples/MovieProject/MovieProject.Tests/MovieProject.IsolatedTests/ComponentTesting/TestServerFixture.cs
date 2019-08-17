@@ -11,7 +11,7 @@ using System.Text.RegularExpressions;
 using SystemTestingTools;
 using Xunit;
 
-namespace IsolatedTests.SystemTestings
+namespace IsolatedTests.ComponentTestings
 {
     public class TestServerFixture : IDisposable
     {
@@ -27,7 +27,7 @@ namespace IsolatedTests.SystemTestings
 
         private void StartServer()
         {
-            MocksFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\SystemTesting\Mocks";
+            MocksFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Mocks";
 
             Startup.GlobalLastHandlerFactory = () => new HttpCallsInterceptorHandler();
 

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using SystemTestingTools;
 using Xunit;
 
-namespace IsolatedTests.SystemTestings
+namespace IsolatedTests.ComponentTestings
 {
     [Collection("SharedServer collection")]
-    [Trait("Project", "MovieProject System Tests (Unhappy)")]
+    [Trait("Project", "MovieProject Component Tests (Unhappy)")]
     public class GetMovieUnhappyTests
     {
         private readonly TestServerFixture Fixture;

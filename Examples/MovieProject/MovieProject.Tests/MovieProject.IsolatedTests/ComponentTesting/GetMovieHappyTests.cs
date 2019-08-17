@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using SystemTestingTools;
 using Xunit;
 
-namespace IsolatedTests.SystemTestings
+namespace IsolatedTests.ComponentTestings
 {
     [Collection("SharedServer collection")]
-    [Trait("Project", "MovieProject System Tests (Happy)")]
+    [Trait("Project", "MovieProject Component Tests (Happy)")]
     public class GetMovieHappyTests
     {
         private readonly TestServerFixture Fixture;
@@ -22,7 +22,7 @@ namespace IsolatedTests.SystemTestings
             Fixture = fixture;
         }
 
-        [Fact(Skip = "example of how NOT write System tests, because it doesn't assert logs and outgoing requests")]
+        [Fact(Skip = "example of how NOT write Component tests, because it doesn't assert logs and outgoing requests")]
         public async Task When_UserAsksForMovieWithMostFields_Then_ReturnMovieProperly_Incomplete()
         {
             // arrange

@@ -15,11 +15,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.Web", "Example
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.Logic", "Examples\MovieProject\MovieProject.Logic\MovieProject.Logic.csproj", "{918401E5-B9AF-40C0-A911-5F11684F99E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.IsolatedTests", "Examples\MovieProject\MovieProjectTests\MovieProject.IsolatedTests\MovieProject.IsolatedTests.csproj", "{999AF142-0919-4163-9ACC-A61C5D4DDBC2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.IsolatedTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.IsolatedTests\MovieProject.IsolatedTests.csproj", "{999AF142-0919-4163-9ACC-A61C5D4DDBC2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemTestingTools.UnitTests", "Tool\SystemTestingTools.UnitTests\SystemTestingTools.UnitTests.csproj", "{58806D58-5E6C-4BF5-BC0D-FFC454785101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieProject.ContractTests", "Examples\MovieProject\MovieProjectTests\MovieProject.ContractTests\MovieProject.ContractTests.csproj", "{6E5D1F7F-329F-4923-81BE-EB6935687BBF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieProject.ContractTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.IntegrationTests\MovieProject.IntegrationTests.csproj", "{6E5D1F7F-329F-4923-81BE-EB6935687BBF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
