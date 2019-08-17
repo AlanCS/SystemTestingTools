@@ -10,11 +10,9 @@
 
 [Nuget package](https://www.nuget.org/packages/SystemTestingTools)
 
-Recommended video presentation to understand the philosophy behind T shaped testing, and how to best leverage this tool:
+[Recommended article to understand the philosophy behind T shaped testing, and how to best leverage this tool] (https://www.linkedin.com/pulse/evolving-past-test-pyramid-shaped-testing-alan-sarli)
 
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/zdfw6oRGHOE/0.jpg)](https://www.youtube.com/watch?v=zdfw6oRGHOE)
-
-In summary, you are better off using T shaped testing (focusing mainly system testing and using unit tests to complement those + contract testing) instead of the traditional testing pyramid, here is a summary of pros and cons:
+In summary, you are better off using T shaped testing (focusing mainly component testing and using unit tests to complement those + contract testing) instead of the traditional testing pyramid, here is a summary of pros and cons:
 
 | Benefit        | Test pyramid           | T shaped tests  | Remediation |
 | ------------- |:-------------:|:-------------:| -----:|
@@ -41,7 +39,8 @@ You can use the extension method **HttpClient.AppendMockHttpCall()** to intercep
 Simple example:
 
 ```C#
-using SystemTestingTools;
+using 
+TestingTools;
 using Shouldly; // nice to have :)
 using Xunit;
 
