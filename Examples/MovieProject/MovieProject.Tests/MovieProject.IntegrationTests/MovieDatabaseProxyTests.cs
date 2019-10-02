@@ -36,8 +36,8 @@ namespace MovieProject.ContractTests
             var result = await proxy.GetMovieOrTvSeries("movie", "the matrix");
 
             result.ShouldNotBeNull();
-            result.ImdbId.ShouldBe("tt0133093");
-            result.Title.ShouldBe("The Matrix");
+            result.Id.ShouldBe("tt0133093");
+            result.Name.ShouldBe("The Matrix");
             result.Year.ShouldBe("1999");
 
             logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);
@@ -51,8 +51,8 @@ namespace MovieProject.ContractTests
             var result = await proxy.GetMovieOrTvSeries("series", "the big bang theory");
 
             result.ShouldNotBeNull();
-            result.ImdbId.ShouldBe("tt0898266");
-            result.Title.ShouldBe("The Big Bang Theory");
+            result.Id.ShouldBe("tt0898266");
+            result.Name.ShouldBe("The Big Bang Theory");
             result.Year.ShouldBe("2007–2019");
 
             logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);

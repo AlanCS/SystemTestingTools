@@ -1,5 +1,4 @@
 ﻿using MovieProject.Logic.Exceptions;
-using MovieProject.Logic.Extensions;
 using MovieProject.Logic.Proxy;
 using System.Threading.Tasks;
 
@@ -31,18 +30,7 @@ namespace MovieProject.Logic
 
             var result = await _cacheWrapper.GetOrSetFromCache(cacheKey, async () =>
                 {
-                    var externalDto = await _movieDatabaseProxy.GetMovieOrTvSeries(type.ToString(), name);
-
-                    if (externalDto?.Response?.ToLower() != "true") return null;
-
-                    return new DTO.Media()
-                    {
-                        Id = externalDto.ImdbId,
-                        Name = externalDto.Title.CleanNA(),
-                        Year = externalDto.Year.CleanYear(),
-                        Plot = externalDto.Plot.CleanNA(),
-                        Runtime = externalDto.Runtime.FormatDuration()
-                    };
+                    return await _movieDatabaseProxy.GetMovieOrTvSeries(type.ToString(), name);
                 });
 
             return result;

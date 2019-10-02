@@ -40,7 +40,7 @@ namespace IsolatedTests.ComponentTestings
             // assert logs
             var logs = client.GetSessionLogs();
             logs.Count.ShouldBe(1);
-            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} threw an exception: System.Net.Http.HttpRequestException: weird network error");
+            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} threw exception [weird network error]");
 
             // assert outgoing            
             var outgoingRequests = client.GetSessionOutgoingRequests();
@@ -85,8 +85,9 @@ namespace IsolatedTests.ComponentTestings
             logs.Count.ShouldBe(1);
             // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
             // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
-            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} returned invalid response: http status={(int)httpStatus} and body=[");
+            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} had exception");
             logs[0].Message.ShouldContain(logContent);
+            logs[0].Message.ShouldContain($" response HttpStatus={(int)httpStatus} and body=[");
 
             // assert outgoing            
             var outgoingRequests = client.GetSessionOutgoingRequests();
@@ -122,7 +123,7 @@ namespace IsolatedTests.ComponentTestings
             logs.Count.ShouldBe(1);
             // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
             // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
-            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} returned invalid response: http status=200 and body=[");
+            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} had exception [DTO is invalid] while [processing response], response HttpStatus=200 and body=[");
             logs[0].Message.ShouldContain(@"""weirdRoot"":");
 
             // assert outgoing            

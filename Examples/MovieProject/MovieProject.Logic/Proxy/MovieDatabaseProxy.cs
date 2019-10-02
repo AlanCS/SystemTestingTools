@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using MovieProject.Logic.Exceptions;
+using MovieProject.Logic.Extensions;
 using MovieProject.Logic.Option;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -10,10 +11,10 @@ namespace MovieProject.Logic.Proxy
 {
     public interface IMovieDatabaseProxy
     {
-        Task<Proxy.DTO.Media> GetMovieOrTvSeries(string type, string movieName);
+        Task<Logic.DTO.Media> GetMovieOrTvSeries(string type, string movieName);
     }
 
-    public class MovieDatabaseProxy  : IMovieDatabaseProxy
+    public class MovieDatabaseProxy  : BaseProxy, IMovieDatabaseProxy
     {
         private string _apiKey;
         private HttpClient _client;
@@ -21,7 +22,7 @@ namespace MovieProject.Logic.Proxy
 
         public MovieDatabaseProxy(HttpClient client,
                                   ILogger<MovieDatabaseProxy> logger,
-                                  IOptions<Omdb> omdbOption)
+                                  IOptions<Omdb> omdbOption) : base(client)
         {
             _apiKey = omdbOption.Value.ApiKey ?? throw new ArgumentNullException(nameof(omdbOption));
 
@@ -33,51 +34,40 @@ namespace MovieProject.Logic.Proxy
             _logger = logger;
         }        
 
-        public async Task<Proxy.DTO.Media> GetMovieOrTvSeries(string type, string name)
+        public async Task<Logic.DTO.Media> GetMovieOrTvSeries(string type, string name)
         {
             string route = $"?apikey={_apiKey}&type={type}&t={name}";
 
-            // try to account for all ways it could go wrong, as mentioned in 
-            // https://github.com/AlanCS/SystemTestingTools/
-
-            HttpResponseMessage response;
-            try
+            var result = await Send(HttpMethod.Get, route, (DTO.ExternalMedia externalDTO, HttpStatusCode status)=> 
             {
-                response = await _client.GetAsync(route);
-            }
-            catch (System.Exception ex)
-            {
-                throw new DownstreamException($"{GetEndpoint()} threw an exception: {ex}");
-            }
+                // any exceptions throwm in here will be wrapped inside a DownstreamException, will all the details of the request / response for investigation
+                // also applies the concept of anti-corruption layer, meaning we parse the external DTO inside the proxy, and only return valid / clean internal DTOs
 
-            if (!response.IsSuccessStatusCode)
-                await ThrowDownstreamErrorWithResponseInfo();
+                if (string.IsNullOrWhiteSpace(externalDTO?.Response)) throw new Exception("DTO is invalid");
 
-            var result = await response.Content.ReadAsAsync<DTO.Media>();
+                if (!string.IsNullOrWhiteSpace(externalDTO.Error))
+                {
+                    // movies and tv series not found get incorrectly returned as "errors", so we filter it out here
+                    if (externalDTO.Error.EndsWith("not found!", System.StringComparison.CurrentCultureIgnoreCase)) return null;
 
-            if (!string.IsNullOrWhiteSpace(result.Error))
-            {
-                // movies and tv series not found get incorrectly returned as "errors", so we filter it out here
-                if (result.Error.EndsWith("not found!", System.StringComparison.CurrentCultureIgnoreCase)) return null;
+                    throw new Exception("Responsed contained error");
+                }
 
-                await ThrowDownstreamErrorWithResponseInfo();
-            }
+                if (string.IsNullOrWhiteSpace(externalDTO.Title)) throw new Exception("Response didn't have title");
 
-            // could not parse the (hopefully json) response properly
-            if (string.IsNullOrWhiteSpace(result.Title)) await ThrowDownstreamErrorWithResponseInfo();
+                if (externalDTO.Response?.ToLower() != "true") return null;
+
+                return new Logic.DTO.Media()
+                {
+                    Id = externalDTO.ImdbId,
+                    Name = externalDTO.Title.CleanNA(),
+                    Year = externalDTO.Year.CleanYear(),
+                    Plot = externalDTO.Plot.CleanNA(),
+                    Runtime = externalDTO.Runtime.FormatDuration()
+                };
+            });
 
             return result;
-
-            async Task ThrowDownstreamErrorWithResponseInfo()
-            {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                throw new DownstreamException($"{GetEndpoint()} returned invalid response: http status={(int)response.StatusCode} and body=[{responseBody}]");
-            }
-
-            string GetEndpoint()
-            {
-                return $"GET {_client.BaseAddress}{route}";
-            }
         }
     }
 }

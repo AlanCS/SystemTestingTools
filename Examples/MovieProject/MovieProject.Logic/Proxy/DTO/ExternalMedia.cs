@@ -5,7 +5,7 @@ using System;
 
 namespace MovieProject.Logic.Proxy.DTO
 {
-    public class Media
+    public class ExternalMedia
     {
         [JsonProperty("Title")]
         public string Title;
