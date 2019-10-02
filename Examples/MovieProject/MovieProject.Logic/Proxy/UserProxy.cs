@@ -21,14 +21,9 @@ namespace MovieProject.Logic.Proxy
         private ILogger<UserProxy> _logger;
 
         public UserProxy(HttpClient client,
-                                  ILogger<UserProxy> logger,
-                                  IOptions<User> userOption)
+                                  ILogger<UserProxy> logger)
         {
             _client = client;
-            _client.BaseAddress = new Uri(userOption.Value.Url);
-            _client.DefaultRequestHeaders.Add("Referer", Constants.Website);
-            _client.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
-
             _logger = logger;
         }        
 

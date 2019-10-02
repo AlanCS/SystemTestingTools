@@ -16,27 +16,19 @@ namespace MovieProject.Logic.Proxy
 
     public class MovieDatabaseProxy  : BaseProxy, IMovieDatabaseProxy
     {
-        private string _apiKey;
         private HttpClient _client;
         private ILogger<MovieDatabaseProxy> _logger;
 
         public MovieDatabaseProxy(HttpClient client,
-                                  ILogger<MovieDatabaseProxy> logger,
-                                  IOptions<Omdb> omdbOption) : base(client)
+                                  ILogger<MovieDatabaseProxy> logger) : base(client)
         {
-            _apiKey = omdbOption.Value.ApiKey ?? throw new ArgumentNullException(nameof(omdbOption));
-
             _client = client;
-            _client.BaseAddress = new Uri(omdbOption.Value.Url);
-            _client.DefaultRequestHeaders.Add("Referer", Constants.Website);
-            _client.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
-
             _logger = logger;
         }        
 
         public async Task<Logic.DTO.Media> GetMovieOrTvSeries(string type, string name)
         {
-            string route = $"?apikey={_apiKey}&type={type}&t={name}";
+            string route = $"?apikey={Constants.OmdbApiKey}&type={type}&t={name}";
 
             var result = await Send(HttpMethod.Get, route, (DTO.ExternalMedia externalDTO, HttpStatusCode status)=> 
             {

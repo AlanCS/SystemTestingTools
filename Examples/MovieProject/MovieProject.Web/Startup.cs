@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using MovieProject.Logic.Option;
 using MovieProject.Logic.Proxy;
 using Polly;
 using Polly.Extensions.Http;
@@ -29,34 +31,6 @@ namespace MovieProject.Web
             _logger = logger;
         }
 
-        private void AddHttpClient(IServiceCollection services)
-        {
-            // setup copied from https://github.com/App-vNext/Polly/wiki/Polly-and-HttpClientFactory
-
-            var retryPolicy = HttpPolicyExtensions
-                .HandleTransientHttpError()
-                .Or<TimeoutRejectedException>() // thrown by Polly's TimeoutPolicy if the inner call times out
-                .RetryAsync();
-
-            var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(800));  // Timeout for an individual try      
-
-            services
-                .AddHttpClient<IMovieDatabaseProxy, MovieDatabaseProxy>()
-                .AddPolicyHandler(retryPolicy)
-                .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
-                .ConfigureHttpMessageHandlerBuilder((c) => {
-                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
-                });
-
-            services
-                .AddHttpClient<IUserProxy, UserProxy>()
-                .AddPolicyHandler(retryPolicy)
-                .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
-                .ConfigureHttpMessageHandlerBuilder((c) => {
-                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
-                });
-        }
-
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services
@@ -72,14 +46,54 @@ namespace MovieProject.Web
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHealthChecks();
 
-            services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));
-            services.Configure<Logic.Option.Omdb>(_configuration.GetSection("Omdb"));
-            services.Configure<Logic.Option.User>(_configuration.GetSection("User"));
+            services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));            
 
             AddHttpClient(services);
         }
 
+        private void AddHttpClient(IServiceCollection services)
+        {
+            services.Configure<Omdb>(_configuration.GetSection("Omdb"));
+            var omdb = services.BuildServiceProvider().GetService<IOptions<Omdb>>();
+            Logic.Constants.OmdbApiKey = omdb.Value?.ApiKey ?? throw new Exception("Omdb is not configured correctly in settings file");
 
+            // setup copied from https://github.com/App-vNext/Polly/wiki/Polly-and-HttpClientFactory
+            var retryPolicy = HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .Or<TimeoutRejectedException>() // thrown by Polly's TimeoutPolicy if the inner call times out
+                .RetryAsync();
+
+            var timeoutPolicy = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(800));  // Timeout for an individual try
+
+            services
+                .AddHttpClient<IMovieDatabaseProxy, MovieDatabaseProxy>()
+                .AddPolicyHandler(retryPolicy)
+                .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
+                .ConfigureHttpClient(c => {
+                    c.BaseAddress = new Uri(omdb.Value.Url);
+                    c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
+                    c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
+                })
+                .ConfigureHttpMessageHandlerBuilder((c) => {
+                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
+                });
+
+            services.Configure<User>(_configuration.GetSection("User"));
+            var user = services.BuildServiceProvider().GetService<IOptions<User>>();
+
+            services
+                .AddHttpClient<IUserProxy, UserProxy>()
+                .AddPolicyHandler(retryPolicy)
+                .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
+                .ConfigureHttpClient(c => {
+                    c.BaseAddress = new Uri(user.Value.Url);
+                    c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
+                    c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
+                })
+                .ConfigureHttpMessageHandlerBuilder((c) => {
+                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
+                });
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
