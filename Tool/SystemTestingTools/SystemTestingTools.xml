@@ -27,6 +27,7 @@
             Create a new session, so logs and requests and responses can be tracked
             </summary>
             <param name="httpClient"></param>
+            <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
         </member>
         <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage)">
             <summary>

@@ -14,13 +14,15 @@ namespace SystemTestingTools
         /// Create a new session, so logs and requests and responses can be tracked
         /// </summary>
         /// <param name="httpClient"></param>
-        public static void CreateSession(this HttpClient httpClient)
+        /// <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
+        public static string CreateSession(this HttpClient httpClient)
         {
             var sessionId = Guid.NewGuid().ToString();
             httpClient.DefaultRequestHeaders.Add(Constants.headerName, sessionId);
             MockInstrumentation.MockedEndpoints.Add(sessionId, new List<MockEndpoint>());
             MockInstrumentation.SessionLogs.Add(sessionId, new List<LoggedEvent>());
             MockInstrumentation.OutgoingRequests.Add(sessionId, new List<HttpRequestMessageWrapper>());
+            return sessionId;
         }
 
         private static string GetSessionFromHeader(HttpClient httpClient)
