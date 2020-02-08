@@ -20,7 +20,7 @@ namespace MovieProject.Logic.Proxy
         protected async Task<FinalClass> Send<IntermediateClass, FinalClass>(HttpMethod method, string route, Func<IntermediateClass, HttpStatusCode, FinalClass> processResponse, object body = null)
         {
             // may seem excessive, but it's necessary for high quality error logs
-            // this has saved our team from dozens of hours of debugging many times over
+            // this has saved me from dozens of hours of debugging many times over
             // we want (for every error) to have (if available): full url, http status, response body, exception            
 
             var request = new HttpRequestMessage(method, _client.BaseAddress + route);

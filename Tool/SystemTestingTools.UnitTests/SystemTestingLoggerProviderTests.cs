@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
 using Shouldly;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace SystemTestingTools.UnitTests

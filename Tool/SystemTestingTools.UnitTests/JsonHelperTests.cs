@@ -1,5 +1,4 @@
 ﻿using Shouldly;
-using System.Text;
 using Xunit;
 
 namespace SystemTestingTools.UnitTests

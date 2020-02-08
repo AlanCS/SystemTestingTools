@@ -1,10 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using MovieProject.Logic.Exceptions;
-using MovieProject.Logic.Option;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -15,49 +11,30 @@ namespace MovieProject.Logic.Proxy
         Task<DTO.User[]> GetUsers();
     }
 
-    public class UserProxy  : IUserProxy
+    public class UserProxy  : BaseProxy, IUserProxy
     {
-        private HttpClient _client;
-        private ILogger<UserProxy> _logger;
 
         public UserProxy(HttpClient client,
-                                  ILogger<UserProxy> logger)
+                                  ILogger<UserProxy> logger) : base(client)
         {
-            _client = client;
-            _logger = logger;
         }        
 
         public async Task<DTO.User[]> GetUsers()
         {
-            string route = $"/users";
+            string route = "users";
 
-            HttpResponseMessage response;
-            try
+            var result = await Send(HttpMethod.Get, route, (DTO.User[] users, HttpStatusCode status) =>
             {
-                response = await _client.GetAsync(route);
-            }
-            catch (System.Exception ex)
-            {
-                throw new DownstreamException($"{GetEndpoint()} threw an exception: {ex}");
-            }
+                // any exceptions throwm in here will be wrapped inside a DownstreamException, will all the details of the request / response for investigation
+                // also applies the concept of anti-corruption layer, meaning we parse the external DTO inside the proxy, and only return valid / clean internal DTOs
 
-            if (!response.IsSuccessStatusCode)
-                await ThrowDownstreamErrorWithResponseInfo();
+                if(status != HttpStatusCode.OK || users == null)
+                    throw new Exception("Unexpected response");
 
-            var users = await response.Content.ReadAsAsync<DTO.User[]>();
+                return users;
+            });
 
-            return users;
-
-            async Task ThrowDownstreamErrorWithResponseInfo()
-            {
-                var responseBody = await response.Content.ReadAsStringAsync();
-                throw new DownstreamException($"{GetEndpoint()} returned invalid response: http status={(int)response.StatusCode} and body=[{responseBody}]");
-            }
-
-            string GetEndpoint()
-            {
-                return $"GET {_client.BaseAddress}{route}";
-            }
+            return result;
         }
     }
 }

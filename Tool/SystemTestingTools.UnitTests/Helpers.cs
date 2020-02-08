@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Xunit;
 using System.Net.Http.Headers;
 using System.Diagnostics;
-using System.Text;
 
 namespace SystemTestingTools.UnitTests
 {

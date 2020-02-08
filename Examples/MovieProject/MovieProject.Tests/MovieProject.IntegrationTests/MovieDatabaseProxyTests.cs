@@ -14,8 +14,8 @@ namespace MovieProject.ContractTests
 {
     public class MovieDatabaseProxyTests
     {
+        private MovieDatabaseProxy proxy;
         private ILogger<MovieDatabaseProxy> logger;
-        private IOptions<Omdb> option;
 
         public MovieDatabaseProxyTests()
         {
@@ -23,15 +23,17 @@ namespace MovieProject.ContractTests
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json", optional: false).Build();
             var serviceCollection = new ServiceCollection();
             serviceCollection.Configure<Omdb>(configuration.GetSection("Omdb"));
-            option = serviceCollection.BuildServiceProvider().GetService<IOptions<Omdb>>();
+            var option = serviceCollection.BuildServiceProvider().GetService<IOptions<Omdb>>();
 
             logger = Substitute.For<ILogger<MovieDatabaseProxy>>();
+            proxy = new MovieDatabaseProxy(new HttpClient() { BaseAddress = new System.Uri(option.Value.Url) }, logger);
+            Logic.Constants.OmdbApiKey = option.Value.ApiKey;
         }
 
         [Fact]
         public async Task CanRetrieveMovie_TheMatrix()
         {
-            var proxy = new MovieDatabaseProxy(new HttpClient(), logger, option);
+            logger.ClearReceivedCalls();
 
             var result = await proxy.GetMovieOrTvSeries("movie", "the matrix");
 
@@ -46,7 +48,7 @@ namespace MovieProject.ContractTests
         [Fact]
         public async Task CanRetrieveTvSeries_TheBigBangTheory()
         {
-            var proxy = new MovieDatabaseProxy(new HttpClient(), logger, option);
+            logger.ClearReceivedCalls();
 
             var result = await proxy.GetMovieOrTvSeries("series", "the big bang theory");
 

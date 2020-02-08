@@ -1,6 +1,5 @@
 ﻿using MovieProject.Logic.Extensions;
 using Shouldly;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace MovieProject.IsolatedTests.UnitTests

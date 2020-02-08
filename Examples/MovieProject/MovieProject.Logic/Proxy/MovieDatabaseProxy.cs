@@ -1,7 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using MovieProject.Logic.Extensions;
-using MovieProject.Logic.Option;
 using System;
 using System.Net;
 using System.Net.Http;
@@ -16,15 +14,11 @@ namespace MovieProject.Logic.Proxy
 
     public class MovieDatabaseProxy  : BaseProxy, IMovieDatabaseProxy
     {
-        private HttpClient _client;
-        private ILogger<MovieDatabaseProxy> _logger;
-
-        public MovieDatabaseProxy(HttpClient client,
-                                  ILogger<MovieDatabaseProxy> logger) : base(client)
+        public MovieDatabaseProxy(HttpClient client, ILogger<MovieDatabaseProxy> logger) : base(client)
         {
-            _client = client;
-            _logger = logger;
-        }        
+
+
+        }
 
         public async Task<Logic.DTO.Media> GetMovieOrTvSeries(string type, string name)
         {
