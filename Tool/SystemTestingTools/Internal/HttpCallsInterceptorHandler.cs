@@ -9,7 +9,7 @@ namespace SystemTestingTools
     /// <summary>
     /// The handler that will allow SystemTestingTools to intercept OUTGOING http calls and return mocks
     /// </summary>
-    public class HttpCallsInterceptorHandler : DelegatingHandler
+    internal class HttpCallsInterceptorHandler : DelegatingHandler
     {
         /// <summary>
         /// intercepts the http request that was about to hit a downstream server and return a mock instead

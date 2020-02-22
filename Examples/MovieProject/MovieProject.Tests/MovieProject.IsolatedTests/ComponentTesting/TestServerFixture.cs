@@ -29,8 +29,6 @@ namespace IsolatedTests.ComponentTestings
         {
             MocksFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Mocks";
 
-            Startup.GlobalLastHandlerFactory = () => new HttpCallsInterceptorHandler();
-
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((hostingContext, config) =>

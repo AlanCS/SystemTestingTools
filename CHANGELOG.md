@@ -1,3 +1,11 @@
+## 1.1.0
+Improvements to how interception of HTTP calls happen, to be easier to configure and less intrusive, inspired by https://github.com/justeat/httpclient-interception.
+
+
+
+## 1.0.0
+After extensive real life testing, and with minor improvements to documentation and other non breaking changes, I decided the library was stable enough to become version 1
+
 ## 0.3.0
 - Bug fix:
     - Fixed bug that only allowed one downstream dependency, otherwise code threw exception "DelegatingHandler instances provided to HttpMessageHandlerBuilder must not be reused or cached"

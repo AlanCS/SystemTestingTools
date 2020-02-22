@@ -14,7 +14,7 @@ namespace SystemTestingTools
     /// <summary>
     /// Use this handle to record responses you get, so you can use it for mocking later
     /// </summary>
-    public class RequestResponseRecorder : DelegatingHandler
+    internal class RequestResponseRecorder : DelegatingHandler
     {
         static internal IFileWriter FileWriter = null;
         private readonly string _callerPath;

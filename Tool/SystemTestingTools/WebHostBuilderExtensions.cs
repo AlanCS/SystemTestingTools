@@ -2,8 +2,10 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using System;
+using SystemTestingTools.Internal;
 
 namespace SystemTestingTools
 {
@@ -24,6 +26,7 @@ namespace SystemTestingTools
                 var services = c.BuildServiceProvider();
                 var context = services.GetService<IHttpContextAccessor>();
                 MockInstrumentation.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+                c.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallsInterceptorHandler()));
             });
 
             return builder;

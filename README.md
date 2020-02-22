@@ -39,8 +39,7 @@ You can use the extension method **HttpClient.AppendMockHttpCall()** to intercep
 Simple example:
 
 ```C#
-using 
-TestingTools;
+using SystemTestingTools;
 using Shouldly; // nice to have :)
 using Xunit;
 
@@ -86,46 +85,17 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
 
 # Setup
 
-## 1- Startup.cs file
-
-Setup a static DelegatingHandler:
-
-```C#
-public static Func<DelegatingHandler> GlobalLastHandlerFactory = null;
-```
-
-then for every HttpClient you configure, add the above Handler if not null as the last handler (if you have others):
-
-```C#
-services.AddHttpClient("movieApi", c =>
-{
-    c.BaseAddress = new Uri("https://www.mydependency.com");
-    c.DefaultRequestHeaders.Add("User-Agent", "My app Name");
-})
-.ConfigureHttpMessageHandlerBuilder((c) => {
-    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
-});
-```
-
-[Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L70)
-
-## 2- Creating a TestServer
-
-Add the line
-
-```C#
-Startup.GlobalLastHandlerFactory = () => new HttpCallsInterceptorHandler();
-```
-
-And when creating your WebHostBuilder, also add
+When creating your WebHostBuilder in your test project, add
 
 ```C#
 .ConfigureInterceptionOfHttpCalls()
 .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
                 namespaceToIncludeStart: new[] { "MovieProject" },
-                namespaceToExcludeStart: new[] { "Microsoft" })
+                namespaceToExcludeStart: new[] { "Microsoft" });
 ```
 [Real life example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/TestServerFixture.cs#L32)
+
+Explanation: ConfigureInterceptionOfHttpCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a mock response, configured as above by the method AppendMockHttpCall().
 
 # Extra capabilities
 
@@ -202,7 +172,12 @@ If you have an existing solution, you might find useful to use a recorder to sto
 Once you are setup your  Startup.cs file (as per instructions above), just setup the GlobalHandler to record like this:
 
 ```C#
-public static Func<DelegatingHandler> GlobalLastHandlerFactory = () => new SystemTestingTools.RequestResponseRecorder("C:\\temp");
+using SystemTestingTools;
+
+public virtual void ConfigureServices(IServiceCollection services)
+{
+    services.RecordHttpRequestsAndResponses("C:\\temp"); // add this line
+}
 ```
 
 It's recommended you don't commit this code to production :) use it only for quickly creating mock responses for loading later using the ResponseFactory.FromFiddlerLikeResponseFile() method
@@ -211,11 +186,12 @@ Example of generated file:
 
 ```JSON
 METADATA
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
 Date: 2019-03-20 18:51:47.189 (UTC+10:00) Canberra, Melbourne, Sydney
 Requested by code: C:\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
 Local machine: DESKTOP-OGVA1EU
 User: DESKTOP-OGVA1EU\AlanPC
-Using tool: SystemTestingTools 0.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Using tool: SystemTestingTools 1.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
 
 REQUEST
 get http://www.omdbapi.com/someendpoint?search=weird_movie_title

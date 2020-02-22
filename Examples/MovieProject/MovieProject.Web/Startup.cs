@@ -14,6 +14,7 @@ using Polly.Timeout;
 using System;
 using System.Linq;
 using System.Net.Http;
+//using SystemTestingTools; // you only need this line if you are planning to use IServiceCollection.RecordHttpRequestsAndResponses()
 
 namespace MovieProject.Web
 {
@@ -21,9 +22,6 @@ namespace MovieProject.Web
     {
         private readonly ILogger<Startup> _logger;
         private readonly IConfiguration _configuration;
-
-        //public static Func<DelegatingHandler> GlobalLastHandlerFactory = () => new SystemTestingTools.RequestResponseRecorder("C:\\temp");
-        public static Func<DelegatingHandler> GlobalLastHandlerFactory = null;
 
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
@@ -45,6 +43,7 @@ namespace MovieProject.Web
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHealthChecks();
+            //services.RecordHttpRequestsAndResponses("C:\\temp");
 
             services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));            
 
@@ -73,9 +72,6 @@ namespace MovieProject.Web
                     c.BaseAddress = new Uri(omdb.Value.Url);
                     c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
-                })
-                .ConfigureHttpMessageHandlerBuilder((c) => {
-                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
                 });
 
             services.Configure<User>(_configuration.GetSection("User"));
@@ -89,9 +85,6 @@ namespace MovieProject.Web
                     c.BaseAddress = new Uri(user.Value.Url);
                     c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
-                })
-                .ConfigureHttpMessageHandlerBuilder((c) => {
-                    if (GlobalLastHandlerFactory != null) c.AdditionalHandlers.Add(GlobalLastHandlerFactory());
                 });
         }
 
