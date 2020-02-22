@@ -81,7 +81,7 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
 ```
 *We need the concept of sessions because many tests with many requests can be happening at the same time, so we need to keep things separated
 
-[Real life example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/GetMovieHappyTests.cs#L49)
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/GetMovieHappyTests.cs#L49)
 
 # Setup
 
@@ -93,7 +93,7 @@ When creating your WebHostBuilder in your test project, add
                 namespaceToIncludeStart: new[] { "MovieProject" },
                 namespaceToExcludeStart: new[] { "Microsoft" });
 ```
-[Real life example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/TestServerFixture.cs#L32)
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/TestServerFixture.cs#L32)
 
 Explanation: ConfigureInterceptionOfHttpCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a mock response, configured as above by the method AppendMockHttpCall().
 
@@ -164,7 +164,7 @@ httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.InternalServerError);
 var message = await httpResponse.GetResponseString();
 message.ShouldBe(Constants.DownstreamErrorMessage);
 ```
-[Real life example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/GetMovieUnhappyTests.cs#L30)
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/GetMovieUnhappyTests.cs#L30)
 
 ## 3 - Recorder
 If you have an existing solution, you might find useful to use a recorder to store the existing requests and responses in a text file, so you can use them for mocking later!
@@ -208,7 +208,7 @@ Header2: some other value
 
 It's useful to keep some metadata like the date the mock was generated and how the request looked like, so if in the future people decide to leverage the same mocks, they know if it's out of date or how they can easily generate new ones.
 
-[Real life example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/Mocks/OmdbApi/Real_Responses/Happy/200_FewFields_OldMovie.txt)
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/Mocks/OmdbApi/Real_Responses/Happy/200_FewFields_OldMovie.txt)
 
 
 # Recommendations
@@ -220,7 +220,7 @@ Try to keep your mock responses in separate text files (as opposite to in your c
 * as a form of documentation of possible responses received and what your system is prepared to handle
 * as separate files that other roles (like testers or BAs) can manage themselves
 
-[Real life Example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/Mocks/OmdbApi/Real_Responses/Happy)
+[Real life Example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/Mocks/OmdbApi/Real_Responses/Happy)
 
 ## 2 - Use the recorder to generate mock responses
 
@@ -242,7 +242,7 @@ Asserting in this order will make it more likely you will catch the original rea
 
 For example: if you have proper error handling, an exception throw while trying to read a downstream response will show up in the logs with great detail, trying to guess why it happened from the returned values could be a challenge.
 
-[Real life Example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/GetMovieHappyTests.cs#L58)
+[Real life Example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/GetMovieHappyTests.cs#L58)
 
 ## 4 - Assert non functionals
 
@@ -289,7 +289,7 @@ Obviously you don't need to worry about using the other functions of this tool, 
 
 The recorder function generates files which a comment section at the top, with metadata and request information, and the response (in Fiddler like format) at the bottom.
 
-[Example](/Examples/MovieProject/MovieProjectTests/MovieProject.IsolatedTests/SystemTesting/Mocks/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt)
+[Example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/Mocks/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt)
 
 The separator can be a problem if it's also found in the request or response, throwing off the reader function.
 
