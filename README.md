@@ -164,7 +164,7 @@ httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.InternalServerError);
 var message = await httpResponse.GetResponseString();
 message.ShouldBe(Constants.DownstreamErrorMessage);
 ```
-[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/SystemTesting/GetMovieUnhappyTests.cs#L30)
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetMovieUnhappyTests.cs#L30)
 
 ## 3 - Recorder
 If you have an existing solution, you might find useful to use a recorder to store the existing requests and responses in a text file, so you can use them for mocking later!
