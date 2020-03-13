@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using ExternalDependencies.Calculator;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,8 @@ using Polly.Timeout;
 using System;
 using System.Linq;
 using System.Net.Http;
+using System.ServiceModel;
+using SystemTestingTools;
 //using SystemTestingTools; // you only need this line if you are planning to use IServiceCollection.RecordHttpRequestsAndResponses()
 
 namespace MovieProject.Web
@@ -31,6 +34,9 @@ namespace MovieProject.Web
 
         public virtual void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));
+            AddDownstreamDependencies(services);
+
             services
                 .Scan(scan => scan
                                 .FromAssemblyOf<Logic.SearchService>()
@@ -43,14 +49,10 @@ namespace MovieProject.Web
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHealthChecks();
-            //services.RecordHttpRequestsAndResponses("C:\\temp");
-
-            services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));            
-
-            AddHttpClient(services);
+            services.RecordHttpRequestsAndResponses("C:\\RecordedRequestAndResponses");
         }
 
-        private void AddHttpClient(IServiceCollection services)
+        private void AddDownstreamDependencies(IServiceCollection services)
         {
             services.Configure<Omdb>(_configuration.GetSection("Omdb"));
             var omdb = services.BuildServiceProvider().GetService<IOptions<Omdb>>();
@@ -86,6 +88,13 @@ namespace MovieProject.Web
                     c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
                 });
+
+
+            services.AddSingleton<ICalculatorSoap>(factory => {
+                var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
+                client.Endpoint.Address = new EndpointAddress(_configuration["Calculator:Url"]);
+                return client;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
