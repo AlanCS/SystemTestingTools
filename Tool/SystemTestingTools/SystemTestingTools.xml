@@ -65,6 +65,34 @@
             When the Http request happened
             </summary>
         </member>
+        <member name="T:SystemTestingTools.HttpResponseMessageExtensions">
+            <summary>
+            Useful extensions for the microsoft HttpResponseMessage
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ModifyJsonBody``1(System.Net.Http.HttpResponseMessage,System.Action{``0})">
+            <summary>
+            Parse the response body as a class, change it and store it again in the response
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="response"></param>
+            <param name="dtoModifier"></param>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadBody``1(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Read the response body and parset as a given class
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="httpResponse"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadBody(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Read the response body as string
+            </summary>
+            <param name="httpResponse"></param>
+            <returns></returns>
+        </member>
         <member name="M:SystemTestingTools.FileWriter.Write(SystemTestingTools.RequestResponse)">
             <summary>
             

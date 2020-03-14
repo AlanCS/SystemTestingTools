@@ -1,6 +1,6 @@
 [<img align="right" src="https://i.imgur.com/DdoC5Il.png" width="100" />](https://www.nuget.org/packages/Polly/)
 
-**SystemTestingTools** (for .net core 2.2+) allows you to extend the capabilities of Microsoft.AspNetCore.TestHost.TestServer, allowing you to run more comprehensive + deterministic tests by:
+**SystemTestingTools** (for .net core 3.1+) allows you to extend the capabilities of Microsoft.AspNetCore.TestHost.TestServer, allowing you to run more comprehensive + deterministic tests by:
 
 * supporting Http calls:
     * intercepting of outgoing calls, returning mock responses
@@ -71,7 +71,7 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
     httpResponse.ShouldNotBeNull();
     httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-    var movie = JsonConvert.DeserializeObject<DTO.Movie>(await httpResponse.GetResponseString());
+    var movie = await httpResponse.ReadJsonBody<MovieProject.Logic.DTO.Media>();
     movie.ShouldNotBeNull();
     movie.Id.ShouldBe("tt0133093");
     movie.Name.ShouldBe("The Matrix");
@@ -160,8 +160,8 @@ outgoingRequests.Count.ShouldBe(1);
 outgoingRequests[0].ShouldBeEndpoint($"GET {MatrixMovieUrl}");
 
 // assert return
-httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.InternalServerError);
-var message = await httpResponse.GetResponseString();
+httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+var message = await httpResponse.ReadBody();
 message.ShouldBe(Constants.DownstreamErrorMessage);
 ```
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetMovieUnhappyTests.cs#L30)
@@ -210,6 +210,22 @@ It's useful to keep some metadata like the date the mock was generated and how t
 
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/Mocks/OmdbApi/Real_Responses/Happy/200_FewFields_OldMovie.txt)
 
+## 4 - Extension methods for HttpResponseMessage
+
+For easy manipulation and assertions of the responses you get (specially JSON), these extensions might save you time / lines of code:
+
+```JSON
+(await httpResponse.ReadBody()).ShouldBe("An error happened, try again later"); // ReadBody will ready the body as a string
+
+var movie = await httpResponse.ReadJsonBody<DTO.Media>(); // ReadJsonBody will parse the json response body as the given class
+
+response.ModifyJsonBody<DTO.User[]>(dto =>
+{
+    dto[0].Name = "Changed in code";
+});
+```
+
+ModifyJsonBody() can be useful to make small changes to a complex DTO you just loaded from disk, so you don't need to store lots of small variantions of possible responses, you can make changes to it in code. [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetUserHappyTests.cs#L35)
 
 # Recommendations
 

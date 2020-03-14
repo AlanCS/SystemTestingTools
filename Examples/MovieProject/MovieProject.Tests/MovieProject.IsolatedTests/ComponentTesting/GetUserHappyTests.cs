@@ -29,6 +29,12 @@ namespace IsolatedTests.ComponentTestings
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
             var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/UserApi/Real_Responses/Happy/200_ListUsers.txt");
+
+            response.ModifyJsonBody<MovieProject.Logic.Proxy.DTO.User[]>(dto =>
+            {
+                dto[0].Name = "Changed in code";
+            });
+
             client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(Url), response);
 
             // act
@@ -45,17 +51,17 @@ namespace IsolatedTests.ComponentTestings
             outgoingRequests[0].ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.OK);
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var list = await httpResponse.ParseResponse<List<string>>();
+            var list = await httpResponse.ReadJsonBody<List<string>>();
             list.Count.ShouldBe(10);
-            list[0].ShouldBe("Chelsey Dietrich");
-            list[1].ShouldBe("Clementina DuBuque");
-            list[2].ShouldBe("Clementine Bauch");
-            list[3].ShouldBe("Ervin Howell");
-            list[4].ShouldBe("Glenna Reichert");
-            list[5].ShouldBe("Kurtis Weissnat");
-            list[6].ShouldBe("Leanne Graham");
+            list[0].ShouldBe("Changed in code");
+            list[1].ShouldBe("Chelsey Dietrich");
+            list[2].ShouldBe("Clementina DuBuque");
+            list[3].ShouldBe("Clementine Bauch");
+            list[4].ShouldBe("Ervin Howell");
+            list[5].ShouldBe("Glenna Reichert");
+            list[6].ShouldBe("Kurtis Weissnat");
             list[7].ShouldBe("Mrs. Dennis Schulist");
             list[8].ShouldBe("Nicholas Runolfsdottir V");
             list[9].ShouldBe("Patricia Lebsack");

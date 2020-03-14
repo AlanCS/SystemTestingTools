@@ -50,8 +50,8 @@ namespace IsolatedTests.ComponentTestings
             AssertMatrixEndpointCalled(outgoingRequests[1]);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.InternalServerError);
-            var message = await httpResponse.GetResponseString();
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+            var message = await httpResponse.ReadBody();
             message.ShouldBe(Constants.DownstreamErrorMessage);
         }
 
@@ -100,8 +100,8 @@ namespace IsolatedTests.ComponentTestings
             }            
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.InternalServerError);
-            var message = await httpResponse.GetResponseString();
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+            var message = await httpResponse.ReadBody();
             message.ShouldBe(Constants.DownstreamErrorMessage);
         }
 
@@ -131,8 +131,8 @@ namespace IsolatedTests.ComponentTestings
             AssertMatrixEndpointCalled(outgoingRequests[0]);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.InternalServerError);
-            var message = await httpResponse.GetResponseString();
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
+            var message = await httpResponse.ReadBody();
             message.ShouldBe(Constants.DownstreamErrorMessage);
         }
 
@@ -160,8 +160,8 @@ namespace IsolatedTests.ComponentTestings
             client.GetSessionOutgoingRequests().Count.ShouldBe(0);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.BadRequest);
-            var message = await httpResponse.GetResponseString();
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
+            var message = await httpResponse.ReadBody();
             message.ShouldBe($"{correctMessage} = [{culprit}]");
         }
 

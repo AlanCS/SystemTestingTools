@@ -39,7 +39,7 @@ namespace IsolatedTests.ComponentTestings
             httpResponse.ShouldNotBeNull();
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var movie = JsonSerializer.Deserialize<MovieProject.Logic.DTO.Media>(await httpResponse.GetResponseString());
+            var movie = JsonSerializer.Deserialize<MovieProject.Logic.DTO.Media>(await httpResponse.Content.ReadAsStringAsync());
             movie.ShouldNotBeNull();
 
             movie.Id.ShouldBe("tt0133093");
@@ -73,9 +73,9 @@ namespace IsolatedTests.ComponentTestings
             outgoingRequests[0].ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.OK);
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var movie = await httpResponse.ParseResponse<MovieProject.Logic.DTO.Media>();
+            var movie = await httpResponse.ReadJsonBody<MovieProject.Logic.DTO.Media>();
             movie.Id.ShouldBe("tt0133093");
             movie.Name.ShouldBe("The Matrix");
             movie.Year.ShouldBe("1999");
@@ -106,8 +106,8 @@ namespace IsolatedTests.ComponentTestings
             outgoingRequests[0].ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.NotFound);
-            var message = await httpResponse.GetResponseString();
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.NotFound);
+            var message = await httpResponse.ReadBody();
             message.ShouldBe("Search terms didn't match any movie");
         }
 
@@ -135,9 +135,9 @@ namespace IsolatedTests.ComponentTestings
             outgoingRequests[0].ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.OK);
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var movie = await httpResponse.ParseResponse<MovieProject.Logic.DTO.Media>();
+            var movie = await httpResponse.ReadJsonBody<MovieProject.Logic.DTO.Media>();
             movie.Id.ShouldBe("tt0000182");
             movie.Name.ShouldBe("Come Along, Do!");
             movie.Year.ShouldBe("1898");
@@ -169,9 +169,9 @@ namespace IsolatedTests.ComponentTestings
             outgoingRequests[0].ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
 
             // assert return
-            httpResponse.ShouldNotBeNullAndHaveStatus(HttpStatusCode.OK);
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var movie = await httpResponse.ParseResponse<MovieProject.Logic.DTO.Media>();
+            var movie = await httpResponse.ReadJsonBody<MovieProject.Logic.DTO.Media>();
             movie.Id.ShouldBe("tt1185643");
             movie.Name.ShouldBe("Fantastika vs. Wonderwoman");
             movie.Runtime.ShouldBe("Unknown");
