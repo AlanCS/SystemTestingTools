@@ -1,10 +1,10 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
 using Shouldly;
 using System.Linq;
 using SystemTestingTools;
+using System.Text.Json;
 
 namespace IsolatedTests.Helpers
 {
@@ -29,7 +29,8 @@ namespace IsolatedTests.Helpers
 
         public static async Task<T> ParseResponse<T>(this HttpResponseMessage httpResponse)
         {
-            var dto = JsonConvert.DeserializeObject<T>(await httpResponse.GetResponseString());
+            var content = await httpResponse.GetResponseString();
+            var dto = JsonSerializer.Deserialize<T>(content);
             dto.ShouldNotBeNull();
 
             return dto;

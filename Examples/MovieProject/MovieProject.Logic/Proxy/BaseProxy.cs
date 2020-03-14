@@ -1,10 +1,10 @@
 ﻿using MovieProject.Logic.Exceptions;
-using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.Json;
 
 namespace MovieProject.Logic.Proxy
 {
@@ -25,7 +25,7 @@ namespace MovieProject.Logic.Proxy
 
             var request = new HttpRequestMessage(method, _client.BaseAddress + route);
 
-            if (body != null) request.Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json");
+            if (body != null) request.Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
 
             HttpResponseMessage response;
             try

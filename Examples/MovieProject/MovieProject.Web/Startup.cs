@@ -44,8 +44,9 @@ namespace MovieProject.Web
                                 .UsingRegistrationStrategy(Scrutor.RegistrationStrategy.Skip)
                                 .AsImplementedInterfaces()
                                 .WithScopedLifetime())
-                .AddMvc()                
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                .AddMvc()
+                    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null)                
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHealthChecks();
@@ -108,8 +109,13 @@ namespace MovieProject.Web
             }
             
             app.UseMiddleware<ExceptionHandlerMiddleware>();
-            app.UseMvc();
             app.UseHealthChecks("/healthcheck");
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHealthChecks("/healthcheck");
+                endpoints.MapControllers();
+            });
 
             // useful for many purposes
             // - see cloud consumption and analyse bugs where application restarts unexpectely

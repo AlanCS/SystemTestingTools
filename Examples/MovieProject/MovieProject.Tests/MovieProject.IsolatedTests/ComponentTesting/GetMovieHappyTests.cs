@@ -1,8 +1,8 @@
 using IsolatedTests.Helpers;
-using Newtonsoft.Json;
 using Shouldly;
 using System.Net;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using SystemTestingTools;
 using Xunit;
@@ -39,7 +39,7 @@ namespace IsolatedTests.ComponentTestings
             httpResponse.ShouldNotBeNull();
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
 
-            var movie = JsonConvert.DeserializeObject<MovieProject.Logic.DTO.Media>(await httpResponse.GetResponseString());
+            var movie = JsonSerializer.Deserialize<MovieProject.Logic.DTO.Media>(await httpResponse.GetResponseString());
             movie.ShouldNotBeNull();
 
             movie.Id.ShouldBe("tt0133093");
