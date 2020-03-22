@@ -15,11 +15,22 @@ namespace SystemTestingTools
     public static class WebHostBuilderExtensions
     {
         /// <summary>
-        /// Intercept outgoing Http calls so we can return mocks and make assertions later
+        /// obsolete method
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
+        [Obsolete("Please use ConfigureInterceptionOfHttpClientCalls() instead")]
         public static IWebHostBuilder ConfigureInterceptionOfHttpCalls(this IWebHostBuilder builder)
+        {
+            return ConfigureInterceptionOfHttpClientCalls(builder);
+        }
+
+        /// <summary>
+        /// Intercept outgoing HttpClient calls so we can return mocks and make assertions later
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IWebHostBuilder ConfigureInterceptionOfHttpClientCalls(this IWebHostBuilder builder)
         {
             builder.ConfigureTestServices((c) =>
             {

@@ -25,13 +25,16 @@ namespace SystemTestingTools
         /// </summary>
         /// <param name="Folder">Folder full path where the response text files will be saved</param>
         /// <param name="CallerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
-        public RequestResponseRecorder(string Folder, [CallerFilePath]string CallerPath = "")
+        public RequestResponseRecorder(string Folder, bool isWcf, [CallerFilePath]string CallerPath = "")
         {
             if(FileWriter == null) FileWriter = new FileWriter(Folder);
 
             _callerPath = CallerPath;
 
             SetupToolNameVersion();
+
+            if(isWcf)
+                InnerHandler = new HttpClientHandler(); // for some reason, WCF calls demand to have an InnerHandler, and HttpClient ones won't tolerate it
         }
 
         private void SetupToolNameVersion()

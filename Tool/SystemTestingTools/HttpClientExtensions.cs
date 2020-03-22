@@ -42,11 +42,12 @@ namespace SystemTestingTools
         /// <param name="httpMethod"></param>
         /// <param name="Url"></param>
         /// <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
-        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response)
+        /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
+        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
         {
             var sessionId = GetSessionFromHeader(httpClient);
 
-            MockInstrumentation.MockedEndpoints[sessionId].Add(new MockEndpoint(httpMethod, Url, response));
+            MockInstrumentation.MockedEndpoints[sessionId].Add(new MockEndpoint(httpMethod, Url, response, headerMatches));
         }
 
         /// <summary>
@@ -57,11 +58,12 @@ namespace SystemTestingTools
         /// <param name="httpMethod"></param>
         /// <param name="Url"></param>
         /// <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
-        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception)
+        /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
+        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
         {
             var sessionId = GetSessionFromHeader(httpClient);
 
-            MockInstrumentation.MockedEndpoints[sessionId].Add(new MockEndpoint(httpMethod, Url, exception));
+            MockInstrumentation.MockedEndpoints[sessionId].Add(new MockEndpoint(httpMethod, Url, exception, headerMatches));
         }
 
         /// <summary>

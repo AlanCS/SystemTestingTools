@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MovieProject.Logic.Option;
@@ -15,6 +16,7 @@ using Polly.Timeout;
 using System;
 using System.Net.Http;
 using System.ServiceModel;
+using System.ServiceModel.Description;
 using SystemTestingTools;
 //using SystemTestingTools; // you only need this line if you are planning to use IServiceCollection.RecordHttpRequestsAndResponses()
 
@@ -25,6 +27,8 @@ namespace MovieProject.Web
         private readonly ILogger<Startup> _logger;
         private readonly IConfiguration _configuration;
 
+        public static IEndpointBehavior wcfInterceptor = WcfHttpInterceptor.CreateRequestResponseRecorder("C:\\RecordedRequestAndResponses");
+
         public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             _configuration = configuration;
@@ -34,7 +38,7 @@ namespace MovieProject.Web
         public virtual void ConfigureServices(IServiceCollection services)
         {
             services.Configure<Logic.Option.Caching>(_configuration.GetSection("caching"));
-            AddDownstreamDependencies(services);
+            AddHttpDependencies(services);
 
             services
                 .Scan(scan => scan
@@ -52,7 +56,7 @@ namespace MovieProject.Web
             services.RecordHttpRequestsAndResponses("C:\\RecordedRequestAndResponses");
         }
 
-        private void AddDownstreamDependencies(IServiceCollection services)
+        private void AddHttpDependencies(IServiceCollection services)
         {
             services.Configure<Omdb>(_configuration.GetSection("Omdb"));
             var omdb = services.BuildServiceProvider().GetService<IOptions<Omdb>>();
@@ -89,16 +93,16 @@ namespace MovieProject.Web
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
                 });
 
-
-            services.AddSingleton<ICalculatorSoap>(factory => {
+            services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
                 var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
                 client.Endpoint.Address = new EndpointAddress(_configuration["Calculator:Url"]);
+                if (wcfInterceptor != null) client.Endpoint.EndpointBehaviors.Add(wcfInterceptor);
                 return client;
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (!env.IsDevelopment())
             {

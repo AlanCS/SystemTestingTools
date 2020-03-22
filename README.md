@@ -85,17 +85,42 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
 
 # Setup
 
+## For HttpClient calls
+
 When creating your WebHostBuilder in your test project, add
 
 ```C#
-.ConfigureInterceptionOfHttpCalls()
+.ConfigureInterceptionOfHttpClientCalls()
 .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
                 namespaceToIncludeStart: new[] { "MovieProject" },
                 namespaceToExcludeStart: new[] { "Microsoft" });
 ```
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L42)
 
-Explanation: ConfigureInterceptionOfHttpCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a mock response, configured as above by the method AppendMockHttpCall().
+Explanation: ConfigureInterceptionOfHttpClientCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a mock response, configured as above by the method AppendMockHttpCall().
+
+## For WCF http calls
+
+Unfortunately the  HTTP Client used by WCF Http calls is created internally, so intercepting it requires a bit more manual work
+```C#
+// in your Startup.cs, you need to add the line bellow
+public static IEndpointBehavior wcfInterceptor = null;
+
+// in your ConfigureServices method, you will add one line to the setup of your WCF interface
+services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
+    var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
+    client.Endpoint.Address = new EndpointAddress(_configuration["Url"]);
+    if (wcfInterceptor != null) client.Endpoint.EndpointBehaviors.Add(wcfInterceptor); // add this line to  allow interception
+    return client;
+});
+```
+[Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L99)
+
+And before setting up your TestServer
+```C#
+Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
+```
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L32)
 
 # Extra capabilities
 
@@ -209,6 +234,13 @@ Header2: some other value
 It's useful to keep some metadata like the date the mock was generated and how the request looked like, so if in the future people decide to leverage the same mocks, they know if it's out of date or how they can easily generate new ones.
 
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/Mocks/OmdbApi/Real_Responses/Happy/200_FewFields_OldMovie.txt)
+
+
+For recording WCF http requests / and responses, in your Startup
+
+```
+public static IEndpointBehavior wcfInterceptor = WcfHttpInterceptor.CreateRequestResponseRecorder("C:\\RecordedRequestAndResponses");
+```
 
 ## 4 - Extension methods for HttpResponseMessage
 

@@ -1,0 +1,29 @@
+METADATA
+Observations: Example of SOAP minus function
+Date: 2020-03-22 22:37:51.717 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\Alan\Documents\GitHub\SystemTestingTools\Tool\SystemTestingTools\WcfHttpInterceptor.cs
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 1.3.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+
+REQUEST
+post http://www.dneonline.com/calculator.asmx
+Cache-Control:no-cache, max-age=0
+SOAPAction:"http://tempuri.org/Subtract"
+Request-Id:|1af1acf3-47ceefb1cdab007f.1.
+Content-Type:text/xml; charset=utf-8
+Content-Length:171
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/"><s:Body><Subtract xmlns="http://tempuri.org/"><intA>7</intA><intB>3</intB></Subtract></s:Body></s:Envelope>
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Cache-Control:max-age=0, private
+Server:Microsoft-IIS/7.5
+X-AspNet-Version:2.0.50727
+X-Powered-By:ASP.NET
+Date:Sun, 22 Mar 2020 11:37:50 GMT
+Content-Length:345
+Content-Type:text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><SubtractResponse xmlns="http://tempuri.org/"><SubtractResult>4</SubtractResult></SubtractResponse></soap:Body></soap:Envelope>

@@ -16,7 +16,7 @@
             <param name="httpClient"></param>
             <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
         </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage)">
+        <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Will return the response when a matching call gets fired, but only once
             if you expect this endpoint to be called X times, add X mock endpoints
@@ -25,8 +25,9 @@
             <param name="httpMethod"></param>
             <param name="Url"></param>
             <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
+            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Exception)">
+        <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Exception,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Will throw an exception when a matching call gets fired, but only once
             if you expect this endpoint to be called X times, add X mock endpoints
@@ -35,6 +36,7 @@
             <param name="httpMethod"></param>
             <param name="Url"></param>
             <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
+            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         </member>
         <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionLogs(System.Net.Http.HttpClient)">
             <summary>
@@ -78,7 +80,7 @@
             <param name="response"></param>
             <param name="dtoModifier"></param>
         </member>
-        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadBody``1(System.Net.Http.HttpResponseMessage)">
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadJsonBody``1(System.Net.Http.HttpResponseMessage)">
             <summary>
             Read the response body and parset as a given class
             </summary>
@@ -92,6 +94,11 @@
             </summary>
             <param name="httpResponse"></param>
             <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.CustomEndpointBehaviour">
+            <summary>
+            copied from https://medium.com/trueengineering/realization-of-the-connections-pool-with-wcf-for-net-core-with-usage-of-httpclientfactory-c2cb2676423e
+            </summary>
         </member>
         <member name="M:SystemTestingTools.FileWriter.Write(SystemTestingTools.RequestResponse)">
             <summary>
@@ -124,7 +131,7 @@
             Use this handle to record responses you get, so you can use it for mocking later
             </summary>
         </member>
-        <member name="M:SystemTestingTools.RequestResponseRecorder.#ctor(System.String,System.String)">
+        <member name="M:SystemTestingTools.RequestResponseRecorder.#ctor(System.String,System.Boolean,System.String)">
             <summary>
             Hander to save request and responses information
             </summary>
@@ -142,6 +149,11 @@
         <member name="M:SystemTestingTools.StringFormattingHelper.FormatJson(System.String)">
             <summary>
             copied from https://stackoverflow.com/questions/4580397/json-formatter-in-c
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.StringFormattingHelper.FormatXml(System.String)">
+            <summary>
+            copied from https://stackoverflow.com/questions/1123718/format-xml-string-to-print-friendly-xml-string
             </summary>
         </member>
         <member name="T:SystemTestingTools.NonFunctionalLogger">
@@ -222,6 +234,24 @@
             <param name="statusCode"></param>
             <returns></returns>
         </member>
+        <member name="T:SystemTestingTools.WcfHttpInterceptor">
+            <summary>
+            methods that allows you to work with WCF http calls
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateRequestResponseRecorder(System.String)">
+            <summary>
+            Create an IEndpointBehavior that will save requests and responses in a text file in a folder
+            </summary>
+            <param name="folderName">where the files will be saved</param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateInterceptor">
+            <summary>
+            Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with mock responses instead
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:SystemTestingTools.WebHostBuilderExtensions">
             <summary>
             Extends WebHostBuilder to allow interception of Http calls and logs
@@ -229,7 +259,14 @@
         </member>
         <member name="M:SystemTestingTools.WebHostBuilderExtensions.ConfigureInterceptionOfHttpCalls(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
             <summary>
-            Intercept outgoing Http calls so we can return mocks and make assertions later
+            obsolete method
+            </summary>
+            <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.WebHostBuilderExtensions.ConfigureInterceptionOfHttpClientCalls(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
+            <summary>
+            Intercept outgoing HttpClient calls so we can return mocks and make assertions later
             </summary>
             <param name="builder"></param>
             <returns></returns>

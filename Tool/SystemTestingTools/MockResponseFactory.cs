@@ -66,7 +66,8 @@ namespace SystemTestingTools
             }
             var format = Helper.ParseContentType(contentType);
 
-            response.Content = new StringContent(fileParts.Groups[4].Value.Trim(), format.encoding, format.mediaType);
+            var body = fileParts.Groups[4].Value.Trim();
+            response.Content = new StringContent(body, format.encoding, format.mediaType);
 
             if (headerDic != null)
                 foreach (var header in headerDic)

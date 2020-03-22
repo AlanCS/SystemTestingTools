@@ -29,6 +29,8 @@ namespace IsolatedTests.ComponentTestings
         {
             MocksFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Mocks";
 
+            Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
+
             var builder = new WebHostBuilder()
                 .UseStartup<Startup>()
                 .ConfigureAppConfiguration((hostingContext, config) =>
@@ -39,7 +41,7 @@ namespace IsolatedTests.ComponentTestings
                     config.AddJsonFile("appsettings.SystemTesting.json", optional: false, reloadOnChange: true);
                 })
                 .UseNLog()
-                .ConfigureInterceptionOfHttpCalls()
+                .ConfigureInterceptionOfHttpClientCalls()
                 .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
                                 namespaceToIncludeStart: new[] { "MovieProject" },
                                 namespaceToExcludeStart: new[] { "Microsoft" })

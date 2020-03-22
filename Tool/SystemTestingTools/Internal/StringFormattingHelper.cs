@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
 
 namespace SystemTestingTools
 {
@@ -76,6 +77,24 @@ namespace SystemTestingTools
             foreach (var i in ie)
             {
                 action(i);
+            }
+        }
+
+        /// <summary>
+        /// copied from https://stackoverflow.com/questions/1123718/format-xml-string-to-print-friendly-xml-string
+        /// </summary>
+        internal static string FormatXml(this string xml)
+        {
+            try
+            {
+                var doc = XDocument.Parse(xml);
+                if (doc.Declaration != null) return doc.Declaration + Environment.NewLine + doc.ToString();
+                return doc.ToString();
+            }
+            catch (Exception)
+            {
+                // Handle and throw if fatal exception here; don't just ignore them
+                return xml;
             }
         }
     }

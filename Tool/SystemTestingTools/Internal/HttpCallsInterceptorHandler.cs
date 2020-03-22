@@ -28,7 +28,7 @@ namespace SystemTestingTools
             MockInstrumentation.OutgoingRequests[session].Add(requestWrapper);
 
             // there could be more than one mock for the same endpoint, perhaps returning different responses, we grab the first
-            var match = MockInstrumentation.MockedEndpoints[session].FirstOrDefault(c => c.Endpoint == requestWrapper.GetEndpoint());
+            var match = MockInstrumentation.MockedEndpoints[session].FirstOrDefault(c => c.IsMatch(requestWrapper));
 
             if (match == null)
                 throw new ApplicationException($"No mocks found for [{requestWrapper.GetEndpoint()}], please make sure you called 'AppendMockHttpCall'");

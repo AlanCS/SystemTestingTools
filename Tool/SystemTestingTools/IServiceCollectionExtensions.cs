@@ -14,7 +14,7 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static IServiceCollection RecordHttpRequestsAndResponses(this IServiceCollection serviceCollection, string folder)
         {
-            serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder)));                
+            serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false)));                
 
             return serviceCollection;
         }

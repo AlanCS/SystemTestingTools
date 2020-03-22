@@ -26,7 +26,7 @@ namespace SystemTestingTools.UnitTests
 
             RequestResponseRecorder.FileWriter = NSubstitute.Substitute.For<IFileWriter>();
 
-            var sut = new RequestResponseRecorder("");            
+            var sut = new RequestResponseRecorder("", false);            
 
             // act
             var result =  await sut.Summarize(request, response);
@@ -37,7 +37,7 @@ namespace SystemTestingTools.UnitTests
             result.Metadata.LocalMachine = System.Environment.MachineName;
             result.Metadata.RequestedByCode.ShouldEndWith(@"Tool\SystemTestingTools.UnitTests\RequestResponseRecorderTests.cs");
             result.Metadata.ToolUrl.ShouldBe(Constants.Website);
-            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.2.0.0");
+            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.0.0");
             result.Metadata.User.ShouldContain(System.Environment.UserName);
             result.Metadata.Timezone.ShouldNotBeNullOrWhiteSpace();
             result.Metadata.DateTime.ShouldBeLessThan(System.DateTime.Now.AddSeconds(1));

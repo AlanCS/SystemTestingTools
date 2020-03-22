@@ -4,9 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-
-
-
 namespace SystemTestingTools
 {
     internal interface IFileWriter
@@ -68,7 +65,8 @@ namespace SystemTestingTools
             content.AppendLine($"REQUEST");
             content.AppendLine($"{log.Request.Method.ToString().ToLower()} {log.Request.Url}");
             AddHeadersToContent(log.Request.Headers);
-            if (log.Request.Body != null) content.AppendLine(log.Request.Body);
+            if (log.Request.Body != null)
+                content.AppendLine(FormatBody(log.Request.Body, log.Request.Headers.GetValueOrDefault("Content-Type"), false));
 
             // lots of thought went into the bellow lines, because a separator needed to be created to split the response that
             // the method ResponseFactory.FromFiddlerLikeResponseFile can read, from (optional) comments
@@ -89,7 +87,7 @@ namespace SystemTestingTools
             content.AppendLine();
 
             if (log.Response.Body != null)
-                content.AppendLine(FormatBody(log.Response.Body, log.Response.Headers.GetValueOrDefault("Content-Type")));
+                content.AppendLine(FormatBody(log.Response.Body, log.Response.Headers.GetValueOrDefault("Content-Type"), true));
 
             var filename = $"{_callsCounter}_{log.Response.Status}";
             _fileSystem.CreateNewTextFile(folder, filename, content.ToString().Trim());
@@ -103,7 +101,7 @@ namespace SystemTestingTools
             }
         }
 
-        internal string FormatBody(string body, string contentType)
+        internal string FormatBody(string body, string contentType, bool isResponse)
         {
             if (string.IsNullOrEmpty(contentType)) return body;
 
@@ -113,6 +111,10 @@ namespace SystemTestingTools
 
             if (contentType.StartsWith("application/json"))
                 return body.FormatJson();
+
+            if (contentType.StartsWith("application/xml") || contentType.StartsWith("text/xml"))
+                if(!isResponse) // formatting XML responses of WCF seems to make it non readable for some reason. something to look into more deeply one day
+                    return body.FormatXml();
 
             return body;
         }
