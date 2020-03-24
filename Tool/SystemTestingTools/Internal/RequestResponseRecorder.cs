@@ -20,16 +20,12 @@ namespace SystemTestingTools
         private readonly string _callerPath;
         private string _toolNameAndVersion;
 
-        /// <summary>
-        /// Hander to save request and responses information
-        /// </summary>
-        /// <param name="Folder">Folder full path where the response text files will be saved</param>
-        /// <param name="CallerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
-        public RequestResponseRecorder(string Folder, bool isWcf, [CallerFilePath]string CallerPath = "")
+
+        public RequestResponseRecorder(string Folder, bool isWcf, string callerPath)
         {
             if(FileWriter == null) FileWriter = new FileWriter(Folder);
 
-            _callerPath = CallerPath;
+            _callerPath = callerPath;
 
             SetupToolNameVersion();
 

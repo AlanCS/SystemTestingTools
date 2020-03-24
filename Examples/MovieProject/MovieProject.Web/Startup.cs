@@ -53,7 +53,7 @@ namespace MovieProject.Web
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHealthChecks();
-            services.RecordHttpRequestsAndResponses("C:\\RecordedRequestAndResponses");
+            services.RecordHttpClientRequestsAndResponses("C:\\RecordedRequestAndResponses");
         }
 
         private void AddHttpDependencies(IServiceCollection services)

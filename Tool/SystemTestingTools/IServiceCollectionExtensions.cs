@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Http;
 using SystemTestingTools.Internal;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.CompilerServices;
+using System;
 
 namespace SystemTestingTools
 {
@@ -11,10 +13,19 @@ namespace SystemTestingTools
         /// </summary>
         /// <param name="serviceCollection"></param>
         /// <param name="folder">Folder full path where the response text files will be saved</param>
+        /// <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
         /// <returns></returns>
-        public static IServiceCollection RecordHttpRequestsAndResponses(this IServiceCollection serviceCollection, string folder)
+        public static IServiceCollection RecordHttpClientRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
         {
-            serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false)));                
+            serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false, callerPath)));                
+
+            return serviceCollection;
+        }
+
+        [Obsolete("Please use RecordHttpClientRequestsAndResponses instead")]
+        public static IServiceCollection RecordHttpRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
+        {
+            serviceCollection.RecordHttpClientRequestsAndResponses(folder, callerPath);
 
             return serviceCollection;
         }

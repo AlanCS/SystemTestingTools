@@ -201,7 +201,7 @@ using SystemTestingTools;
 
 public virtual void ConfigureServices(IServiceCollection services)
 {
-    services.RecordHttpRequestsAndResponses("C:\\temp"); // add this line
+    services.RecordHttpClientRequestsAndResponses("C:\\RecordedRequestAndResponses"); // add this line
 }
 ```
 
@@ -216,7 +216,7 @@ Date: 2019-03-20 18:51:47.189 (UTC+10:00) Canberra, Melbourne, Sydney
 Requested by code: C:\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
 Local machine: DESKTOP-OGVA1EU
 User: DESKTOP-OGVA1EU\AlanPC
-Using tool: SystemTestingTools 1.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Using tool: SystemTestingTools 1.3.1.0 (https://github.com/AlanCS/SystemTestingTools/)
 
 REQUEST
 get http://www.omdbapi.com/someendpoint?search=weird_movie_title

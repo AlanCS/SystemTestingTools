@@ -131,13 +131,6 @@
             Use this handle to record responses you get, so you can use it for mocking later
             </summary>
         </member>
-        <member name="M:SystemTestingTools.RequestResponseRecorder.#ctor(System.String,System.Boolean,System.String)">
-            <summary>
-            Hander to save request and responses information
-            </summary>
-            <param name="Folder">Folder full path where the response text files will be saved</param>
-            <param name="CallerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
-        </member>
         <member name="M:SystemTestingTools.RequestResponseRecorder.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
             <summary>
             Lets outgoing requests pass through, to log requests and responses
@@ -161,12 +154,13 @@
             class used to assign as a mandatory logger but does not log anything, because the namespace is not one we are interested in
             </summary>
         </member>
-        <member name="M:SystemTestingTools.IServiceCollectionExtensions.RecordHttpRequestsAndResponses(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
+        <member name="M:SystemTestingTools.IServiceCollectionExtensions.RecordHttpClientRequestsAndResponses(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String)">
             <summary>
             Will intercept every http call, and record details of the request and response in a text file, this file can be used later to load up stubs, so you can test without hitting external dependencies
             </summary>
             <param name="serviceCollection"></param>
             <param name="folder">Folder full path where the response text files will be saved</param>
+            <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
             <returns></returns>
         </member>
         <member name="T:SystemTestingTools.LoggedEvent">
@@ -239,11 +233,12 @@
             methods that allows you to work with WCF http calls
             </summary>
         </member>
-        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateRequestResponseRecorder(System.String)">
+        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateRequestResponseRecorder(System.String,System.String)">
             <summary>
             Create an IEndpointBehavior that will save requests and responses in a text file in a folder
             </summary>
             <param name="folderName">where the files will be saved</param>
+            <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
             <returns></returns>
         </member>
         <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateInterceptor">
