@@ -19,7 +19,7 @@ namespace SystemTestingTools
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        [Obsolete("Please use ConfigureInterceptionOfHttpClientCalls() instead")]
+        [Obsolete("Please use ConfigureInterceptionOfHttpClientCalls() instead", true)]
         public static IWebHostBuilder ConfigureInterceptionOfHttpCalls(this IWebHostBuilder builder)
         {
             return ConfigureInterceptionOfHttpClientCalls(builder);

@@ -1,3 +1,7 @@
+## 1.3.1
+- Bug fix
+    - Fixed bug where generated recorded files, the displayed source file was incorrect
+
 ## 1.3.0
 - New feature
     - Introduced support for interception WCF HTTP calls

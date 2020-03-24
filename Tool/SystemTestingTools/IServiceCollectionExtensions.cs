@@ -22,7 +22,7 @@ namespace SystemTestingTools
             return serviceCollection;
         }
 
-        [Obsolete("Please use RecordHttpClientRequestsAndResponses instead")]
+        [Obsolete("Please use RecordHttpClientRequestsAndResponses instead", true)]
         public static IServiceCollection RecordHttpRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
         {
             serviceCollection.RecordHttpClientRequestsAndResponses(folder, callerPath);

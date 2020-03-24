@@ -8,7 +8,7 @@
     * recording live outgoing calls (requests and responses)
 * asserting logs
 
-[Nuget package](https://www.nuget.org/packages/SystemTestingTools)
+[Nuget package](https://www.nuget.org/packages/SystemTestingTools) | [CHANGE LOG](CHANGELOG.md)
 
 Recommended article to understand the philosophy behind T shaped testing, and how to best leverage this tool:  https://www.linkedin.com/pulse/evolving-past-test-pyramid-shaped-testing-alan-sarli
 
@@ -85,9 +85,7 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
 
 # Setup
 
-## For HttpClient calls
-
-When creating your WebHostBuilder in your test project, add
+When creating your WebHostBuilder in your test project, to support HttpClient calls, add
 
 ```C#
 .ConfigureInterceptionOfHttpClientCalls()
@@ -98,29 +96,6 @@ When creating your WebHostBuilder in your test project, add
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L42)
 
 Explanation: ConfigureInterceptionOfHttpClientCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a mock response, configured as above by the method AppendMockHttpCall().
-
-## For WCF http calls
-
-Unfortunately the  HTTP Client used by WCF Http calls is created internally, so intercepting it requires a bit more manual work
-```C#
-// in your Startup.cs, you need to add the line bellow
-public static IEndpointBehavior wcfInterceptor = null;
-
-// in your ConfigureServices method, you will add one line to the setup of your WCF interface
-services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
-    var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
-    client.Endpoint.Address = new EndpointAddress(_configuration["Url"]);
-    if (wcfInterceptor != null) client.Endpoint.EndpointBehaviors.Add(wcfInterceptor); // add this line to  allow interception
-    return client;
-});
-```
-[Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L99)
-
-And before setting up your TestServer
-```C#
-Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
-```
-[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L32)
 
 # Extra capabilities
 
@@ -258,6 +233,36 @@ response.ModifyJsonBody<DTO.User[]>(dto =>
 ```
 
 ModifyJsonBody() can be useful to make small changes to a complex DTO you just loaded from disk, so you don't need to store lots of small variantions of possible responses, you can make changes to it in code. [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetUserHappyTests.cs#L35)
+
+## 5 - Supporting WFC Http calls
+
+Unfortunately the  HTTP Client used by WCF Http calls is created internally, so intercepting it requires a bit more manual work
+```C#
+// in your Startup.cs, you need to add the line bellow
+public static IEndpointBehavior wcfInterceptor = null;
+
+// in your ConfigureServices method, you will add one line to the setup of your WCF interface
+services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
+    var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
+    client.Endpoint.Address = new EndpointAddress(_configuration["Url"]);
+    if (wcfInterceptor != null) client.Endpoint.EndpointBehaviors.Add(wcfInterceptor); // add this line to  allow interception
+    return client;
+});
+```
+[Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L99)
+
+And before setting up your TestServer
+```C#
+Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
+```
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L32)
+
+And then you can mock WCF Http calls, example (and you can use the header filters to avoid crossed wires):
+```C#
+var wcfResponse = ResponseFactory.FromFiddlerLikeResponseFile($"SOAP_Successful_Add.txt");
+client.AppendMockHttpCall(HttpMethod.Post, new System.Uri("http://www.dneonline.com/calculator.asmx"), wcfResponse, new Dictionary<string, string>() { { "SOAPAction", @"""http://tempuri.org/Add""" } });
+```
+[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/MathHappyTests.cs#L27)
 
 # Recommendations
 
