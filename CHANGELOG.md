@@ -1,3 +1,8 @@
+## 1.3.2
+- Bug fix
+    - ReadJsonBody<T> is now case insensitive
+    - XML responses saved by Recorder are now properly indented for easy visualization
+
 ## 1.3.1
 - Bug fix
     - Fixed bug where generated recorded files, the displayed source file was incorrect

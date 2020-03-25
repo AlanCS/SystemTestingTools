@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using static SystemTestingTools.RequestResponse;
+
 namespace SystemTestingTools
 {
     internal interface IFileWriter
@@ -64,9 +66,7 @@ namespace SystemTestingTools
             content.AppendLine();
             content.AppendLine($"REQUEST");
             content.AppendLine($"{log.Request.Method.ToString().ToLower()} {log.Request.Url}");
-            AddHeadersToContent(log.Request.Headers);
-            if (log.Request.Body != null)
-                content.AppendLine(FormatBody(log.Request.Body, log.Request.Headers.GetValueOrDefault("Content-Type"), false));
+            AddHeadersAndBody(log.Request);
 
             // lots of thought went into the bellow lines, because a separator needed to be created to split the response that
             // the method ResponseFactory.FromFiddlerLikeResponseFile can read, from (optional) comments
@@ -83,40 +83,66 @@ namespace SystemTestingTools
 
             // details about response
             content.AppendLine($"HTTP/{log.Response.HttpVersion} {(int)log.Response.Status} {log.Response.Status}");
-            AddHeadersToContent(log.Response.Headers);
-            content.AppendLine();
-
-            if (log.Response.Body != null)
-                content.AppendLine(FormatBody(log.Response.Body, log.Response.Headers.GetValueOrDefault("Content-Type"), true));
+            AddHeadersAndBody(log.Response);
 
             var filename = $"{_callsCounter}_{log.Response.Status}";
             _fileSystem.CreateNewTextFile(folder, filename, content.ToString().Trim());
 
             return filename;
 
-            // new feature in C#7 (https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/classes-and-structs/local-functions)
-            void AddHeadersToContent(Dictionary<string, string> headers)
+            void AddHeadersAndBody(RequestResponseInfo requestOrResponse)
             {
-                headers.ToList().ForEach((header) => content.AppendLine($"{header.Key}:{header.Value}"));
+                var contentType = GetKnownContentTypes(requestOrResponse.Headers.GetValueOrDefault("Content-Type"));
+
+                bool IsResponseXml = requestOrResponse is ResponseInfo && contentType == KnownContentTypes.Xml;
+
+                foreach (var header in requestOrResponse.Headers.ToList())
+                {
+                    // we skip Content-Length for XML responses (liked WCF), because for some reason when trying to read XML responses (that have been changed by formatting)
+                    // the content-length being smaller seems to throw WCF readers out and cause exceptions
+                    if (header.Key.ToLower() == "content-length" && IsResponseXml) continue;
+
+                    content.AppendLine($"{header.Key}:{header.Value}");
+                }
+                content.AppendLine();
+
+                if (requestOrResponse.Body == null) return;                
+
+                switch (contentType)
+                {
+                    case KnownContentTypes.Json:
+                        content.AppendLine(requestOrResponse.Body.FormatJson());
+                        break;
+                    case KnownContentTypes.Xml:
+                        content.AppendLine(requestOrResponse.Body.FormatXml());
+                        break;
+                    case KnownContentTypes.Other:
+                        content.AppendLine(requestOrResponse.Body);
+                        break;
+                }
             }
         }
 
-        internal string FormatBody(string body, string contentType, bool isResponse)
+        enum KnownContentTypes
         {
-            if (string.IsNullOrEmpty(contentType)) return body;
+            Json,
+            Xml,
+            Other // for now, we only care about the most common
+        }
+
+        private KnownContentTypes GetKnownContentTypes(string contentType)
+        {
+            if (string.IsNullOrEmpty(contentType)) return KnownContentTypes.Other;
 
             contentType = contentType.ToLower();
 
-            // we format JSONs because it's a common format and it makes it way easier to visualize
-
             if (contentType.StartsWith("application/json"))
-                return body.FormatJson();
+                return KnownContentTypes.Json;
 
             if (contentType.StartsWith("application/xml") || contentType.StartsWith("text/xml"))
-                if(!isResponse) // formatting XML responses of WCF seems to make it non readable for some reason. something to look into more deeply one day
-                    return body.FormatXml();
+                return KnownContentTypes.Xml;
 
-            return body;
+            return KnownContentTypes.Other;
         }
     }
 }

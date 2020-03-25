@@ -1,18 +1,19 @@
 METADATA
-Observations: Example of SOAP add function
-Date: 2020-03-22 22:03:58.769 (UTC+10:00) Canberra, Melbourne, Sydney
-Requested by code: C:\Users\Alan\Documents\GitHub\SystemTestingTools\Tool\SystemTestingTools\WcfHttpInterceptor.cs
+Observations: a simple example of calling the add function
+Date: 2020-03-24 22:22:41.168 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
 Local machine: DESKTOP-ODVA6EU
 User: DESKTOP-ODVA6EU\AlanPC
-Using tool: SystemTestingTools 1.3.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Using tool: SystemTestingTools 1.3.1.0 (https://github.com/AlanCS/SystemTestingTools/)
 
 REQUEST
 post http://www.dneonline.com/calculator.asmx
 Cache-Control:no-cache, max-age=0
 SOAPAction:"http://tempuri.org/Add"
-Request-Id:|f62d8d50-40a6ca8c6cccc69b.1.
+Request-Id:|9e2f34d8-43adf96f6ee97237.1.
 Content-Type:text/xml; charset=utf-8
 Content-Length:161
+
 <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
   <s:Body>
     <Add xmlns="http://tempuri.org/">
@@ -29,8 +30,14 @@ Cache-Control:max-age=0, private
 Server:Microsoft-IIS/7.5
 X-AspNet-Version:2.0.50727
 X-Powered-By:ASP.NET
-Date:Mon, 23 Mar 2020 09:21:22 GMT
-Content-Length:326
+Date:Tue, 24 Mar 2020 11:22:40 GMT
 Content-Type:text/xml; charset=utf-8
 
-<?xml version="1.0" encoding="utf-8"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"><soap:Body><AddResponse xmlns="http://tempuri.org/"><AddResult>10</AddResult></AddResponse></soap:Body></soap:Envelope>
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <AddResponse xmlns="http://tempuri.org/">
+      <AddResult>10</AddResult>
+    </AddResponse>
+  </soap:Body>
+</soap:Envelope>

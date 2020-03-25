@@ -29,6 +29,8 @@ namespace SystemTestingTools
             response.Content = new StringContent(JsonSerializer.Serialize(dto), enconding, mediaType);
         }
 
+        private static readonly JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+
         /// <summary>
         /// Read the response body and parset as a given class
         /// </summary>
@@ -38,7 +40,7 @@ namespace SystemTestingTools
         public static async Task<T> ReadJsonBody<T>(this HttpResponseMessage httpResponse) where T : class
         {
             var content = await httpResponse.ReadBody() ?? throw new ArgumentNullException("Body is null or empty");
-            var dto = JsonSerializer.Deserialize<T>(content);
+            var dto = JsonSerializer.Deserialize<T>(content, options);
             return dto;
         }
 

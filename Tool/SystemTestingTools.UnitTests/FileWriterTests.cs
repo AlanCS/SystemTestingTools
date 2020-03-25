@@ -23,6 +23,7 @@ Using tool: SystemTestingTools 0.1.0.0 (http://www.whatever.com)
 REQUEST
 post https://www.whatever.com/someendpoint
 User-Agent:MyApp
+
 {""user"":""Alan"", ""trickyField"":""--!?@Divider:"", ""trickyField2"":""HTTP/1.1 200 OK""}
 
 --!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
@@ -98,44 +99,6 @@ Server:Kestrel
 
             foreach (var item in input.Response.Headers)
                 deserializedResponse.Headers.ShouldContainHeader(item.Key, item.Value);
-        }
-
-        [Fact]
-        public void When_ContentTypeIsJson_FormatBody()
-        {
-            var sut = new FileWriter(folder);
-
-            var json = @"{""glossary"": {""title"": ""example glossary"",""GlossDiv"": {""title"": ""S"",""GlossList"": {""GlossEntry"": {""ID"": ""SGML"",""SortAs"": ""SGML"",""GlossTerm"": ""Standard Generalized Markup Language"",""Acronym"": ""SGML"",""Abbrev"": ""ISO 8879:1986"",""GlossDef"": {""para"": ""A meta-markup language, used to create markup languages such as DocBook."",""GlossSeeAlso"": [""GML"", ""XML""]},""GlossSee"": ""markup""}}}}}";
-
-            // act
-            var body = sut.FormatBody(json, @"Application/Json", false);
-
-            // asserts
-            body.ShouldBe(@"{
-    ""glossary"":  {
-        ""title"":  ""example glossary"",
-        ""GlossDiv"":  {
-            ""title"":  ""S"",
-            ""GlossList"":  {
-                ""GlossEntry"":  {
-                    ""ID"":  ""SGML"",
-                    ""SortAs"":  ""SGML"",
-                    ""GlossTerm"":  ""Standard Generalized Markup Language"",
-                    ""Acronym"":  ""SGML"",
-                    ""Abbrev"":  ""ISO 8879:1986"",
-                    ""GlossDef"":  {
-                        ""para"":  ""A meta-markup language, used to create markup languages such as DocBook."",
-                        ""GlossSeeAlso"":  [
-                            ""GML"",
-                             ""XML""
-                        ]
-                    },
-                    ""GlossSee"":  ""markup""
-                }
-            }
-        }
-    }
-}");
         }
     }
 }
