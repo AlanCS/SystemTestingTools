@@ -24,10 +24,26 @@ namespace SystemTestingTools
             this.RequestTime = DateTime.Now;
         }
 
-        internal string GetEndpoint()
+        /// <summary>
+        /// Get the full endpoint, in the format "HttpVerb FullUrl"
+        /// </summary>
+        /// <returns></returns>
+        public string GetEndpoint()
         {
             var endpoint = string.Format($"{Request.Method} {Request.RequestUri}");
             return endpoint;
+        }
+
+        /// <summary>
+        /// Get the values of a header separated by comma, null if not present
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public string GetHeaderValue(string key)
+        {
+            if (!Request.Headers.Contains(key)) return null;
+
+            return string.Join(",", Request.Headers.GetValues(key));
         }
     }
 }

@@ -64,8 +64,8 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
     // assert outgoing (make sure the requests were exactly how we expected)
     var outgoingRequests = client.GetSessionOutgoingRequests();
     outgoingRequests.Count.ShouldBe(1);
-    outgoingRequests[0].ShouldBeEndpoint($"GET https://www.mydependency.com/api/SomeEndpoint/matrix");
-    outgoingRequests[0].ShouldContainHeader("User-Agent", "My app Name");
+    outgoingRequests[0].GetEndpoint().ShouldBe($"GET https://www.mydependency.com/api/SomeEndpoint/matrix");
+    outgoingRequests[0].GetHeaderValue("User-Agent").ShouldBe("My app Name");
 
     // assert return
     httpResponse.ShouldNotBeNull();
@@ -96,6 +96,8 @@ When creating your WebHostBuilder in your test project, to support HttpClient ca
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L42)
 
 Explanation: ConfigureInterceptionOfHttpClientCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a mock response, configured as above by the method AppendMockHttpCall().
+
+InterceptLogs() allows namespaces to include or exclude in the logs, first the inclusion filter is executed, then the exclusion one. So if you configure namespaceToIncludeStart: new[] { "MovieProject" } namespaceToExcludeStart: new[] { "MovieProject.Proxy" }; then you will get all logs logged from classes whose namespace starts with MovieProject, except if they start with MovieProject.Proxy
 
 # Extra capabilities
 

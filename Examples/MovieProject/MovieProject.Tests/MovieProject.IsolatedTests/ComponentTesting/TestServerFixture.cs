@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MovieProject.Web;
-using NLog.Web;
 using System;
 using System.Linq;
 using System.Net.Http;
@@ -38,13 +37,12 @@ namespace IsolatedTests.ComponentTestings
                     // use the same settings as the website (linked referenced)
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true); 
                     // make small changes to configuration, such as disabling caching
-                    config.AddJsonFile("appsettings.SystemTesting.json", optional: false, reloadOnChange: true);
-                })
-                .UseNLog()
+                    config.AddJsonFile("appsettings.tests.json", optional: false, reloadOnChange: true);
+                })                
                 .ConfigureInterceptionOfHttpClientCalls()
                 .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
                                 namespaceToIncludeStart: new[] { "MovieProject" },
-                                namespaceToExcludeStart: new[] { "Microsoft" })
+                                namespaceToExcludeStart: new[] { "Microsoft" }) // redundand exclusion, just here to show the possible configuration
                 .UseEnvironment("Development");
 
             Server = new TestServer(builder);   

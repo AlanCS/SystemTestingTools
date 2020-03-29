@@ -67,6 +67,19 @@
             When the Http request happened
             </summary>
         </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.GetEndpoint">
+            <summary>
+            Get the full endpoint, in the format "HttpVerb FullUrl"
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.GetHeaderValue(System.String)">
+            <summary>
+            Get the values of a header separated by comma, null if not present
+            </summary>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
         <member name="T:SystemTestingTools.HttpResponseMessageExtensions">
             <summary>
             Useful extensions for the microsoft HttpResponseMessage

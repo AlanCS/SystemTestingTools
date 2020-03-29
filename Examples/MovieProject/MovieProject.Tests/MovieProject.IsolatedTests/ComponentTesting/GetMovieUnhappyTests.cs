@@ -1,4 +1,3 @@
-using IsolatedTests.Helpers;
 using MovieProject.Web;
 using Shouldly;
 using System.Net;
@@ -167,8 +166,8 @@ namespace IsolatedTests.ComponentTestings
 
         private void AssertMatrixEndpointCalled(HttpRequestMessageWrapper request)
         {
-            request.ShouldBeEndpoint($"GET {MatrixMovieUrl}");
-            request.ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
+            request.GetEndpoint().ShouldBe($"GET {MatrixMovieUrl}");
+            request.GetHeaderValue("Referer").ShouldBe(MovieProject.Logic.Constants.Website);
         }
     }
 }

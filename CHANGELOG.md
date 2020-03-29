@@ -1,3 +1,7 @@
+## 1.3.3
+- New feature
+    - New HttpRequestMessageWrapper methods: GetEndpoint() will return "HttpMethod FullUrl", GetHeaderValue("headerName") will return header values separated by comma
+
 ## 1.3.2
 - Bug fix
     - ReadJsonBody<T> is now case insensitive

@@ -1,4 +1,3 @@
-using IsolatedTests.Helpers;
 using Shouldly;
 using System.Collections.Generic;
 using System.Net;
@@ -54,8 +53,8 @@ namespace IsolatedTests.ComponentTestings
 
                 // assert outgoing
                 var outgoingRequests = client.GetSessionOutgoingRequests();
-                outgoingRequests.Last().ShouldBeEndpoint($"POST {Url}"); // only the last one matters, as they accumulate over the 2 requests
-                outgoingRequests.Last().ShouldContainHeader("SOAPAction", string.Format(@"""http://tempuri.org/{0}""", soapMethodName));
+                outgoingRequests.Last().GetEndpoint().ShouldBe($"POST {Url}"); // only the last one matters, as they accumulate over the 2 requests
+                outgoingRequests.Last().GetHeaderValue("SOAPAction").ShouldBe(string.Format(@"""http://tempuri.org/{0}""", soapMethodName));
 
                 // assert return
                 httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);

@@ -1,4 +1,3 @@
-using IsolatedTests.Helpers;
 using Shouldly;
 using System.Collections.Generic;
 using System.Net;
@@ -47,8 +46,8 @@ namespace IsolatedTests.ComponentTestings
             // assert outgoing
             var outgoingRequests = client.GetSessionOutgoingRequests();
             outgoingRequests.Count.ShouldBe(1);
-            outgoingRequests[0].ShouldBeEndpoint($"GET {Url}");
-            outgoingRequests[0].ShouldContainHeader("Referer", MovieProject.Logic.Constants.Website);
+            outgoingRequests[0].GetEndpoint().ShouldBe($"GET {Url}");
+            outgoingRequests[0].GetHeaderValue("Referer").ShouldBe(MovieProject.Logic.Constants.Website);
 
             // assert return
             httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
