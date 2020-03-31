@@ -190,7 +190,7 @@ Example of generated file:
 METADATA
 Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
 Date: 2019-03-20 18:51:47.189 (UTC+10:00) Canberra, Melbourne, Sydney
-Requested by code: C:\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
 Local machine: DESKTOP-OGVA1EU
 User: DESKTOP-OGVA1EU\AlanPC
 Using tool: SystemTestingTools 1.3.1.0 (https://github.com/AlanCS/SystemTestingTools/)

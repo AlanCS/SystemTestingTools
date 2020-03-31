@@ -37,7 +37,7 @@ namespace SystemTestingTools
         {
             public DateTime DateTime;
             public string Timezone;
-            public string RequestedByCode;
+            public string RecordedFrom;
             public string LocalMachine;
             public string User;
             public string ToolUrl;

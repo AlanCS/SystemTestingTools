@@ -17,6 +17,7 @@ using System;
 using System.Net.Http;
 using System.ServiceModel;
 using System.ServiceModel.Description;
+using System.Text.Json.Serialization;
 using SystemTestingTools;
 //using SystemTestingTools; // you only need this line if you are planning to use IServiceCollection.RecordHttpRequestsAndResponses()
 
@@ -48,7 +49,11 @@ namespace MovieProject.Web
                                 .AsImplementedInterfaces()
                                 .WithScopedLifetime())
                 .AddMvc()
-                    .AddJsonOptions(options => options.JsonSerializerOptions.PropertyNamingPolicy = null)                
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+                        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+                    })
                 .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();

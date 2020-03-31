@@ -15,7 +15,7 @@ namespace SystemTestingTools.UnitTests
         readonly string expectedFileContent = @"METADATA
 Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
 Date: 2019-03-17 15:44:37.597 my_time_zone
-Requested by code: C:\temp\code.cs
+Recorded from: MovieProject.Web 1.2.0.1 (htts://localhost/api/whatever?param=2)
 Local machine: Machine001
 User: A01/MyUser
 Using tool: SystemTestingTools 0.1.0.0 (http://www.whatever.com)
@@ -58,7 +58,7 @@ Server:Kestrel
                     Timezone = "my_time_zone",
                     LocalMachine = "Machine001",
                     User = "A01/MyUser",
-                    RequestedByCode = @"C:\temp\code.cs",
+                    RecordedFrom = @"MovieProject.Web 1.2.0.1 (htts://localhost/api/whatever?param=2)",
                     ToolUrl = "http://www.whatever.com",
                     ToolNameAndVersion = "SystemTestingTools 0.1.0.0"
                 },

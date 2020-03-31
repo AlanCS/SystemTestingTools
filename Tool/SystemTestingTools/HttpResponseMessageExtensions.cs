@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace SystemTestingTools
@@ -29,7 +30,21 @@ namespace SystemTestingTools
             response.Content = new StringContent(JsonSerializer.Serialize(dto), enconding, mediaType);
         }
 
-        private static readonly JsonSerializerOptions options = new JsonSerializerOptions() { PropertyNameCaseInsensitive = true };
+        private static readonly object padlock = new object();
+        private static JsonSerializerOptions options = null;
+        private static JsonSerializerOptions GetJsonOptions()
+        {
+            if (options == null)
+                lock (padlock)
+                    if (options == null) // double lock for the win :)
+                    {
+                        options = new JsonSerializerOptions();
+                        options.PropertyNameCaseInsensitive = true;
+                        options.Converters.Add(new JsonStringEnumConverter());
+                    }
+
+            return options;
+        }
 
         /// <summary>
         /// Read the response body and parset as a given class
@@ -40,7 +55,7 @@ namespace SystemTestingTools
         public static async Task<T> ReadJsonBody<T>(this HttpResponseMessage httpResponse) where T : class
         {
             var content = await httpResponse.ReadBody() ?? throw new ArgumentNullException("Body is null or empty");
-            var dto = JsonSerializer.Deserialize<T>(content, options);
+            var dto = JsonSerializer.Deserialize<T>(content, GetJsonOptions());
             return dto;
         }
 

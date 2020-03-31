@@ -35,9 +35,12 @@ namespace SystemTestingTools.UnitTests
             result.ShouldNotBeNull();
 
             result.Metadata.LocalMachine = System.Environment.MachineName;
-            result.Metadata.RequestedByCode.ShouldEndWith(@"\folder\test.cs");
+
+            result.Metadata.RecordedFrom.ShouldStartWith(@"testhost");
+            result.Metadata.RecordedFrom.ShouldEndWith(@"(No httpcontext available)");
+
             result.Metadata.ToolUrl.ShouldBe(Constants.Website);
-            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.3.0");
+            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.4.0");
             result.Metadata.User.ShouldContain(System.Environment.UserName);
             result.Metadata.Timezone.ShouldNotBeNullOrWhiteSpace();
             result.Metadata.DateTime.ShouldBeLessThan(System.DateTime.Now.AddSeconds(1));

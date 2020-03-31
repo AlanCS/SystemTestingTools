@@ -1,34 +1,37 @@
 METADATA
-Date: 2019-03-24 21:30:34.573 (UTC+10:00) Canberra, Melbourne, Sydney
-Requested by code: C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+Observations: a popular movie that has all response fields filled up
+Date: 2020-03-31 19:32:14.710 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
 Local machine: DESKTOP-ODVA6EU
 User: DESKTOP-ODVA6EU\AlanPC
-Using tool: SystemTestingTools 0.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
-Observations: 
+Using tool: SystemTestingTools 1.3.4.0 (https://github.com/AlanCS/SystemTestingTools/)
 
 REQUEST
 get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=matrix
 Referer:https://github.com/AlanCS/SystemTestingTools
+Request-Id:|75854d04-412c8255772b3bfe.1.
+
 
 --!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
 
 HTTP/1.1 200 OK
-Date:Sun, 24 Mar 2019 10:30:34 GMT
+Date:Tue, 31 Mar 2020 08:32:13 GMT
 Connection:keep-alive
-Set-Cookie:__cfduid=d2d5a20b9068101300f4129014b84b6541553423434; expires=Mon, 23-Mar-20 10:30:34 GMT; path=/; domain=.omdbapi.com; HttpOnly
+Set-Cookie:__cfduid=da1472fcb2e1cff4dc508d46457512edf1585643533; expires=Thu, 30-Apr-20 08:32:13 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
 Cache-Control:public, max-age=86400
 Vary:*
 X-AspNet-Version:4.0.30319
 X-Powered-By:ASP.NET
 Access-Control-Allow-Origin:*
 CF-Cache-Status:HIT
+Age:1451
 Accept-Ranges:bytes
 Server:cloudflare
-CF-RAY:4bc7f87148f06533-SYD
+CF-RAY:57c8b7f408fb65eb-SYD
 Content-Type:application/json; charset=utf-8
-Content-Length:1053
-Expires:Mon, 25 Mar 2019 10:30:34 GMT
-Last-Modified:Sat, 23 Mar 2019 22:26:49 GMT
+Content-Length:1026
+Expires:Tue, 31 Mar 2020 09:08:02 GMT
+Last-Modified:Tue, 31 Mar 2020 08:08:02 GMT
 
 {
     "Title": "The Matrix",
@@ -43,7 +46,7 @@ Last-Modified:Sat, 23 Mar 2019 22:26:49 GMT
     "Plot": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
     "Language": "English",
     "Country": "USA",
-    "Awards": "Won 4 Oscars. Another 34 wins & 48 nominations.",
+    "Awards": "Won 4 Oscars. Another 37 wins & 50 nominations.",
     "Poster": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
     "Ratings": [
         {
@@ -52,7 +55,7 @@ Last-Modified:Sat, 23 Mar 2019 22:26:49 GMT
         },
         {
             "Source": "Rotten Tomatoes",
-            "Value": "88%"
+            "Value": "87%"
         },
         {
             "Source": "Metacritic",
@@ -61,12 +64,12 @@ Last-Modified:Sat, 23 Mar 2019 22:26:49 GMT
     ],
     "Metascore": "73",
     "imdbRating": "8.7",
-    "imdbVotes": "1,480,934",
+    "imdbVotes": "1,584,862",
     "imdbID": "tt0133093",
     "Type": "movie",
     "DVD": "21 Sep 1999",
     "BoxOffice": "N/A",
     "Production": "Warner Bros. Pictures",
-    "Website": "http://www.whatisthematrix.com",
+    "Website": "N/A",
     "Response": "True"
 }

@@ -49,7 +49,8 @@ namespace MovieProject.Logic.Proxy
                     Name = externalDTO.Title.CleanNA(),
                     Year = externalDTO.Year.CleanYear(),
                     Plot = externalDTO.Plot.CleanNA(),
-                    Runtime = externalDTO.Runtime.FormatDuration()
+                    Runtime = externalDTO.Runtime.FormatDuration(),
+                    Language = externalDTO.Language.GetLanguage()
                 };
             });
 

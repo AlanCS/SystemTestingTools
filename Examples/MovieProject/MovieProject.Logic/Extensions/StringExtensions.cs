@@ -1,4 +1,6 @@
-﻿using System;
+﻿using MovieProject.Logic.DTO;
+using System;
+using System.Text.RegularExpressions;
 
 namespace MovieProject.Logic.Extensions
 {
@@ -26,7 +28,7 @@ namespace MovieProject.Logic.Extensions
         }
 
         // example 1998-2005
-        private static System.Text.RegularExpressions.Regex seriesYearsRegex = new System.Text.RegularExpressions.Regex("^(19|20)[0-9]{2}–(19|20)[0-9]{2}$");
+        private static readonly Regex seriesYearsRegex = new Regex("^(19|20)[0-9]{2}–(19|20)[0-9]{2}$");
         public static string CleanYear(this string yearString)
         {
             if (string.IsNullOrWhiteSpace(yearString)) return Constants.Unknown;
@@ -50,6 +52,18 @@ namespace MovieProject.Logic.Extensions
             originalString = originalString.Trim();
             if (originalString == "N/A") originalString = "";
             return originalString;
+        }
+
+        public static Media.Languages GetLanguage(this string languageString)
+        {
+            if(string.IsNullOrWhiteSpace(languageString)) return Media.Languages.Other;
+
+            languageString = languageString.ToLower();
+            if (languageString.Contains("english")) return Media.Languages.English;
+            if (languageString.Contains("french") || languageString.StartsWith("espa")) return Media.Languages.Spanish;
+            if (languageString.Contains("spanish") || languageString.StartsWith("français")) return Media.Languages.French;
+
+            return Media.Languages.Other;
         }
     }
 }

@@ -80,6 +80,7 @@ namespace IsolatedTests.ComponentTestings
             movie.Year.ShouldBe("1999");
             movie.Runtime.ShouldBe("2.3h");
             movie.Plot.ShouldBe("A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.");
+            movie.Language.ShouldBe(MovieProject.Logic.DTO.Media.Languages.English);
         }
 
         [Fact]

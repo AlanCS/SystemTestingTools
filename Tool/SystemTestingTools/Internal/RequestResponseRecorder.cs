@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,7 +66,8 @@ namespace SystemTestingTools
 
             result.Metadata.DateTime = DateTime.Now;
             result.Metadata.Timezone = TimeZoneInfo.Local.ToString();
-            result.Metadata.RequestedByCode = _callerPath;
+            result.Metadata.RecordedFrom = $"{MockInstrumentation.GetAppNameAndVersion()} ({MockInstrumentation.GetUrl()})";
+
             result.Metadata.User = $"{Environment.UserDomainName}\\{Environment.UserName}";
             result.Metadata.LocalMachine = Environment.MachineName;
             result.Metadata.ToolUrl = Constants.Website;

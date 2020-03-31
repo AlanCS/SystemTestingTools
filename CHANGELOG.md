@@ -1,3 +1,9 @@
+## 1.3.4
+- Bugfixes
+    - ReadJsonBody<T> now parses enums as strings
+- Change
+    - Recorded file now shows assembly name and version and url of initial request like MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
+
 ## 1.3.3
 - New feature
     - New HttpRequestMessageWrapper methods: GetEndpoint() will return "HttpMethod FullUrl", GetHeaderValue("headerName") will return header values separated by comma

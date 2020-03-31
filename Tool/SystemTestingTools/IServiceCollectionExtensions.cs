@@ -3,6 +3,7 @@ using SystemTestingTools.Internal;
 using Microsoft.Extensions.DependencyInjection;
 using System.Runtime.CompilerServices;
 using System;
+using Microsoft.AspNetCore.Http;
 
 namespace SystemTestingTools
 {
@@ -17,6 +18,13 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static IServiceCollection RecordHttpClientRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
         {
+            if (MockInstrumentation.context == null)
+            {
+                var services = serviceCollection.BuildServiceProvider();
+                var context = services.GetService<IHttpContextAccessor>();
+                MockInstrumentation.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+            }
+
             serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false, callerPath)));                
 
             return serviceCollection;
