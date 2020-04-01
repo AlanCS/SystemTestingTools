@@ -51,5 +51,27 @@ namespace SystemTestingTools
             foreach (var item in otherDic)
                 currentDic.Add(item.Key, item.Value);
         }
+
+        internal enum KnownContentTypes
+        {
+            Json,
+            Xml,
+            Other // for now, we only care about the most common
+        }
+
+        internal static KnownContentTypes GetKnownContentType(string contentType)
+        {
+            if (string.IsNullOrEmpty(contentType)) return KnownContentTypes.Other;
+
+            contentType = contentType.ToLower().Trim();
+
+            if (contentType.StartsWith("application/json") || contentType.StartsWith("text/json"))
+                return KnownContentTypes.Json;
+
+            if (contentType.StartsWith("application/xml") || contentType.StartsWith("text/xml"))
+                return KnownContentTypes.Xml;
+
+            return KnownContentTypes.Other;
+        }
     }
 }

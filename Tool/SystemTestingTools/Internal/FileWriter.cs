@@ -92,9 +92,9 @@ namespace SystemTestingTools
 
             void AddHeadersAndBody(RequestResponseInfo requestOrResponse)
             {
-                var contentType = GetKnownContentTypes(requestOrResponse.Headers.GetValueOrDefault("Content-Type"));
+                var contentType = Helper.GetKnownContentType(requestOrResponse.Headers.GetValueOrDefault("Content-Type"));
 
-                bool IsResponseXml = requestOrResponse is ResponseInfo && contentType == KnownContentTypes.Xml;
+                bool IsResponseXml = requestOrResponse is ResponseInfo && contentType == Helper.KnownContentTypes.Xml;
 
                 foreach (var header in requestOrResponse.Headers.ToList())
                 {
@@ -110,39 +110,19 @@ namespace SystemTestingTools
 
                 switch (contentType)
                 {
-                    case KnownContentTypes.Json:
+                    case Helper.KnownContentTypes.Json:
                         content.AppendLine(requestOrResponse.Body.FormatJson());
                         break;
-                    case KnownContentTypes.Xml:
+                    case Helper.KnownContentTypes.Xml:
                         content.AppendLine(requestOrResponse.Body.FormatXml());
                         break;
-                    case KnownContentTypes.Other:
+                    case Helper.KnownContentTypes.Other:
                         content.AppendLine(requestOrResponse.Body);
                         break;
                 }
             }
         }
 
-        enum KnownContentTypes
-        {
-            Json,
-            Xml,
-            Other // for now, we only care about the most common
-        }
 
-        private KnownContentTypes GetKnownContentTypes(string contentType)
-        {
-            if (string.IsNullOrEmpty(contentType)) return KnownContentTypes.Other;
-
-            contentType = contentType.ToLower();
-
-            if (contentType.StartsWith("application/json"))
-                return KnownContentTypes.Json;
-
-            if (contentType.StartsWith("application/xml") || contentType.StartsWith("text/xml"))
-                return KnownContentTypes.Xml;
-
-            return KnownContentTypes.Other;
-        }
     }
 }

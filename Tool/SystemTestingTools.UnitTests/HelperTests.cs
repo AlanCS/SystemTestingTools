@@ -32,5 +32,31 @@ namespace SystemTestingTools.UnitTests
             response.encoding.ShouldBe(Encoding.GetEncoding(encoding));
             response.mediaType.ShouldBe(mediaType);
         }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData("null")]
+        [InlineData("gibberish")]
+        [InlineData("text/plain")]
+        public void GetKnownContentType_tests(string value)
+        {
+            Helper.GetKnownContentType(value).ShouldBe(Helper.KnownContentTypes.Other);
+        }
+
+        [Theory]
+        [InlineData("application/xml")]
+        [InlineData("TEXT/xml")]
+        public void GetKnownContentType_Tests_Xml(string value)
+        {
+            Helper.GetKnownContentType(value).ShouldBe(Helper.KnownContentTypes.Xml);
+        }
+
+        [Theory]
+        [InlineData("application/json")]
+        [InlineData("TEXT/json")]
+        public void GetKnownContentType_Tests_Json(string value)
+        {
+            Helper.GetKnownContentType(value).ShouldBe(Helper.KnownContentTypes.Json);
+        }
     }
 }
