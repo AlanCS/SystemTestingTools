@@ -83,14 +83,14 @@ namespace SystemTestingTools
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            var session = MockInstrumentation.GetSession();
+            var session = ContextRepo.GetSession();
 
             var log = new LoggedEvent(logLevel, formatter(state, exception), source);
 
             if (session == null)
-                MockInstrumentation.UnsessionedLogs.Add(log);
+                ContextRepo.UnsessionedLogs.Add(log);
             else
-                MockInstrumentation.SessionLogs[session].Add(log);
+                ContextRepo.SessionLogs[session].Add(log);
         }
     }
 }

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SystemTestingTools
 {
     /// <summary>
-    /// Use this handle to record responses you get, so you can use it for mocking later
+    /// Use this handle to record responses you get, so you can use it for stubbing later
     /// </summary>
     internal class RequestResponseRecorder : DelegatingHandler
     {
@@ -66,7 +66,7 @@ namespace SystemTestingTools
 
             result.Metadata.DateTime = DateTime.Now;
             result.Metadata.Timezone = TimeZoneInfo.Local.ToString();
-            result.Metadata.RecordedFrom = $"{MockInstrumentation.GetAppNameAndVersion()} ({MockInstrumentation.GetUrl()})";
+            result.Metadata.RecordedFrom = $"{ContextRepo.GetAppNameAndVersion()} ({ContextRepo.GetUrl()})";
 
             result.Metadata.User = $"{Environment.UserDomainName}\\{Environment.UserName}";
             result.Metadata.LocalMachine = Environment.MachineName;

@@ -30,8 +30,8 @@ namespace IsolatedTests.ComponentTestings
             client.CreateSession();
             var exception = new HttpRequestException("weird network error");
             // add exception twice because we configured a retry
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
@@ -71,10 +71,10 @@ namespace IsolatedTests.ComponentTestings
 
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/{fileName}");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/{fileName}");
             // we add it twice to account for the recall attempt
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), response);
-            if(isTransientDownstreamError) client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), response);
+            if(isTransientDownstreamError) client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
@@ -110,9 +110,9 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/Fake_Responses/Unhappy/200_Unexpected_Json.txt");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Fake_Responses/Unhappy/200_Unexpected_Json.txt");
             // we add it twice to account for the recall attempt
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(MatrixMovieUrl), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");

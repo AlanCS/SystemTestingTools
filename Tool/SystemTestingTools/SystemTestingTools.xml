@@ -6,7 +6,7 @@
     <members>
         <member name="T:SystemTestingTools.HttpClientExtensions">
             <summary>
-            extensions to HttpClient to allow mocking and assertions
+            extensions to HttpClient to allow stubbing and assertions
             </summary>
         </member>
         <member name="M:SystemTestingTools.HttpClientExtensions.CreateSession(System.Net.Http.HttpClient)">
@@ -16,10 +16,10 @@
             <param name="httpClient"></param>
             <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
         </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Will return the response when a matching call gets fired, but only once
-            if you expect this endpoint to be called X times, add X mock endpoints
+            if you expect this endpoint to be called X times, add X stub endpoints
             </summary>
             <param name="httpClient"></param>
             <param name="httpMethod"></param>
@@ -27,10 +27,10 @@
             <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
             <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.AppendMockHttpCall(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Exception,System.Collections.Generic.Dictionary{System.String,System.String})">
+        <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Exception,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Will throw an exception when a matching call gets fired, but only once
-            if you expect this endpoint to be called X times, add X mock endpoints
+            if you expect this endpoint to be called X times, add X stub endpoints
             </summary>
             <param name="httpClient"></param>
             <param name="httpMethod"></param>
@@ -122,12 +122,12 @@
         </member>
         <member name="T:SystemTestingTools.HttpCallsInterceptorHandler">
             <summary>
-            The handler that will allow SystemTestingTools to intercept OUTGOING http calls and return mocks
+            The handler that will allow SystemTestingTools to intercept OUTGOING http calls and return stubs
             </summary>
         </member>
         <member name="M:SystemTestingTools.HttpCallsInterceptorHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
             <summary>
-            intercepts the http request that was about to hit a downstream server and return a mock instead
+            intercepts the http request that was about to hit a downstream server and return a stub instead
             </summary>
             <param name="request"></param>
             <param name="cancellationToken"></param>
@@ -141,7 +141,7 @@
         </member>
         <member name="T:SystemTestingTools.RequestResponseRecorder">
             <summary>
-            Use this handle to record responses you get, so you can use it for mocking later
+            Use this handle to record responses you get, so you can use it for stubbing later
             </summary>
         </member>
         <member name="M:SystemTestingTools.RequestResponseRecorder.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
@@ -196,12 +196,12 @@
             The class (with namespace) that logged it
             </summary>
         </member>
-        <member name="T:SystemTestingTools.MockInstrumentation">
+        <member name="T:SystemTestingTools.ContextRepo">
             <summary>
-            Contains a mock of usual instrumentation, containing logs and requests
+            Contains a stub of usual instrumentation, containing logs and requests
             </summary>
         </member>
-        <member name="F:SystemTestingTools.MockInstrumentation.UnsessionedLogs">
+        <member name="F:SystemTestingTools.ContextRepo.UnsessionedLogs">
             <summary>
             Get the logs not linked to any user session
             </summary>
@@ -256,7 +256,7 @@
         </member>
         <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateInterceptor">
             <summary>
-            Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with mock responses instead
+            Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with stub responses instead
             </summary>
             <returns></returns>
         </member>
@@ -274,7 +274,7 @@
         </member>
         <member name="M:SystemTestingTools.WebHostBuilderExtensions.ConfigureInterceptionOfHttpClientCalls(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
             <summary>
-            Intercept outgoing HttpClient calls so we can return mocks and make assertions later
+            Intercept outgoing HttpClient calls so we can return stubs and make assertions later
             </summary>
             <param name="builder"></param>
             <returns></returns>

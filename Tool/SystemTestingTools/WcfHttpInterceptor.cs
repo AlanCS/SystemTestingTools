@@ -20,7 +20,7 @@ namespace SystemTestingTools
         }
 
         /// <summary>
-        /// Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with mock responses instead
+        /// Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with stub responses instead
         /// </summary>
         /// <returns></returns>
         public static IEndpointBehavior CreateInterceptor()

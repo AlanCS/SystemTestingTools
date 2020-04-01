@@ -1,3 +1,7 @@
+## 1.3.5
+- Breaking change
+    - Renamed mentions of "mock" to "stub", because it's a more precise word to define what is being done
+    
 ## 1.3.4
 - Bugfixes
     - ReadJsonBody<T> now parses enums as strings

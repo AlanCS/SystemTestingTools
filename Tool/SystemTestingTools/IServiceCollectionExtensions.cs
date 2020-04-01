@@ -18,11 +18,11 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static IServiceCollection RecordHttpClientRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
         {
-            if (MockInstrumentation.context == null)
+            if (ContextRepo.context == null)
             {
                 var services = serviceCollection.BuildServiceProvider();
                 var context = services.GetService<IHttpContextAccessor>();
-                MockInstrumentation.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+                ContextRepo.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
             }
 
             serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false, callerPath)));                

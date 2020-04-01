@@ -6,10 +6,10 @@ using Shouldly;
 namespace SystemTestingTools.UnitTests
 {
     [Trait("Project", "SystemTestingTools Unit Tests (unhappy)")]
-    public class MockResponseFactoryUnhappyTests
+    public class StubResponseFactoryUnhappyTests
     {
         private string FilesFolder;
-        public MockResponseFactoryUnhappyTests()
+        public StubResponseFactoryUnhappyTests()
         {
             FilesFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\files\";
         }

@@ -26,7 +26,7 @@ namespace SystemTestingTools
         }
 
         /// <summary>
-        /// Intercept outgoing HttpClient calls so we can return mocks and make assertions later
+        /// Intercept outgoing HttpClient calls so we can return stubs and make assertions later
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
@@ -36,7 +36,7 @@ namespace SystemTestingTools
             {
                 var services = c.BuildServiceProvider();
                 var context = services.GetService<IHttpContextAccessor>();
-                MockInstrumentation.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+                ContextRepo.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
                 c.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallsInterceptorHandler()));
             });
 

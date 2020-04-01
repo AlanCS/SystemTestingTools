@@ -40,7 +40,7 @@ namespace SystemTestingTools.UnitTests
             result.Metadata.RecordedFrom.ShouldEndWith(@"(No httpcontext available)");
 
             result.Metadata.ToolUrl.ShouldBe(Constants.Website);
-            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.4.0");
+            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.5.0");
             result.Metadata.User.ShouldContain(System.Environment.UserName);
             result.Metadata.Timezone.ShouldNotBeNullOrWhiteSpace();
             result.Metadata.DateTime.ShouldBeLessThan(System.DateTime.Now.AddSeconds(1));

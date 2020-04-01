@@ -27,14 +27,14 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/UserApi/Real_Responses/Happy/200_ListUsers.txt");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/UserApi/Real_Responses/Happy/200_ListUsers.txt");
 
             response.ModifyJsonBody<MovieProject.Logic.Proxy.DTO.User[]>(dto =>
             {
                 dto[0].Name = "Changed in code";
             });
 
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(Url), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(Url), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/users");

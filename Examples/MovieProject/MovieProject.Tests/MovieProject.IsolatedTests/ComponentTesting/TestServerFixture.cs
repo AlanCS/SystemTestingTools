@@ -16,7 +16,7 @@ namespace IsolatedTests.ComponentTestings
     {
         public TestServer Server { get; private set; }
 
-        public string MocksFolder { get; private set; }
+        public string StubsFolder { get; private set; }
 
         public TestServerFixture()
         {
@@ -26,7 +26,7 @@ namespace IsolatedTests.ComponentTestings
 
         private void StartServer()
         {
-            MocksFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Mocks";
+            StubsFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Stubs";
 
             Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
 
@@ -61,10 +61,10 @@ namespace IsolatedTests.ComponentTestings
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 throw new ApplicationException("TestServer doesn't respond to basic request to /healthcheck");
 
-            if(MockInstrumentation.UnsessionedLogs.Count > 1)
+            if(ContextRepo.UnsessionedLogs.Count > 1)
                 throw new ApplicationException("Unexpected logs are showing up when starting application");
 
-            if (MockInstrumentation.UnsessionedLogs.FirstOrDefault()?.ToString() != "Information: Application is starting")
+            if (ContextRepo.UnsessionedLogs.FirstOrDefault()?.ToString() != "Information: Application is starting")
                 throw new ApplicationException("Logs don't seem to be wired correctly");
         }
 

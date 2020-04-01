@@ -7,7 +7,7 @@ using System.Linq;
 namespace SystemTestingTools
 {
     [DebuggerDisplay("{Endpoint}")]
-    internal class MockEndpoint 
+    internal class StubEndpoint 
     {
         private string endpoint;
         private readonly Dictionary<string, string> headerMatches;
@@ -15,14 +15,14 @@ namespace SystemTestingTools
         internal readonly HttpResponseMessage Response;
         internal readonly Exception Exception;
 
-        public MockEndpoint(HttpMethod httpMethod, System.Uri url, HttpResponseMessage response, Dictionary<string, string> headerMatches)
+        public StubEndpoint(HttpMethod httpMethod, System.Uri url, HttpResponseMessage response, Dictionary<string, string> headerMatches)
         {
             this.Response = response ?? throw new ArgumentNullException(nameof(response));
             this.headerMatches = headerMatches;
             SetEndpoint(httpMethod, url);
         }
 
-        public MockEndpoint(HttpMethod httpMethod, System.Uri url, Exception exception, Dictionary<string, string> headerMatches)
+        public StubEndpoint(HttpMethod httpMethod, System.Uri url, Exception exception, Dictionary<string, string> headerMatches)
         {
             this.Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             this.headerMatches = headerMatches;

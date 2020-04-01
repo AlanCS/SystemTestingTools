@@ -9,7 +9,7 @@
     <Product />
     <Description>
       Tool that allows you to extend the capabilities of Microsoft.AspNetCore.TestHost.TestServer, allowing you to run more comprehensive + deterministic tests by:
-      - intercepting Http calls, returning mock responses
+      - intercepting Http calls, returning stub responses
       - asserting outgoing Http calls
       - recording outgoing Http calls (requests and responses), for documentation purposes
       - asserting logs
@@ -18,9 +18,9 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/AlanCS/SystemTestingTools</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>Mock Mocking Stub Stubbing Automation Testing Test Fake Dowsntream Integration Http HttpClient TestServer</PackageTags>
-    <Title>Tool to extend the capabilities of .net core TestServer to run more comprehensive + deterministic tests, supports: HTTP mocking/assertions/recording and asserting logs.</Title>
-    <Summary>Tool to extend the capabilities of .net core TestServer to run more comprehensive + deterministic tests, supports: HTTP mocking/assertions/recording and asserting logs.</Summary>
+    <PackageTags>Stub stubbing Stub Stubbing Automation Testing Test Fake Dowsntream Integration Http HttpClient TestServer</PackageTags>
+    <Title>Tool to extend the capabilities of your .net core tests to run more comprehensive + deterministic scenarios, supports: HTTP stubbing/assertions/recording and asserting logs.</Title>
+    <Summary>Tool to extend the capabilities of your .net core tests to run more comprehensive + deterministic scenarios, supports: HTTP stubbing/assertions/recording and asserting logs.</Summary>
     <PackageReleaseNotes>Please check changelog: https://github.com/AlanCS/SystemTestingTools/blob/master/CHANGELOG.md </PackageReleaseNotes>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
@@ -41,9 +41,9 @@
   </ItemGroup>
 
   <PropertyGroup Label="Version">
-    <Version>1.3.4.0</Version>
-    <AssemblyVersion>1.3.4.0</AssemblyVersion>
-    <FileVersion>1.3.4.0</FileVersion>
+    <Version>1.3.5.0</Version>
+    <AssemblyVersion>1.3.5.0</AssemblyVersion>
+    <FileVersion>1.3.5.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 namespace SystemTestingTools.UnitTests
 {
     [Trait("Project", "SystemTestingTools Unit Tests (happy)")]
-    public class MockResponseFactoryHappyTests
+    public class StubResponseFactoryHappyTests
     {
         private string FilesFolder;
-        public MockResponseFactoryHappyTests()
+        public StubResponseFactoryHappyTests()
         {
             FilesFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\files\";
         }

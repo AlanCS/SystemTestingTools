@@ -6,7 +6,7 @@ using System.Net.Http;
 namespace SystemTestingTools
 {
     /// <summary>
-    /// extensions to HttpClient to allow mocking and assertions
+    /// extensions to HttpClient to allow stubbing and assertions
     /// </summary>
     public static class HttpClientExtensions
     {
@@ -19,9 +19,9 @@ namespace SystemTestingTools
         {
             var sessionId = Guid.NewGuid().ToString();
             httpClient.DefaultRequestHeaders.Add(Constants.headerName, sessionId);
-            MockInstrumentation.MockedEndpoints.Add(sessionId, new List<MockEndpoint>());
-            MockInstrumentation.SessionLogs.Add(sessionId, new List<LoggedEvent>());
-            MockInstrumentation.OutgoingRequests.Add(sessionId, new List<HttpRequestMessageWrapper>());
+            ContextRepo.StubbedEndpoints.Add(sessionId, new List<StubEndpoint>());
+            ContextRepo.SessionLogs.Add(sessionId, new List<LoggedEvent>());
+            ContextRepo.OutgoingRequests.Add(sessionId, new List<HttpRequestMessageWrapper>());
             return sessionId;
         }
 
@@ -36,34 +36,47 @@ namespace SystemTestingTools
 
         /// <summary>
         /// Will return the response when a matching call gets fired, but only once
-        /// if you expect this endpoint to be called X times, add X mock endpoints
+        /// if you expect this endpoint to be called X times, add X stub endpoints
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="httpMethod"></param>
         /// <param name="Url"></param>
         /// <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
-        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
+        public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
         {
             var sessionId = GetSessionFromHeader(httpClient);
 
-            MockInstrumentation.MockedEndpoints[sessionId].Add(new MockEndpoint(httpMethod, Url, response, headerMatches));
+            ContextRepo.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, response, headerMatches));
         }
+
+        [Obsolete("This call has been renamed to AppendHttpCallStub", true)]
+        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
+        {
+            // old method, renamed it because Stub is a better word for what it does
+        }
+        
 
         /// <summary>
         /// Will throw an exception when a matching call gets fired, but only once
-        /// if you expect this endpoint to be called X times, add X mock endpoints
+        /// if you expect this endpoint to be called X times, add X stub endpoints
         /// </summary>
         /// <param name="httpClient"></param>
         /// <param name="httpMethod"></param>
         /// <param name="Url"></param>
         /// <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
-        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
+        public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
         {
             var sessionId = GetSessionFromHeader(httpClient);
 
-            MockInstrumentation.MockedEndpoints[sessionId].Add(new MockEndpoint(httpMethod, Url, exception, headerMatches));
+            ContextRepo.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches));
+        }
+
+        [Obsolete("This call has been renamed to AppendHttpCallStub", true)]
+        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
+        {
+            // old method, renamed it because Stub is a better word for what it does
         }
 
         /// <summary>
@@ -75,7 +88,7 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionFromHeader(httpClient);
 
-            return MockInstrumentation.SessionLogs[sessionId];
+            return ContextRepo.SessionLogs[sessionId];
         }
 
         /// <summary>
@@ -87,7 +100,7 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionFromHeader(httpClient);
 
-            return MockInstrumentation.OutgoingRequests[sessionId];
+            return ContextRepo.OutgoingRequests[sessionId];
         }
     }
 }

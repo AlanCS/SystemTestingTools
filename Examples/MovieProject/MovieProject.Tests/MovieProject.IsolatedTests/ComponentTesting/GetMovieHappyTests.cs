@@ -27,9 +27,9 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt");
             var matrixMovieUrl = $"{MovieUrl}&t=matrix";
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(matrixMovieUrl), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(matrixMovieUrl), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
@@ -54,9 +54,9 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt");
             var matrixMovieUrl = $"{MovieUrl}&t=matrix";
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(matrixMovieUrl), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(matrixMovieUrl), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
@@ -89,8 +89,8 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/Real_Responses/Happy/200_MovieNotFound.txt");
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri($"{MovieUrl}&t=some_weird_title"), response);
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_MovieNotFound.txt");
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri($"{MovieUrl}&t=some_weird_title"), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/some_weird_title");
@@ -117,9 +117,9 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/Real_Responses/Happy/200_FewFields_OldMovie.txt");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_FewFields_OldMovie.txt");
             var comeAlongMovieUrl = $"{MovieUrl}&t=come along, do";
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(comeAlongMovieUrl), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(comeAlongMovieUrl), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/come along, do");
@@ -151,9 +151,9 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.MocksFolder}/OmdbApi/Fake_Responses/Happy/200_NoRunTime_NoPlot_YearTooOld.txt");
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Fake_Responses/Happy/200_NoRunTime_NoPlot_YearTooOld.txt");
             var comeAlongMovieUrl = $"{MovieUrl}&t=fantastika";
-            client.AppendMockHttpCall(HttpMethod.Get, new System.Uri(comeAlongMovieUrl), response);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(comeAlongMovieUrl), response);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/fantastika");

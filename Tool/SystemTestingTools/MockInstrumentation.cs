@@ -6,11 +6,11 @@ using System.Reflection;
 namespace SystemTestingTools
 {
     /// <summary>
-    /// Contains a mock of usual instrumentation, containing logs and requests
+    /// Contains a stub of usual instrumentation, containing logs and requests
     /// </summary>
-    public static class MockInstrumentation
+    public static class ContextRepo
     {
-        internal static Dictionary<string, List<MockEndpoint>> MockedEndpoints = new Dictionary<string, List<MockEndpoint>>();
+        internal static Dictionary<string, List<StubEndpoint>> StubbedEndpoints = new Dictionary<string, List<StubEndpoint>>();
         internal static Dictionary<string, List<LoggedEvent>> SessionLogs = new Dictionary<string, List<LoggedEvent>>();
         
         internal static Dictionary<string, List<HttpRequestMessageWrapper>> OutgoingRequests = new Dictionary<string, List<HttpRequestMessageWrapper>>();
