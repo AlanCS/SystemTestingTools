@@ -1,7 +1,10 @@
 ## 1.3.5
 - Breaking change
     - Renamed mentions of "mock" to "stub", because it's a more precise word to define what is being done
-    
+    - Renamed MockInstrumentation to ContextRepo [example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L67)
+- Bug fix
+    - Interpret content type "text/json" as JSON (not only "application/json"), so recorder will try to format it nicely
+
 ## 1.3.4
 - Bugfixes
     - ReadJsonBody<T> now parses enums as strings
