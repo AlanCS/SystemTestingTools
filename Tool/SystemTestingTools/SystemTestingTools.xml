@@ -16,6 +16,13 @@
             <param name="httpClient"></param>
             <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
         </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionId(System.Net.Http.HttpClient)">
+            <summary>
+            Get Session ID allocated to httpClient, can be useful to interact with other tools
+            </summary>
+            <param name="httpClient"></param>
+            <returns></returns>
+        </member>
         <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String})">
             <summary>
             Will return the response when a matching call gets fired, but only once

@@ -25,7 +25,12 @@ namespace SystemTestingTools
             return sessionId;
         }
 
-        private static string GetSessionFromHeader(HttpClient httpClient)
+        /// <summary>
+        /// Get Session ID allocated to httpClient, can be useful to interact with other tools
+        /// </summary>
+        /// <param name="httpClient"></param>
+        /// <returns></returns>
+        public static string GetSessionId(this HttpClient httpClient)
         {
             var values = httpClient.DefaultRequestHeaders.GetValues(Constants.headerName);
 
@@ -45,7 +50,7 @@ namespace SystemTestingTools
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
         {
-            var sessionId = GetSessionFromHeader(httpClient);
+            var sessionId = GetSessionId(httpClient);
 
             ContextRepo.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, response, headerMatches));
         }
@@ -68,7 +73,7 @@ namespace SystemTestingTools
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
         {
-            var sessionId = GetSessionFromHeader(httpClient);
+            var sessionId = GetSessionId(httpClient);
 
             ContextRepo.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches));
         }
@@ -86,7 +91,7 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static List<LoggedEvent> GetSessionLogs(this HttpClient httpClient)
         {
-            var sessionId = GetSessionFromHeader(httpClient);
+            var sessionId = GetSessionId(httpClient);
 
             return ContextRepo.SessionLogs[sessionId];
         }
@@ -98,7 +103,7 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static List<HttpRequestMessageWrapper> GetSessionOutgoingRequests(this HttpClient httpClient)
         {
-            var sessionId = GetSessionFromHeader(httpClient);
+            var sessionId = GetSessionId(httpClient);
 
             return ContextRepo.OutgoingRequests[sessionId];
         }
