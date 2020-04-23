@@ -1,3 +1,7 @@
+## 1.3.6
+- New feature
+    - New Added HttpClient extension GetSessionId(), can be useful to interact with other tools
+
 ## 1.3.5
 - Breaking change
     - Renamed mentions of "mock" to "stub", because it's a more precise word to define what is being done
