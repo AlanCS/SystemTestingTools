@@ -18,7 +18,7 @@
     <PackageLicenseUrl></PackageLicenseUrl>
     <PackageProjectUrl>https://github.com/AlanCS/SystemTestingTools</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
-    <PackageTags>Stub stubbing Stub Stubbing Automation Testing Test Fake Dowsntream Integration Http HttpClient TestServer</PackageTags>
+    <PackageTags>Stub stubbing Automation Testing Test Fake Dowsntream Integration Http HttpClient TestServer</PackageTags>
     <Title>Tool to extend the capabilities of your .net core tests to run more comprehensive + deterministic scenarios, supports: HTTP stubbing/assertions/recording and asserting logs.</Title>
     <Summary>Tool to extend the capabilities of your .net core tests to run more comprehensive + deterministic scenarios, supports: HTTP stubbing/assertions/recording and asserting logs.</Summary>
     <PackageReleaseNotes>Please check changelog: https://github.com/AlanCS/SystemTestingTools/blob/master/CHANGELOG.md </PackageReleaseNotes>

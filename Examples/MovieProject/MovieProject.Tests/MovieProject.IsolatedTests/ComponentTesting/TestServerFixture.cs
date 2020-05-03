@@ -29,13 +29,10 @@ namespace IsolatedTests.ComponentTestings
             StubsFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Stubs";
 
             Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
-
-            var builder = new WebHostBuilder()
-                .UseStartup<Startup>()
+            
+            var builder = Program.CreateWebHostBuilder(new string[0]) // use the exact same builder as the website, to test the wiring
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
-                    // use the same settings as the website (linked referenced)
-                    config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true); 
                     // make small changes to configuration, such as disabling caching
                     config.AddJsonFile("appsettings.tests.json", optional: false, reloadOnChange: true);
                 })                
