@@ -106,7 +106,11 @@ namespace SystemTestingTools
                 }
                 content.AppendLine();
 
-                if (requestOrResponse.Body == null) return;                
+                if (requestOrResponse.Body == null)
+                {
+                    content.AppendLine(); // a NoContent (204) could return this, we mark an empty file
+                    return;
+                }
 
                 switch (contentType)
                 {

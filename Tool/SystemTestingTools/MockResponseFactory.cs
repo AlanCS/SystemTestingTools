@@ -5,6 +5,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Collections.Generic;
+using static SystemTestingTools.Helper;
 
 namespace SystemTestingTools
 {
@@ -90,12 +91,20 @@ namespace SystemTestingTools
         {
             string content = ReadFile(fileFullPath);
 
+            var contentType = KnownContentTypes.Other;
+            if (fileFullPath.EndsWith(".json", StringComparison.CurrentCultureIgnoreCase))
+                contentType = KnownContentTypes.Json;
+            if (fileFullPath.EndsWith(".xml", StringComparison.CurrentCultureIgnoreCase))
+                contentType = KnownContentTypes.Xml;
+
             var response = new HttpResponseMessage(statusCode);
 
-            response.Content = new StringContent(content);
+            response.Content = new StringContent(content, System.Text.Encoding.Default, contentType.GetContentType());
 
             return response;
         }
+
+        
 
         /// <summary>
         /// Read from a string containing the body of the response

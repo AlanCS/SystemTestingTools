@@ -59,6 +59,18 @@ namespace SystemTestingTools
             Other // for now, we only care about the most common
         }
 
+        internal static string GetContentType(this KnownContentTypes contentType)
+        {
+            switch (contentType)
+            {
+                case KnownContentTypes.Json:
+                    return "application/json";
+                case KnownContentTypes.Xml:
+                    return "application/xml";
+            }
+            return "text/plain";
+        }
+
         internal static KnownContentTypes GetKnownContentType(string contentType)
         {
             if (string.IsNullOrEmpty(contentType)) return KnownContentTypes.Other;

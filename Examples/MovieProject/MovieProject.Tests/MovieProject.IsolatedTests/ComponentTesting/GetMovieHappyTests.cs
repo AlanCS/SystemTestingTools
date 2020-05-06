@@ -84,6 +84,42 @@ namespace IsolatedTests.ComponentTestings
         }
 
         [Fact]
+        public async Task When_UserAsksForMovieWithMostFields_With_ResponseBodyOny_Then_ReturnMovieProperly()
+        {
+            // arrange
+            var client = Fixture.Server.CreateClient();
+            client.CreateSession();
+            // FromBodyOnlyFile work well, but if possible it's nicer to read from a more comprehensive file format (the one that FromFiddlerLikeResponseFile uses)
+            var response = ResponseFactory.FromBodyOnlyFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.json", HttpStatusCode.OK);
+            var matrixMovieUrl = $"{MovieUrl}&t=matrix";
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(matrixMovieUrl), response);
+
+            // act
+            var httpResponse = await client.GetAsync("/api/movie/matrix");
+
+            // assert logs
+            var logs = client.GetSessionLogs();
+            logs.ShouldBeEmpty();
+
+            // assert outgoing
+            var outgoingRequests = client.GetSessionOutgoingRequests();
+            outgoingRequests.Count.ShouldBe(1);
+            outgoingRequests[0].GetEndpoint().ShouldBe($"GET {matrixMovieUrl}");
+            outgoingRequests[0].GetHeaderValue("Referer").ShouldBe(MovieProject.Logic.Constants.Website);
+
+            // assert return
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+
+            var movie = await httpResponse.ReadJsonBody<MovieProject.Logic.DTO.Media>();
+            movie.Id.ShouldBe("tt0133093");
+            movie.Name.ShouldBe("The Matrix");
+            movie.Year.ShouldBe("1999");
+            movie.Runtime.ShouldBe("2.3h");
+            movie.Plot.ShouldBe("A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.");
+            movie.Language.ShouldBe(MovieProject.Logic.DTO.Media.Languages.English);
+        }
+
+        [Fact]
         public async Task When_UserAsksForMovieThatDoesntExist_Then_Return400Status()
         {
             // arrange

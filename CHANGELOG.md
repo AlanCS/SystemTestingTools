@@ -1,3 +1,8 @@
+## 1.3.7
+- Bugfixes
+    - Recorder when receiving 204 (no content), would produce a file that could not be ready by function FromFiddlerLikeResponseFile    
+    - FromBodyOnlyFile() would set content type header as text/plain, which caused problems when trying to parse to common types (json and xml), now the ending of the file (the extension) is used to guess the content type
+
 ## 1.3.6
 - New feature
     - New Added HttpClient extension GetSessionId(), can be useful to interact with other tools
