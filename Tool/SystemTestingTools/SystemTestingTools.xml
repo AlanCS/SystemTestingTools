@@ -87,6 +87,16 @@
             <param name="key"></param>
             <returns></returns>
         </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.ReadBody">
+            <summary>
+            Read the request body as string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.ReadJsonBody``1">
+            <summary>
+            Read the request body and parse it as a given class
+            </summary>
+        </member>
         <member name="T:SystemTestingTools.HttpResponseMessageExtensions">
             <summary>
             Useful extensions for the microsoft HttpResponseMessage
@@ -102,7 +112,7 @@
         </member>
         <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadJsonBody``1(System.Net.Http.HttpResponseMessage)">
             <summary>
-            Read the response body and parset as a given class
+            Read the response body and parse it as a given class
             </summary>
             <typeparam name="T"></typeparam>
             <param name="httpResponse"></param>

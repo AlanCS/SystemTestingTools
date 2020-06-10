@@ -10,6 +10,7 @@ namespace MovieProject.Logic.Proxy
     public interface IMovieDatabaseProxy
     {
         Task<Logic.DTO.Media> GetMovieOrTvSeries(string type, string movieName);
+        Task AddToResearchQueue(string type, string imdbId);
     }
 
     public class MovieDatabaseProxy  : BaseProxy, IMovieDatabaseProxy
@@ -55,6 +56,43 @@ namespace MovieProject.Logic.Proxy
             });
 
             return result;
+        }
+
+        public async Task AddToResearchQueue(string type, string imdbId)
+        {
+            string route = $"?apikey={Constants.OmdbApiKey}&type={type}";
+
+            var request = new Logic.DTO.Media()
+            {
+                Id = imdbId.Trim(),
+                Name = "TO BE RESEARCHED"
+            };
+
+            var result = await Send(HttpMethod.Post, route, (DTO.ExternalMedia externalDTO, HttpStatusCode status) =>
+            {
+                // any exceptions throwm in here will be wrapped inside a DownstreamException, will all the details of the request / response for investigation
+                // also applies the concept of anti-corruption layer, meaning we parse the external DTO inside the proxy, and only return valid / clean internal DTOs
+
+                if (string.IsNullOrWhiteSpace(externalDTO?.Response)) throw new Exception("DTO is invalid");
+
+                if (!string.IsNullOrWhiteSpace(externalDTO.Error))
+                {
+                    // movies and tv series not found get incorrectly returned as "errors", so we filter it out here
+                    if (externalDTO.Error.EndsWith("not found!", System.StringComparison.CurrentCultureIgnoreCase)) return null;
+
+                    throw new Exception("Responsed contained error");
+                }
+
+                return new Logic.DTO.Media()
+                {
+                    Id = externalDTO.ImdbId,
+                    Name = externalDTO.Title.CleanNA(),
+                    Year = externalDTO.Year.CleanYear(),
+                    Plot = externalDTO.Plot.CleanNA(),
+                    Runtime = externalDTO.Runtime.FormatDuration(),
+                    Language = externalDTO.Language.GetLanguage()
+                };
+            }, request);
         }
     }
 }

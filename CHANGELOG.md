@@ -1,3 +1,7 @@
+## 1.3.8
+- New features
+    - Added new methods ReadBody() and ReadJsonBody() in HttpRequestMessageWrapper, to make it easier to verify outgoing requests
+
 ## 1.3.7
 - Bugfixes
     - Recorder when receiving 204 (no content), would produce a file that could not be ready by function FromFiddlerLikeResponseFile    

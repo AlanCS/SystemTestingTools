@@ -214,5 +214,37 @@ namespace IsolatedTests.ComponentTestings
             movie.Year.ShouldBe("Unknown");            
             movie.Plot.ShouldBe("");
         }
+
+
+        [Fact]
+        public async Task When_UserAddsMovieToResearchQueue_Then_Success()
+        {
+            // arrange
+            var client = Fixture.Server.CreateClient();
+            client.CreateSession();
+            var response = ResponseFactory.FromBodyOnlyFile($"{Fixture.StubsFolder}/OmdbApi/Fake_Responses/Happy/200_AddToQueue.json", HttpStatusCode.OK);
+            var matrixMovieUrl = $"{MovieUrl}";
+            client.AppendHttpCallStub(HttpMethod.Post, new System.Uri(matrixMovieUrl), response);
+
+            // act
+            var httpResponse = await client.PostAsJsonAsync("/api/movie?imdb=tt000001   ", new { });
+
+            // assert logs
+            var logs = client.GetSessionLogs();
+            logs.ShouldBeEmpty();
+
+            // assert outgoing
+            var outgoingRequests = client.GetSessionOutgoingRequests();
+            outgoingRequests.Count.ShouldBe(1);
+            outgoingRequests[0].GetEndpoint().ShouldBe($"POST {matrixMovieUrl}");
+            outgoingRequests[0].GetHeaderValue("Referer").ShouldBe(MovieProject.Logic.Constants.Website);
+            var request = await outgoingRequests[0].ReadJsonBody<MovieProject.Logic.DTO.Media>();
+            request.ShouldNotBeNull();
+            request.Id.ShouldBe("tt000001");
+            request.Name.ShouldBe("TO BE RESEARCHED"); // check if outgoing post body is correctly formatted
+
+            // assert return
+            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+        }
     }
 }

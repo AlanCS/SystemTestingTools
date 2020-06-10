@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieProject.Logic;
 using MovieProject.Logic.DTO;
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MovieProject.Web.Controllers
 {
     [Route("api")]
     [ApiController]
-    public class SearchController : ControllerBase
+    public class MediaController : ControllerBase
     {
         private ISearchService _searchService { get; }
 
-        public SearchController(ISearchService searchService)
+        public MediaController(ISearchService searchService)
         {
             _searchService = searchService;
         }
@@ -24,6 +25,17 @@ namespace MovieProject.Web.Controllers
             if (media == null) return NotFound($"Search terms didn't match any {type}");
 
             return Ok(media);
-        }      
+        }
+
+        [HttpPost("{type}")]
+        public async Task<ActionResult<Logic.DTO.Media>> AddToResearchQueue(MediaType type, [FromQuery]string imdb)
+        {
+            // fake method that doesn't exist downstream, we pretend to add a new movie / tv series
+            // to a queue to be researched later
+
+            await _searchService.AddToResearchQueue(type, imdb);
+
+            return Ok();
+        }
     }
 }

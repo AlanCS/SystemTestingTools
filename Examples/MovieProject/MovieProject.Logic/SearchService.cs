@@ -7,6 +7,8 @@ namespace MovieProject.Logic
     public interface ISearchService
     {
         Task<DTO.Media> GetMovieOrTvSeries(DTO.MediaType type, string movieName);
+
+        Task AddToResearchQueue(DTO.MediaType type, string imdb);
     }
 
     public class SearchService : ISearchService
@@ -34,6 +36,13 @@ namespace MovieProject.Logic
                 });
 
             return result;
+        }
+
+        public Task AddToResearchQueue(DTO.MediaType type, string imdb)
+        {
+            if (string.IsNullOrWhiteSpace(imdb)) throw new BadRequestException("imdb is empty", imdb);
+
+            return _movieDatabaseProxy.AddToResearchQueue(type.ToString(), imdb);
         }
     }
 }

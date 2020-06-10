@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace SystemTestingTools
 {
@@ -44,6 +46,25 @@ namespace SystemTestingTools
             if (!Request.Headers.Contains(key)) return null;
 
             return string.Join(",", Request.Headers.GetValues(key));
+        }
+
+        /// <summary>
+        /// Read the request body as string
+        /// </summary>
+        public async Task<string> ReadBody()
+        {
+            var requestBody = await Request.Content.ReadAsStringAsync();
+            return requestBody;
+        }
+
+        /// <summary>
+        /// Read the request body and parse it as a given class
+        /// </summary>
+        public async Task<T> ReadJsonBody<T>() where T : class
+        {
+            var content = await ReadBody() ?? throw new ArgumentNullException("Body is null or empty");
+            var dto = JsonSerializer.Deserialize<T>(content, Constants.GetJsonOptions());
+            return dto;
         }
     }
 }

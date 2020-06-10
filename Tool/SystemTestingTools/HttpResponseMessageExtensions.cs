@@ -30,24 +30,10 @@ namespace SystemTestingTools
             response.Content = new StringContent(JsonSerializer.Serialize(dto), enconding, mediaType);
         }
 
-        private static readonly object padlock = new object();
-        private static JsonSerializerOptions options = null;
-        private static JsonSerializerOptions GetJsonOptions()
-        {
-            if (options == null)
-                lock (padlock)
-                    if (options == null) // double lock for the win :)
-                    {
-                        options = new JsonSerializerOptions();
-                        options.PropertyNameCaseInsensitive = true;
-                        options.Converters.Add(new JsonStringEnumConverter());
-                    }
 
-            return options;
-        }
 
         /// <summary>
-        /// Read the response body and parset as a given class
+        /// Read the response body and parse it as a given class
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="httpResponse"></param>
@@ -55,7 +41,7 @@ namespace SystemTestingTools
         public static async Task<T> ReadJsonBody<T>(this HttpResponseMessage httpResponse) where T : class
         {
             var content = await httpResponse.ReadBody() ?? throw new ArgumentNullException("Body is null or empty");
-            var dto = JsonSerializer.Deserialize<T>(content, GetJsonOptions());
+            var dto = JsonSerializer.Deserialize<T>(content, Constants.GetJsonOptions());
             return dto;
         }
 
