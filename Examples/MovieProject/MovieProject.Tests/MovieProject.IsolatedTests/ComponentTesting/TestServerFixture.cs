@@ -58,11 +58,12 @@ namespace IsolatedTests.ComponentTestings
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 throw new ApplicationException("TestServer doesn't respond to basic request to /healthcheck");
 
-            if(ContextRepo.UnsessionedLogs.Count > 1)
-                throw new ApplicationException("Unexpected logs are showing up when starting application");
+            if(ContextRepo.UnsessionedLogs.Count != 1)
+                throw new ApplicationException($"Expected to find 1 log during startup, found {ContextRepo.UnsessionedLogs.Count}");
 
-            if (ContextRepo.UnsessionedLogs.FirstOrDefault()?.ToString() != "Information: Application is starting")
-                throw new ApplicationException("Logs don't seem to be wired correctly");
+            var firstMessage = ContextRepo.UnsessionedLogs.First()?.ToString();
+            if (firstMessage != "Information: Application is starting")
+                throw new ApplicationException($"First log was not the expected one: {firstMessage}");
         }
 
         public void Dispose()

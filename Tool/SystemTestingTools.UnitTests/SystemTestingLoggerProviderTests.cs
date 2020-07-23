@@ -13,7 +13,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("MyFancyApp.NotSoInteresting", false)]
         public void CanStoreLogsFromNamespaceWithIncludeAndExclude(string fullNamespace, bool canLog)
         {
-            var logger = new SystemTestingLoggerProvider(new[] { "MyFancyApp" }, new[] { "MyFancyApp.NotSoInteresting" });
+            var logger = new SystemTestingLoggerProvider(LogLevel.Critical, new[] { "MyFancyApp" }, new[] { "MyFancyApp.NotSoInteresting" });
 
             var result = logger.CreateLogger(fullNamespace);
 
@@ -26,7 +26,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("MyFancyApp.SpecificArea2.Something", true)]
         public void CanStoreLogsFromNamespaceWithIncludeAndNoExclude(string fullNamespace, bool canLog)
         {
-            var logger = new SystemTestingLoggerProvider(new[] { "MyFancyApp.SpecificArea1", "MyFancyApp.SpecificArea2" });
+            var logger = new SystemTestingLoggerProvider(LogLevel.Critical, new[] { "MyFancyApp.SpecificArea1", "MyFancyApp.SpecificArea2" });
 
             var result = logger.CreateLogger(fullNamespace);
 
@@ -41,7 +41,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("MyFancyApp.SpecificArea2.Something", false)]
         public void CanStoreLogsFromNamespaceWithNoIncludeAndWithExclude(string fullNamespace, bool canLog)
         {
-            var logger = new SystemTestingLoggerProvider(namespaceToExcludeStart: new[] { "MyFancyApp.SpecificArea1", "MyFancyApp.SpecificArea2" });
+            var logger = new SystemTestingLoggerProvider(LogLevel.Critical, namespaceToExcludeStart: new[] { "MyFancyApp.SpecificArea1", "MyFancyApp.SpecificArea2" });
 
             var result = logger.CreateLogger(fullNamespace);
 
@@ -51,7 +51,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void CanStoreLogsFromNamespaceWithNoIncludeOrExclude()
         {
-            var logger = new SystemTestingLoggerProvider();
+            var logger = new SystemTestingLoggerProvider(LogLevel.Critical);
 
             var result = logger.CreateLogger("MyFancyApp");
 

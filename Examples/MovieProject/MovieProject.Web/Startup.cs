@@ -125,6 +125,8 @@ namespace MovieProject.Web
                 endpoints.MapControllers();
             });
 
+            _logger.LogDebug("Fake log to check if minLogLevel filter works");
+
             // useful for many purposes
             // - see cloud consumption and analyse bugs where application restarts unexpectely
             // - test logging is working correctly easily

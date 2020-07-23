@@ -56,7 +56,7 @@ namespace SystemTestingTools
             builder = builder.ConfigureLogging((loggingBuilder) =>
             {
                 loggingBuilder.SetMinimumLevel(minimumLevelToIntercept);
-                loggingBuilder.AddProvider(new SystemTestingLoggerProvider(namespaceToIncludeStart, namespaceToExcludeStart));
+                loggingBuilder.AddProvider(new SystemTestingLoggerProvider(minimumLevelToIntercept, namespaceToIncludeStart, namespaceToExcludeStart));
             });
 
             return builder;

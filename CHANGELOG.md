@@ -1,3 +1,7 @@
+## 1.3.9
+- Bugfix
+    - MinimumLogLevel in IntercepLogs() was not being respected at times
+
 ## 1.3.8
 - New features
     - Added new methods ReadBody() and ReadJsonBody() in HttpRequestMessageWrapper, to make it easier to verify outgoing requests
