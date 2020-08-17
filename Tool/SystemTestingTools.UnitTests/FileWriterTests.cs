@@ -12,13 +12,14 @@ namespace SystemTestingTools.UnitTests
     public class FileWriterTests
     {
         readonly string folder = Path.Combine(Path.GetTempPath(),"SystemTestingTools");
-        readonly string expectedFileContent = @"METADATA
+        readonly string expectedFileContent = @"SystemTestingTools_Recording_V2
 Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
 Date: 2019-03-17 15:44:37.597 my_time_zone
 Recorded from: MovieProject.Web 1.2.0.1 (htts://localhost/api/whatever?param=2)
 Local machine: Machine001
 User: A01/MyUser
 Using tool: SystemTestingTools 0.1.0.0 (http://www.whatever.com)
+Duration: 1200 ms
 
 REQUEST
 post https://www.whatever.com/someendpoint
@@ -31,7 +32,8 @@ User-Agent:MyApp
 HTTP/1.1 200 OK
 Server:Kestrel
 
-{""value"":""whatever"", ""trickyField"":""--!?@Divider:"", ""trickyField2"":""HTTP/1.1 200 OK""}";
+{""value"":""whatever"", ""trickyField"":""--!?@Divider:"", ""trickyField2"":""HTTP/1.1 200 OK""}
+";
 
         [Fact]
         public async Task When_FilesAlreadyExistInFolder_And_ValidRequestResponse_Then_CreateTextFileInRightFormat_And_CanLoadFile()
@@ -60,7 +62,8 @@ Server:Kestrel
                     User = "A01/MyUser",
                     RecordedFrom = @"MovieProject.Web 1.2.0.1 (htts://localhost/api/whatever?param=2)",
                     ToolUrl = "http://www.whatever.com",
-                    ToolNameAndVersion = "SystemTestingTools 0.1.0.0"
+                    ToolNameAndVersion = "SystemTestingTools 0.1.0.0",
+                    latencyMiliseconds = 1200
                 },
                 Request = new RequestResponse.RequestInfo()
                 {
@@ -92,7 +95,7 @@ Server:Kestrel
 
             content.ShouldBe(expectedFileContent);
 
-            var deserializedResponse = ResponseFactory.FromFiddlerLikeResponseFile(createdFile);
+            var deserializedResponse = ResponseFactory.FromRecordedFile(createdFile);
 
             deserializedResponse.StatusCode.ShouldBe(input.Response.Status);
             (await deserializedResponse.Content.ReadAsStringAsync()).ShouldBe(input.Response.Body);

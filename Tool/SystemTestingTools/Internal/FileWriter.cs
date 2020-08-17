@@ -55,13 +55,14 @@ namespace SystemTestingTools
             var content = new StringBuilder();
 
             // details about request
-            content.AppendLine($"METADATA");
+            content.AppendLine($"SystemTestingTools_Recording_V2");
             content.AppendLine($"Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!");
-            content.AppendLine($"Date: {log.Metadata.DateTime.ToString("yyyy-MM-dd HH:mm:ss.fff")} {log.Metadata.Timezone}");
+            content.AppendLine($"Date: {log.Metadata.DateTime:yyyy-MM-dd HH:mm:ss.fff} {log.Metadata.Timezone}");
             content.AppendLine($"Recorded from: {log.Metadata.RecordedFrom}");
             content.AppendLine($"Local machine: {log.Metadata.LocalMachine}");
             content.AppendLine($"User: {log.Metadata.User}");
-            content.AppendLine($"Using tool: {log.Metadata.ToolNameAndVersion} ({log.Metadata.ToolUrl})");            
+            content.AppendLine($"Using tool: {log.Metadata.ToolNameAndVersion} ({log.Metadata.ToolUrl})");
+            content.AppendLine($"Duration: {log.Metadata.latencyMiliseconds} ms");
 
             content.AppendLine();
             content.AppendLine($"REQUEST");
@@ -86,7 +87,7 @@ namespace SystemTestingTools
             AddHeadersAndBody(log.Response);
 
             var filename = $"{_callsCounter}_{log.Response.Status}";
-            _fileSystem.CreateNewTextFile(folder, filename, content.ToString().Trim());
+            _fileSystem.CreateNewTextFile(folder, filename, content.ToString());
 
             return filename;
 

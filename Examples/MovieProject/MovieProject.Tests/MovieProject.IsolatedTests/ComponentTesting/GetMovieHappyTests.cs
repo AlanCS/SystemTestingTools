@@ -54,7 +54,7 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt");
+            var response = ResponseFactory.FromRecordedFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt");
             var matrixMovieUrl = $"{MovieUrl}&t=matrix";
             client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(matrixMovieUrl), response);
 
@@ -125,7 +125,7 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_MovieNotFound.txt");
+            var response = ResponseFactory.FromRecordedFile($"{Fixture.StubsFolder}/OmdbApi/Real_Responses/Happy/200_MovieNotFound.txt");
             client.AppendHttpCallStub(HttpMethod.Get, new System.Uri($"{MovieUrl}&t=some_weird_title"), response);
 
             // act

@@ -1,37 +1,40 @@
-METADATA
-Observations: a popular movie that has all response fields filled up
-Date: 2020-03-31 19:32:14.710 (UTC+10:00) Canberra, Melbourne, Sydney
+SystemTestingTools_Recording_V2
+Observations: a popular movie that has all the response fields filled up
+Date: 2020-08-17 08:43:18.366 (UTC+10:00) Canberra, Melbourne, Sydney
 Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
 Local machine: DESKTOP-ODVA6EU
 User: DESKTOP-ODVA6EU\AlanPC
-Using tool: SystemTestingTools 1.3.4.0 (https://github.com/AlanCS/SystemTestingTools/)
+Using tool: SystemTestingTools 1.3.10.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 347 ms
 
 REQUEST
 get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=matrix
 Referer:https://github.com/AlanCS/SystemTestingTools
-Request-Id:|75854d04-412c8255772b3bfe.1.
+Request-Id:|68c83e99-4be61ddc8418424f.1.
+
 
 
 --!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
 
 HTTP/1.1 200 OK
-Date:Tue, 31 Mar 2020 08:32:13 GMT
+Date:Sun, 16 Aug 2020 22:43:19 GMT
 Connection:keep-alive
-Set-Cookie:__cfduid=da1472fcb2e1cff4dc508d46457512edf1585643533; expires=Thu, 30-Apr-20 08:32:13 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
+Set-Cookie:__cfduid=d9240e5a4e777b274e51e64a8090ffbb81597617799; expires=Tue, 15-Sep-20 22:43:19 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
 Cache-Control:public, max-age=86400
 Vary:*
 X-AspNet-Version:4.0.30319
 X-Powered-By:ASP.NET
 Access-Control-Allow-Origin:*
 CF-Cache-Status:HIT
-Age:1451
+Age:661
 Accept-Ranges:bytes
+cf-request-id:049b0a17660000fd462f2c8200000001
 Server:cloudflare
-CF-RAY:57c8b7f408fb65eb-SYD
+CF-RAY:5c3eac6bdb61fd46-SYD
 Content-Type:application/json; charset=utf-8
 Content-Length:1026
-Expires:Tue, 31 Mar 2020 09:08:02 GMT
-Last-Modified:Tue, 31 Mar 2020 08:08:02 GMT
+Expires:Sun, 16 Aug 2020 23:32:18 GMT
+Last-Modified:Sun, 16 Aug 2020 22:32:18 GMT
 
 {
     "Title": "The Matrix",
@@ -55,7 +58,7 @@ Last-Modified:Tue, 31 Mar 2020 08:08:02 GMT
         },
         {
             "Source": "Rotten Tomatoes",
-            "Value": "87%"
+            "Value": "88%"
         },
         {
             "Source": "Metacritic",
@@ -64,7 +67,7 @@ Last-Modified:Tue, 31 Mar 2020 08:08:02 GMT
     ],
     "Metascore": "73",
     "imdbRating": "8.7",
-    "imdbVotes": "1,584,862",
+    "imdbVotes": "1,624,177",
     "imdbID": "tt0133093",
     "Type": "movie",
     "DVD": "21 Sep 1999",

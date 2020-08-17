@@ -42,6 +42,7 @@ namespace SystemTestingTools
             public string User;
             public string ToolUrl;
             public string ToolNameAndVersion;
+            internal long latencyMiliseconds;
         }
     }
 }

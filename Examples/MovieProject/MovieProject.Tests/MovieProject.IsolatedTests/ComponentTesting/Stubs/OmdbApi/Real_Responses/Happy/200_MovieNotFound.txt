@@ -1,19 +1,23 @@
-METADATA
-Date: 2019-03-24 21:32:09.621 (UTC+10:00) Canberra, Melbourne, Sydney
-Requested by code: C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+SystemTestingTools_Recording_V2
+Observations: search for someting that doesn't exist
+Date: 2020-08-16 17:10:33.157 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/search=gibberish)
 Local machine: DESKTOP-ODVA6EU
 User: DESKTOP-ODVA6EU\AlanPC
-Using tool: SystemTestingTools 0.1.0.0 (https://github.com/AlanCS/SystemTestingTools/)
-Observations: 
+Using tool: SystemTestingTools 1.3.10.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 418 ms
 
 REQUEST
-get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=giberish should not exist
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=search=gibberish
 Referer:https://github.com/AlanCS/SystemTestingTools
+Request-Id:|53a2430c-48cb421e76b61f51.1.
+
+
 
 --!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
 
 HTTP/1.1 200 OK
-Date:Sun, 24 Mar 2019 10:32:09 GMT
+Date:Sun, 16 Aug 2020 07:10:35 GMT
 Connection:keep-alive
 Cache-Control:public, max-age=86400
 Vary:*
@@ -22,12 +26,13 @@ X-Powered-By:ASP.NET
 Access-Control-Allow-Origin:*
 CF-Cache-Status:MISS
 Accept-Ranges:bytes
+cf-request-id:0497b424f30000fe6ce8944200000001
 Server:cloudflare
-CF-RAY:4bc7fac238df6533-SYD
+CF-RAY:5c39561b1a1efe6c-SYD
 Content-Type:application/json; charset=utf-8
 Content-Length:47
-Expires:Mon, 25 Mar 2019 10:32:09 GMT
-Last-Modified:Sun, 24 Mar 2019 10:32:09 GMT
+Expires:Sun, 16 Aug 2020 08:10:35 GMT
+Last-Modified:Sun, 16 Aug 2020 07:10:35 GMT
 
 {
     "Response": "False",

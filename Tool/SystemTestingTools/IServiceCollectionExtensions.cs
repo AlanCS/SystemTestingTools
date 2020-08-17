@@ -16,7 +16,7 @@ namespace SystemTestingTools
         /// <param name="folder">Folder full path where the response text files will be saved</param>
         /// <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
         /// <returns></returns>
-        public static IServiceCollection RecordHttpClientRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
+        public static IServiceCollection RecordHttpClientRequestsAndResponses(this IServiceCollection serviceCollection, string folder)
         {
             if (ContextRepo.context == null)
             {
@@ -25,15 +25,15 @@ namespace SystemTestingTools
                 ContextRepo.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
             }
 
-            serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false, callerPath)));                
+            serviceCollection.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new SystemTestingTools.RequestResponseRecorder(folder, false)));                
 
             return serviceCollection;
         }
 
         [Obsolete("Please use RecordHttpClientRequestsAndResponses instead", true)]
-        public static IServiceCollection RecordHttpRequestsAndResponses(this IServiceCollection serviceCollection, string folder, [CallerFilePath]string callerPath = "")
+        public static IServiceCollection RecordHttpRequestsAndResponses(this IServiceCollection serviceCollection, string folder)
         {
-            serviceCollection.RecordHttpClientRequestsAndResponses(folder, callerPath);
+            serviceCollection.RecordHttpClientRequestsAndResponses(folder);
 
             return serviceCollection;
         }

@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using SystemTestingTools.Internal;
 using Xunit;
 
 namespace SystemTestingTools.UnitTests
@@ -26,10 +27,10 @@ namespace SystemTestingTools.UnitTests
 
             RequestResponseRecorder.FileWriter = NSubstitute.Substitute.For<IFileWriter>();
 
-            var sut = new RequestResponseRecorder("", false, @"\folder\test.cs");            
+            var sut = new RequestResponseRecorder("", false);            
 
             // act
-            var result =  await sut.Summarize(request, response);
+            var result =  await StubsManager.Summarize(request, response, 1000);
 
             // asserts
             result.ShouldNotBeNull();
@@ -40,11 +41,12 @@ namespace SystemTestingTools.UnitTests
             result.Metadata.RecordedFrom.ShouldEndWith(@"(No httpcontext available)");
 
             result.Metadata.ToolUrl.ShouldBe(Constants.Website);
-            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.9.0");
+            result.Metadata.ToolNameAndVersion.ShouldBe("SystemTestingTools 1.3.10.0");
             result.Metadata.User.ShouldContain(System.Environment.UserName);
             result.Metadata.Timezone.ShouldNotBeNullOrWhiteSpace();
             result.Metadata.DateTime.ShouldBeLessThan(System.DateTime.Now.AddSeconds(1));
             result.Metadata.DateTime.ShouldBeGreaterThan(System.DateTime.Now.AddSeconds(-1));
+            result.Metadata.latencyMiliseconds.ShouldBe(1000);
 
             result.Request.Method.ShouldBe(HttpMethod.Post);
             result.Request.Url.ShouldBe("https://www.whatever.com/someendpoint");

@@ -1,3 +1,9 @@
+## 1.3.10
+- New features (backwards compatible)
+    - Recorder now generates files with duration of request and a identifier header (SystemTestingTools_Recording.V2), which will enable future features. It can only be read by the new method ResponseFactory.FromRecordedFile()    
+- Bugfix
+    - When recording a response without body, it would generate a file that could not be read by ResponseFactory due to misformatting
+
 ## 1.3.9
 - Bugfix
     - MinimumLogLevel in IntercepLogs() was not being respected at times

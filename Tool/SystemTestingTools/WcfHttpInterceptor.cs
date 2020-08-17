@@ -14,9 +14,9 @@ namespace SystemTestingTools
         /// <param name="folderName">where the files will be saved</param>
         /// <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
         /// <returns></returns>
-        public static IEndpointBehavior CreateRequestResponseRecorder(string folderName, [CallerFilePath]string callerPath = "")
+        public static IEndpointBehavior CreateRequestResponseRecorder(string folderName)
         {
-            return new CustomEndpointBehaviour(() => new RequestResponseRecorder(folderName, true, callerPath));
+            return new CustomEndpointBehaviour(() => new RequestResponseRecorder(folderName, true));
         }
 
         /// <summary>

@@ -69,5 +69,15 @@ namespace SystemTestingTools.UnitTests
             var exception = Assert.Throws<ArgumentException>(act);
             exception.Message.ShouldBe($"Not a valid Http Status code: 800");
         }
+
+        [Fact]
+        public void NoBody()
+        {
+            var fullFileName = FilesFolder + @"unhappy\401_NoBody.txt";
+
+            var response = ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
+
+            response.StatusCode.ShouldBe(System.Net.HttpStatusCode.Unauthorized);
+        }
     }
 }
