@@ -7,8 +7,12 @@ namespace SystemTestingTools
     internal interface IFileSystemFacade
     {
         bool FolderExists(string folderPath);
-        List<string> GetTextFileNames(string folderPath);
-        void CreateNewTextFile(string folderPath, string fileName, string content);
+        void CreateFile(string folderPath, string fileName, string content);
+        void DeleteFolder(string folderPath);
+        void CreateFolder(string folderPath);
+        List<string> GetTextFileNames(string folderPath, string fileName);
+        string[] GetTextFileNames(string folderPath);
+        string ReadContent(string fullFileName);
     }
 
     internal class FileSystemFacade : IFileSystemFacade
@@ -18,16 +22,38 @@ namespace SystemTestingTools
             return Directory.Exists(folderPath);
         }
 
-        public List<string> GetTextFileNames(string folderPath)
+        public void CreateFolder(string folderPath)
         {
-            var existingFiles = Directory.GetFiles(folderPath, "*.txt");
+            Directory.CreateDirectory(folderPath);
+        }
+
+        public void DeleteFolder(string folderPath)
+        {
+            Directory.Delete(folderPath, true);
+        }
+
+        public string[] GetTextFileNames(string folderPath)
+        {
+            var existingFiles = Directory.GetFiles(folderPath, "*.txt", SearchOption.AllDirectories);
+
+            return existingFiles;
+        }
+
+        public List<string> GetTextFileNames(string folderPath, string fileName)
+        {
+            var existingFiles = Directory.GetFiles(folderPath, $"{fileName}*.txt");
 
             var fileNames = existingFiles.Select(c => Path.GetFileName(c)).ToList();
 
             return fileNames;
         }
 
-        public void CreateNewTextFile(string folderPath, string fileName, string content)
+        public string ReadContent(string fullFileName)
+        {
+            return File.ReadAllText(fullFileName);
+        }
+
+        public void CreateFile(string folderPath, string fileName, string content)
         {
             var fullFileName = Path.Combine(folderPath, $"{fileName}.txt");
 

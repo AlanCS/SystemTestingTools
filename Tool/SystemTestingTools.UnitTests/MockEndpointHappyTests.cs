@@ -1,8 +1,9 @@
 using System.Text.RegularExpressions;
 using Xunit;
-using Shouldly;
+
 using System.Net;
 using System.Threading.Tasks;
+using FluentAssertions;
 
 namespace SystemTestingTools.UnitTests
 {
@@ -20,13 +21,13 @@ namespace SystemTestingTools.UnitTests
         {
             var sut = ResponseFactory.FromFiddlerLikeResponseFile( FilesFolder + @"happy\401_InvalidKey.txt");
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+            sut.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
             sut.Headers.ShouldContainHeader("Server", "cloudflare");
             sut.Headers.ShouldContainHeader("CF-RAY", "4afa0cb0efb66563-SYD");
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBe(@"{""Response"":""False"",""Error"":""Invalid API key!""}");
+            body.Should().Be(@"{""Response"":""False"",""Error"":""Invalid API key!""}");
         }
 
         [Fact]
@@ -34,7 +35,7 @@ namespace SystemTestingTools.UnitTests
         {
             var sut = ResponseFactory.FromFiddlerLikeResponseFile( FilesFolder + @"happy\401_Unauthorized_WithoutBody.txt");
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.Unauthorized);
+            sut.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
             sut.Content.Headers.ShouldContainHeader("Content-Length", "0");
             sut.Content.Headers.ShouldContainHeader("Expires", "Sat, 02 Mar 2019 02:53:56 GMT");
@@ -51,7 +52,7 @@ namespace SystemTestingTools.UnitTests
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBeNullOrEmpty();
+            body.Should().BeNullOrEmpty();
         }
 
 
@@ -60,11 +61,11 @@ namespace SystemTestingTools.UnitTests
         {
             var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy\424_NoHeaders.txt");
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.FailedDependency);
+            sut.StatusCode.Should().Be(HttpStatusCode.FailedDependency);
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBe(@"{""Content"":""No headers found here""}");
+            body.Should().Be(@"{""Content"":""No headers found here""}");
         }
 
         [Fact]
@@ -72,7 +73,7 @@ namespace SystemTestingTools.UnitTests
         {
             var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy\200_MovieNotFound.txt");
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.OK);
+            sut.StatusCode.Should().Be(HttpStatusCode.OK);
             
             sut.Content.Headers.ShouldContainHeader("Content-Type", "application/json; charset=utf-8");
             sut.Content.Headers.ShouldContainHeader("Content-Length", "47");
@@ -92,7 +93,7 @@ namespace SystemTestingTools.UnitTests
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBe(@"{
+            body.Should().Be(@"{
   ""Response"": ""False"",
   ""Error"": ""Movie not found!""
 }");
@@ -103,11 +104,11 @@ namespace SystemTestingTools.UnitTests
         {
             var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy\200_WithComments.txt");
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.OK);
+            sut.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBe(@"{""Content"":""testing comments""}");
+            body.Should().Be(@"{""Content"":""testing comments""}");
 
             sut.Content.Headers.ShouldContainHeader("Content-Type", "application/json; charset=utf-8");
             sut.Content.Headers.ShouldContainHeader("Expires", "Mon, 04 Mar 2019 07:17:49 GMT");
@@ -131,13 +132,13 @@ namespace SystemTestingTools.UnitTests
 
             var sut = ResponseFactory.FromBodyOnlyFile(fullFileName, HttpStatusCode.OK);
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.OK);
+            sut.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBe(@"{""Content"":""Only the raw body found here!""}");
+            body.Should().Be(@"{""Content"":""Only the raw body found here!""}");
 
-            sut.Headers.ShouldBeEmpty();
+            sut.Headers.Should().BeEmpty();
         }
 
         [Fact]
@@ -147,11 +148,11 @@ namespace SystemTestingTools.UnitTests
 
             var sut = ResponseFactory.From(content, HttpStatusCode.OK);
 
-            sut.StatusCode.ShouldBe(HttpStatusCode.OK);
+            sut.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var body = await sut.GetResponseString();
 
-            body.ShouldBe(content);
+            body.Should().Be(content);
         }
     }
 }

@@ -16,24 +16,22 @@ using Polly.Timeout;
 using System;
 using System.Net.Http;
 using System.ServiceModel;
-using System.ServiceModel.Description;
 using System.Text.Json.Serialization;
 using SystemTestingTools;
-//using SystemTestingTools; // you only need this line if you are planning to use IServiceCollection.RecordHttpRequestsAndResponses()
 
 namespace MovieProject.Web
 {
     public class Startup
     {
         private readonly ILogger<Startup> _logger;
+        private readonly IWebHostEnvironment _env;
         private readonly IConfiguration _configuration;
 
-        public static IEndpointBehavior wcfInterceptor = WcfHttpInterceptor.CreateRequestResponseRecorder("C:\\RecordedRequestAndResponses");
-
-        public Startup(IConfiguration configuration, ILogger<Startup> logger)
+        public Startup(IConfiguration configuration, ILogger<Startup> logger, IWebHostEnvironment env)
         {
             _configuration = configuration;
             _logger = logger;
+            _env = env;
         }
 
         public virtual void ConfigureServices(IServiceCollection services)
@@ -58,7 +56,16 @@ namespace MovieProject.Web
 
             services.AddTransient<IHttpContextAccessor, HttpContextAccessor>();
             services.AddHealthChecks();
-            services.RecordHttpClientRequestsAndResponses("C:\\RecordedRequestAndResponses");
+
+            if (IsStubbingEnabled())
+                services.AddInterceptionAndStubs(_logger);
+        }
+
+        private bool IsStubbingEnabled()
+        {
+            if (_env.IsStaging() || _env.IsProduction()) return false;
+            if (_configuration["DisableStubbing"] != null) return false; // good safety valve, for when you want to disable this in an emergency
+            return true;
         }
 
         private void AddHttpDependencies(IServiceCollection services)
@@ -79,7 +86,8 @@ namespace MovieProject.Web
                 .AddHttpClient<IMovieDatabaseProxy, MovieDatabaseProxy>()
                 .AddPolicyHandler(retryPolicy)
                 .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
-                .ConfigureHttpClient(c => {
+                .ConfigureHttpClient(c =>
+                {
                     c.BaseAddress = new Uri(omdb.Value.Url);
                     c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
@@ -92,16 +100,19 @@ namespace MovieProject.Web
                 .AddHttpClient<IUserProxy, UserProxy>()
                 .AddPolicyHandler(retryPolicy)
                 .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
-                .ConfigureHttpClient(c => {
+                .ConfigureHttpClient(c =>
+                {
                     c.BaseAddress = new Uri(user.Value.Url);
                     c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
                 });
 
-            services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
+            services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory =>
+            {
                 var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
                 client.Endpoint.Address = new EndpointAddress(_configuration["Calculator:Url"]);
-                if (wcfInterceptor != null) client.Endpoint.EndpointBehaviors.Add(wcfInterceptor);
+                if(IsStubbingEnabled())
+                    client.Endpoint.EnableHttpInterception();
                 return client;
             });
         }
@@ -109,13 +120,16 @@ namespace MovieProject.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (!env.IsDevelopment())
+            if (env.IsProduction())
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }
-            
+
+            if(IsStubbingEnabled())
+                app.ExposeStubsForDirectoryBrowsing();            
+
             app.UseMiddleware<ExceptionHandlerMiddleware>();
             app.UseHealthChecks("/healthcheck");
             app.UseRouting();
@@ -131,7 +145,7 @@ namespace MovieProject.Web
             // - see cloud consumption and analyse bugs where application restarts unexpectely
             // - test logging is working correctly easily
             // -- check if component tests can intercept logs
-            _logger.LogInformation("Application is starting"); 
+            _logger.LogInformation("Application is starting");
         }
     }
 }

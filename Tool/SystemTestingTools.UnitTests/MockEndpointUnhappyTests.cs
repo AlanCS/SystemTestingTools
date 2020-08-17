@@ -1,7 +1,8 @@
+using FluentAssertions;
 using System;
 using System.Text.RegularExpressions;
 using Xunit;
-using Shouldly;
+
 
 namespace SystemTestingTools.UnitTests
 {
@@ -22,7 +23,7 @@ namespace SystemTestingTools.UnitTests
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
             var exception = Assert.Throws<ArgumentException>(act);
-            exception.Message.ShouldBe($"Could not find file '{fullFileName}'");
+            exception.Message.Should().Be($"Could not find file '{fullFileName}'");
         }
 
         [Fact]
@@ -33,7 +34,7 @@ namespace SystemTestingTools.UnitTests
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
             var exception = Assert.Throws<ArgumentException>(act);
-            exception.Message.ShouldBe($"File content is empty");
+            exception.Message.Should().Be($"Content of {fullFileName} is empty");
         }
 
         [Fact]
@@ -44,7 +45,7 @@ namespace SystemTestingTools.UnitTests
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
             var exception = Assert.Throws<ArgumentException>(act);
-            exception.Message.ShouldBe($"File is not in the right format, please consult {Constants.Website}");
+            exception.Message.Should().Be($"File is not in the right format, please consult {Constants.Website}");
         }
 
         [Fact]
@@ -56,7 +57,7 @@ namespace SystemTestingTools.UnitTests
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
             var exception = Assert.Throws<ArgumentException>(act);
-            exception.Message.ShouldBe($"File is not in the right format, please consult {Constants.Website}");
+            exception.Message.Should().Be($"File is not in the right format, please consult {Constants.Website}");
         }
 
         [Fact]
@@ -67,7 +68,7 @@ namespace SystemTestingTools.UnitTests
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
             var exception = Assert.Throws<ArgumentException>(act);
-            exception.Message.ShouldBe($"Not a valid Http Status code: 800");
+            exception.Message.Should().Be($"Not a valid Http Status code: 800");
         }
 
         [Fact]
@@ -77,7 +78,7 @@ namespace SystemTestingTools.UnitTests
 
             var response = ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
-            response.StatusCode.ShouldBe(System.Net.HttpStatusCode.Unauthorized);
+            response.StatusCode.Should().Be(System.Net.HttpStatusCode.Unauthorized);
         }
     }
 }

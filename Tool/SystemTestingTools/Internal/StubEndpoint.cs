@@ -4,38 +4,41 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Linq;
 
-namespace SystemTestingTools
+namespace SystemTestingTools.Internal
 {
     [DebuggerDisplay("{Endpoint}")]
-    internal class StubEndpoint 
+    internal class StubEndpoint
     {
         private string endpoint;
         private readonly Dictionary<string, string> headerMatches;
 
         internal readonly HttpResponseMessage Response;
         internal readonly Exception Exception;
+        internal int Counter = 1;
 
-        public StubEndpoint(HttpMethod httpMethod, System.Uri url, HttpResponseMessage response, Dictionary<string, string> headerMatches)
+        public StubEndpoint(HttpMethod httpMethod, Uri url, HttpResponseMessage response, Dictionary<string, string> headerMatches, int counter)
         {
-            this.Response = response ?? throw new ArgumentNullException(nameof(response));
+            Response = response ?? throw new ArgumentNullException(nameof(response));
             this.headerMatches = headerMatches;
             SetEndpoint(httpMethod, url);
+            Counter = counter;
         }
 
-        public StubEndpoint(HttpMethod httpMethod, System.Uri url, Exception exception, Dictionary<string, string> headerMatches)
+        public StubEndpoint(HttpMethod httpMethod, Uri url, Exception exception, Dictionary<string, string> headerMatches, int counter)
         {
-            this.Exception = exception ?? throw new ArgumentNullException(nameof(exception));
+            Exception = exception ?? throw new ArgumentNullException(nameof(exception));
             this.headerMatches = headerMatches;
             SetEndpoint(httpMethod, url);
+            Counter = counter;
         }
 
-        private void SetEndpoint(HttpMethod httpMethod, System.Uri url)
+        private void SetEndpoint(HttpMethod httpMethod, Uri url)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
-            this.endpoint = string.Format($"{httpMethod} {url}");
+            endpoint = string.Format($"{httpMethod} {url}");
         }
 
-        public bool IsMatch(HttpRequestMessageWrapper request)
+        public bool IsMatch(HttpRequestMessage request)
         {
             if (endpoint != request.GetEndpoint()) return false;
 
@@ -43,9 +46,9 @@ namespace SystemTestingTools
 
             foreach (var key in headerMatches.Keys)
             {
-                if (!request.Request.Headers.Contains(key)) return false; // mandatory header doesn't exist
+                if (!request.Headers.Contains(key)) return false; // mandatory header doesn't exist
 
-                if (request.Request.Headers.GetValues(key).FirstOrDefault() != headerMatches[key]) return false; // mandatory header doesn't exist
+                if (request.Headers.GetValues(key).FirstOrDefault() != headerMatches[key]) return false; // mandatory header doesn't exist
             }
 
             return true; // all headers match

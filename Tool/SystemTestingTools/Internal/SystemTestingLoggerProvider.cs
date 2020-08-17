@@ -94,14 +94,14 @@ namespace SystemTestingTools
         {
             if(IsLogDisabled(logLevel)) return; // for some reasons, some logs are getting here when they shouldn't; so we do one last check here
 
-            var session = ContextRepo.GetSession();
+            var session = Constants.TestStubs.GetSession();
 
             var log = new LoggedEvent(logLevel, formatter(state, exception), source);
 
             if (session == null)
-                ContextRepo.UnsessionedLogs.Add(log);
+                UnsessionedData.UnsessionedLogs.Add(log);
             else
-                ContextRepo.SessionLogs[session].Add(log);
+                Constants.TestStubs.SessionLogs[session].Add(log);
         }
     }
 }

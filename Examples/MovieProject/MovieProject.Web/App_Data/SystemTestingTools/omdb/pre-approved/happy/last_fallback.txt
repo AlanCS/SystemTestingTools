@@ -1,0 +1,77 @@
+SystemTestingTools_Recording_V2
+Observations: This is a fake response that will be returned if we can't contact downstream or find a better stub
+Date: 2020-08-18 20:26:34.231 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 1.3.10.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 125 ms
+
+REQUEST
+get http://www.omdbapi.com?type=movie&t=matrix
+Referer:https://github.com/AlanCS/SystemTestingTools
+Request-Id:|5de5fb2f-495c9d0e1abf3ad2.1.
+
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Tue, 18 Aug 2020 10:26:25 GMT
+Connection:keep-alive
+Set-Cookie:__cfduid=d67f12c8bd87a19fcafcae42652af08da1597746385; expires=Thu, 17-Sep-20 10:26:25 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:HIT
+Age:129247
+Accept-Ranges:bytes
+cf-request-id:04a2b42b66000016b58113c200000001
+Server:cloudflare
+CF-RAY:5c4aefbf09dc16b5-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:1026
+Expires:Sun, 16 Aug 2020 23:32:18 GMT
+Last-Modified:Sun, 16 Aug 2020 22:32:18 GMT
+
+{
+    "Title": "Fake Movie Last Fallback",
+    "Year": "2020",
+    "Rated": "R",
+    "Released": "31 Mar 1999",
+    "Runtime": "136 min",
+    "Genre": "Action, Sci-Fi",
+    "Director": "Lana Wachowski, Lilly Wachowski",
+    "Writer": "Lilly Wachowski, Lana Wachowski",
+    "Actors": "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss, Hugo Weaving",
+    "Plot": "This is a stubbed response, designed to allow teams to continue working while there are problems with downstream",
+    "Language": "English",
+    "Country": "USA",
+    "Awards": "Won 4 Oscars. Another 37 wins & 50 nominations.",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+    "Ratings": [
+        {
+            "Source": "Internet Movie Database",
+            "Value": "8.7/10"
+        },
+        {
+            "Source": "Rotten Tomatoes",
+            "Value": "88%"
+        },
+        {
+            "Source": "Metacritic",
+            "Value": "73/100"
+        }
+    ],
+    "Metascore": "73",
+    "imdbRating": "8.7",
+    "imdbVotes": "1,624,177",
+    "imdbID": "tt0123456",
+    "Type": "movie",
+    "DVD": "21 Sep 1999",
+    "BoxOffice": "N/A",
+    "Production": "Warner Bros. Pictures",
+    "Website": "N/A",
+    "Response": "True"
+}

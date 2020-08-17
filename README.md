@@ -1,12 +1,12 @@
 [<img align="right" src="https://i.imgur.com/DdoC5Il.png" width="100" />](https://www.nuget.org/packages/Polly/)
 
-**SystemTestingTools** (for .net core 3.1+) allows you to extend the capabilities of your tests, allowing you to run more comprehensive + deterministic tests by:
+**SystemTestingTools** (for .net core 3.1+) extends your test capabilities, providing ways to create / return stubs, allowing you to run more comprehensive / deterministic / reliable tests in your local dev machine / build tool and in non-prod environments.
 
-* supporting Http calls:
-    * intercepting of outgoing calls, returning stub responses
-    * asserting outgoing calls
-    * recording live outgoing calls (requests and responses)
-* asserting logs
+* supports interception of Http (HttpClient or WCF) calls:
+    * before they are sent, returning stubs (ideal for automated testing)
+    * after they are sent, where you can save the request and response (recording), log appropriately or replace bad responses by stubs (ideal for dev/test environments that are flaky or not ready)
+    * asserting outgoing calls (ie: making sure out downstream calls have SessionIds)
+* intercept logs and run asserts on them
 
 [Nuget package](https://www.nuget.org/packages/SystemTestingTools) | [CHANGE LOG](CHANGELOG.md)
 
@@ -31,8 +31,7 @@ In summary, you are better off using T shaped testing (focusing mainly component
 | Quickly find bugs      | :heavy_check_mark: | :x: | Small commits
 | Handle shared states (cache, circuit breaker)      | :heavy_check_mark: | :x: | Disable or use data so cache doesn’t matter
 
-
-# Basic capabilities
+# Basic capabilities for automated testing
 
 You can use the extension method **HttpClient.AppendHttpCallStub()** to intercept Http calls and return a stub response, then use **HttpClient.GetSessionLogs()** and **HttpClient.GetSessionOutgoingRequests()** to get all the logs and outgoing Http calls relating to your session.
 
@@ -83,19 +82,51 @@ public async Task When_UserAsksForMovie_Then_ReturnMovieProperly()
 
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetMovieHappyTests.cs#L53)
 
-# Setup
+# Basic capabilities for stubbing in non prod environments
+
+You can use the extension method **IServiceCollection.InterceptHttpCallsAfterSending()** to intercept Http calls (coming from HttpClient or WCF/SOAP), a lambda method will be called everytime for you to decide what to do; with a few helper methods to facilitate common requirements.
+
+Simple example:
+
+```C#
+using SystemTestingTools;
+
+public virtual void ConfigureServices(IServiceCollection services)
+{
+    services.InterceptHttpCallsAfterSending(async (intercept) => {
+        if (intercept.Response?.IsSuccessStatusCode ?? false)
+            await intercept.SaveAsRecording("new/unhappy"); // save for later analysis
+        else
+            await intercept.SaveAsRecording("new/happy"); // save so it can be used to replace an unhappy response later (and analysis)
+        
+        if (intercept.Response?.IsSuccessStatusCode ?? false) 
+            return intercept.KeepResultUnchanged(); // if we got a happy response, just return the original, no need for stubs
+
+        var recording = RecordingCollection.Recordings.FirstOrDefault(
+            recording => recording.File.Contains("new/happy")
+            && recording.Request.RequestUri.PathAndQuery == intercept.Request.RequestUri.PathAndQuery);  
+
+        if (recording != null) // we found a happy response for the same endpoint, return it instead of original response
+            return intercept.ReturnRecording(recording, "unhappy response replaced by a happy one");
+        
+        return intercept.KeepResultUnchanged(); // return original response
+    });
+}
+```
+
+# Automated testing setup
 
 When creating your WebHostBuilder in your test project, to support HttpClient calls, add
 
 ```C#
-.ConfigureInterceptionOfHttpClientCalls()
+.InterceptHttpCallsBeforeSending()
 .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
                 namespaceToIncludeStart: new[] { "MovieProject" },
                 namespaceToExcludeStart: new[] { "Microsoft" });
 ```
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L42)
 
-Explanation: ConfigureInterceptionOfHttpClientCalls() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a stub response, configured as above by the method AppendHttpCallStub().
+Explanation: InterceptHttpCallsBeforeSending() will add a LAST DelegatingHandler to every HttpClient configured with services.AddHttpClient() (as recommended by Microsoft); so we can intercept and return a stub response, configured as above by the method AppendHttpCallStub().
 
 InterceptLogs() allows namespaces to include or exclude in the logs, first the inclusion filter is executed, then the exclusion one. So if you configure namespaceToIncludeStart: new[] { "MovieProject" } namespaceToExcludeStart: new[] { "MovieProject.Proxy" }; then you will get all logs logged from classes whose namespace starts with MovieProject, except if they start with MovieProject.Proxy
 
@@ -174,32 +205,20 @@ message.ShouldBe(Constants.DownstreamErrorMessage);
 ```
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetMovieUnhappyTests.cs#L30)
 
-## 3 - Recorder
-If you have an existing solution, you might find useful to use a recorder to store the existing requests and responses in a text file, so you can use them for stubbing later!
-
-Once you are setup your  Startup.cs file (as per instructions above), just setup the GlobalHandler to record like this:
-
-```C#
-using SystemTestingTools;
-
-public virtual void ConfigureServices(IServiceCollection services)
-{
-    services.RecordHttpClientRequestsAndResponses("C:\\RecordedRequestAndResponses"); // add this line
-}
-```
-
-It's recommended you don't commit this code to production :) use it only for quickly creating stub responses for loading later using the ResponseFactory.FromFiddlerLikeResponseFile() method
+## 3 - Recordings and returning stubs under certain conditions
+The recorder save the request / response to a file with a bunch of useful metadata, so it can be used for analysis later or stubs for automated testing or manual testing (non prod environments).
 
 Example of generated file:
 
 ```JSON
-METADATA
+SystemTestingTools_Recording_V2
 Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
-Date: 2019-03-20 18:51:47.189 (UTC+10:00) Canberra, Melbourne, Sydney
+Date: 2020-08-31 11:28:21.791 (UTC+10:00) Canberra, Melbourne, Sydney
 Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
-Local machine: DESKTOP-OGVA1EU
-User: DESKTOP-OGVA1EU\AlanPC
-Using tool: SystemTestingTools 1.3.1.0 (https://github.com/AlanCS/SystemTestingTools/)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 2.0.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 170 ms
 
 REQUEST
 get http://www.omdbapi.com/someendpoint?search=weird_movie_title
@@ -214,18 +233,56 @@ Header2: some other value
 {"Message":"some json content"}
 ```
 
-It's useful to keep some metadata like the date the stub was generated and how the request looked like, so if in the future people decide to leverage the same stubs, they know if it's out of date or how they can easily generate new ones.
-
 [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/Stubs/OmdbApi/Real_Responses/Happy/200_ContainsMostFields_TheMatrix.txt)
 
+Lots of class methods and extension methods can help you make your test environment more stable; by for example saving successful responses and returning those if the same endpoint fails; or providing fall back stubs or allowing stubs to be driven by headers.
 
-For recording WCF http requests / and responses, in your Startup
+You can find a full list of capabilities in the changelog, but here is a small example:
 
+```C#
+using SystemTestingTools;
+
+public virtual void ConfigureServices(IServiceCollection services)
+{
+    services.InterceptHttpCallsAfterSending(async (intercept) => {
+        if (intercept.Response?.IsSuccessStatusCode ?? false)
+            await intercept.SaveAsRecording("new/unhappy");
+        else
+            await intercept.SaveAsRecording("new/happy");
+
+        var returnStubInstruction = intercept.HttpContextAccessor.GetRequestHeaderValue("SystemTestingTools_ReturnStub");
+        if (returnStubInstruction != null) // someone is testing edge cases, we return the requested stub
+        {
+            var stub = ResponseFactory.FromFiddlerLikeResponseFile(intercept.RootStubsFolder.AppendPath(returnStubInstruction));
+            return intercept.ReturnStub(stub, "instructions from header");
+        }
+
+        if (intercept.Response?.IsSuccessStatusCode ?? false) return intercept.KeepResultUnchanged();
+
+        var message = intercept.Summarize();
+
+        logger.LogError(intercept.Exception, message);                
+
+        var recording = RecordingCollection.Recordings.FirstOrDefault(
+            recording => recording.File.Contains("new/happy")
+            && recording.Request.RequestUri.PathAndQuery == intercept.Request.RequestUri.PathAndQuery
+            && recording.Request.GetSoapAction() == intercept.Request.GetSoapAction());  
+
+        if (recording != null)
+            return intercept.ReturnRecording(recording, message);     
+
+        var fallBackRecording = RecordingCollection.Recordings.FirstOrDefault(
+            recording => recording.File.Contains("last_fallback"));
+
+        if (fallBackRecording != null)
+            return intercept.ReturnRecording(fallBackRecording, message + " and could not find better match");                                                 
+
+        return intercept.KeepResultUnchanged();
+    });
+}
 ```
-public static IEndpointBehavior wcfInterceptor = WcfHttpInterceptor.CreateRequestResponseRecorder("C:\\RecordedRequestAndResponses");
-```
 
-## 4 - Extension methods for HttpResponseMessage
+## 5 - Extension methods for HttpResponseMessage
 
 For easy manipulation and assertions of the responses you get (specially JSON), these extensions might save you time / lines of code:
 
@@ -242,28 +299,19 @@ response.ModifyJsonBody<DTO.User[]>(dto =>
 
 ModifyJsonBody() can be useful to make small changes to a complex DTO you just loaded from disk, so you don't need to store lots of small variantions of possible responses, you can make changes to it in code. [Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/GetUserHappyTests.cs#L35)
 
-## 5 - Supporting WFC Http calls
+## 6 - Supporting WFC Http calls
 
 Unfortunately the  HTTP Client used by WCF Http calls is created internally, so intercepting it requires a bit more manual work
 ```C#
-// in your Startup.cs, you need to add the line bellow
-public static IEndpointBehavior wcfInterceptor = null;
-
 // in your ConfigureServices method, you will add one line to the setup of your WCF interface
 services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
     var client = new CalculatorSoapClient(new CalculatorSoapClient.EndpointConfiguration());
     client.Endpoint.Address = new EndpointAddress(_configuration["Url"]);
-    if (wcfInterceptor != null) client.Endpoint.EndpointBehaviors.Add(wcfInterceptor); // add this line to  allow interception
+    client.Endpoint.EnableHttpInterception(); // add this line to  allow interception
     return client;
 });
 ```
 [Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L99)
-
-And before setting up your TestServer
-```C#
-Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
-```
-[Real life example](/Examples/MovieProject/MovieProject.Tests/MovieProject.IsolatedTests/ComponentTesting/TestServerFixture.cs#L32)
 
 And then you can stub WCF Http calls, example (and you can use the header filters to avoid crossed wires):
 ```C#
@@ -334,6 +382,18 @@ Do not trust downstream dependencies to write logs to help you debug, even if yo
 
 [Real life Example](/Examples/MovieProject/MovieProject.Logic/Proxy/BaseProxy.cs#L65)
 
+# Notes
+
+## Stubs vs Recordings
+ A stub (as per industry standard) in this context is a fake pre-defined response you will return instead of a real response from a downstream system. 
+ 
+ A recording is a new concept created by SystemTestingTools, it's a subtype of stub, because it contains a response AND also the request that generated it.
+ 
+ It unlocks quite a few more capabilities, to name just a few: 
+ * matching the current request with a recording so you can return a healthy response when your downstream system is momentarily unhealthy
+ * documenting how the response was obtained
+ * showing how to reproduce response
+
 # Warnings
 
 Unfortunately life is not all rainbows and unicorns :smiley:, here are potential problems you should keep an eye out while using this tool:
@@ -342,9 +402,7 @@ Unfortunately life is not all rainbows and unicorns :smiley:, here are potential
 
 It can store (in the designated folder) user private data or other confidential information (if you deal with that sort of data), in ways that don't comply to your local laws (or company rules) about privacy / security / compliance.
 
-If that's a concern, make sure you just use this function in local testing or non-production environments.
-
-Obviously you don't need to worry about using the other functions of this tool, as they only require you to add this package to your test projects, the web project that goes to production remains untouched.
+If that's a concern, make sure you only enable this function in non production environments; and leave the option to have a configuration to disable it in an emergency, just in case.
 
 ## 2 -The recorder generated file format divider
 

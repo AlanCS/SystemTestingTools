@@ -22,23 +22,40 @@ namespace SystemTestingTools
         [Obsolete("Please use ConfigureInterceptionOfHttpClientCalls() instead", true)]
         public static IWebHostBuilder ConfigureInterceptionOfHttpCalls(this IWebHostBuilder builder)
         {
-            return ConfigureInterceptionOfHttpClientCalls(builder);
+            // the name of this method wasn't clear enough of it's intention
+            return null;
         }
 
         /// <summary>
-        /// Intercept outgoing HttpClient calls so we can return stubs and make assertions later
+        /// obsolete method
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
+        [Obsolete("Please use InterceptHttpCallsBeforeSending() instead", true)]
         public static IWebHostBuilder ConfigureInterceptionOfHttpClientCalls(this IWebHostBuilder builder)
+        {
+            // the name of this method wasn't clear enough of it's intention
+            return null;
+        }
+
+        /// <summary>
+        /// Intercept outgoing HttpClient calls before they leave the computer, so we can return stubs and make assertions later
+        /// </summary>
+        /// <param name="builder">the builder</param>
+        /// <param name="keepListOfOutgoingRequests">keep the sent requests, so HttpClient.GetSessionOutgoingRequests() can retrieve them; turn it to false if you are doing performance tests, as the growth in the list might look like a memory leak</param>
+        /// <returns></returns>
+        public static IWebHostBuilder InterceptHttpCallsBeforeSending(this IWebHostBuilder builder, bool keepListOfOutgoingRequests = true)
         {
             builder.ConfigureTestServices((c) =>
             {
                 var services = c.BuildServiceProvider();
                 var context = services.GetService<IHttpContextAccessor>();
-                ContextRepo.context = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
-                c.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallsInterceptorHandler()));
+                Constants.httpContextAccessor = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+                c.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallInterceptor(false)));
             });
+
+            Constants.InterceptHttpBeforeSending = true;
+            Constants.KeepListOfSentRequests = keepListOfOutgoingRequests;
 
             return builder;
         }

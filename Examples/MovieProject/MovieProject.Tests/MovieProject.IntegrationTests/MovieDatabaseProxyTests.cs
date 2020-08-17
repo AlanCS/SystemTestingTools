@@ -1,3 +1,5 @@
+using FluentAssertions;
+using FluentAssertions.Execution;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -5,7 +7,7 @@ using Microsoft.Extensions.Options;
 using MovieProject.Logic.Option;
 using MovieProject.Logic.Proxy;
 using NSubstitute;
-using Shouldly;
+
 using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
@@ -37,12 +39,15 @@ namespace MovieProject.ContractTests
 
             var result = await proxy.GetMovieOrTvSeries("movie", "the matrix");
 
-            result.ShouldNotBeNull();
-            result.Id.ShouldBe("tt0133093");
-            result.Name.ShouldBe("The Matrix");
-            result.Year.ShouldBe("1999");
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.Id.Should().Be("tt0133093");
+                result.Name.Should().Be("The Matrix");
+                result.Year.Should().Be("1999");
 
-            logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);
+                logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);
+            }
         }
 
         [Fact]
@@ -52,12 +57,15 @@ namespace MovieProject.ContractTests
 
             var result = await proxy.GetMovieOrTvSeries("series", "the big bang theory");
 
-            result.ShouldNotBeNull();
-            result.Id.ShouldBe("tt0898266");
-            result.Name.ShouldBe("The Big Bang Theory");
-            result.Year.ShouldBe("2007–2019");
+            using (new AssertionScope())
+            {
+                result.Should().NotBeNull();
+                result.Id.Should().Be("tt0898266");
+                result.Name.Should().Be("The Big Bang Theory");
+                result.Year.Should().Be("2007–2019");
 
-            logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);
+                logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);
+            }
         }
     }
 }

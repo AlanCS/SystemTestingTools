@@ -1,0 +1,76 @@
+SystemTestingTools_Recording_V2
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
+Date: 2020-08-31 09:34:32.159 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/the godfather)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 2.0.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 528 ms
+
+REQUEST
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=the godfather
+Referer:https://github.com/AlanCS/SystemTestingTools
+Request-Id:|37e86b0f-407953b3abe73a25.1.
+
+
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Sun, 30 Aug 2020 23:34:32 GMT
+Connection:keep-alive
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:MISS
+Accept-Ranges:bytes
+cf-request-id:04e35201f50000fd3a5f83f200000001
+Server:cloudflare
+CF-RAY:5cb252afe83ffd3a-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:1069
+Expires:Mon, 31 Aug 2020 00:34:31 GMT
+Last-Modified:Sun, 30 Aug 2020 23:34:31 GMT
+
+{
+    "Title": "The Godfather",
+    "Year": "1972",
+    "Rated": "R",
+    "Released": "24 Mar 1972",
+    "Runtime": "175 min",
+    "Genre": "Crime, Drama",
+    "Director": "Francis Ford Coppola",
+    "Writer": "Mario Puzo (screenplay by), Francis Ford Coppola (screenplay by), Mario Puzo (based on the novel by)",
+    "Actors": "Marlon Brando, Al Pacino, James Caan, Richard S. Castellano",
+    "Plot": "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.",
+    "Language": "English, Italian, Latin",
+    "Country": "USA",
+    "Awards": "Won 3 Oscars. Another 26 wins & 30 nominations.",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BM2MyNjYxNmUtYTAwNi00MTYxLWJmNWYtYzZlODY3ZTk3OTFlXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg",
+    "Ratings": [
+        {
+            "Source": "Internet Movie Database",
+            "Value": "9.2/10"
+        },
+        {
+            "Source": "Rotten Tomatoes",
+            "Value": "98%"
+        },
+        {
+            "Source": "Metacritic",
+            "Value": "100/100"
+        }
+    ],
+    "Metascore": "100",
+    "imdbRating": "9.2",
+    "imdbVotes": "1,562,921",
+    "imdbID": "tt0068646",
+    "Type": "movie",
+    "DVD": "09 Oct 2001",
+    "BoxOffice": "N/A",
+    "Production": "Paramount Pictures",
+    "Website": "N/A",
+    "Response": "True"
+}

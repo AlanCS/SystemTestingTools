@@ -4,194 +4,109 @@
         <name>SystemTestingTools</name>
     </assembly>
     <members>
-        <member name="T:SystemTestingTools.HttpClientExtensions">
+        <member name="T:SystemTestingTools.InterceptedHttpCall">
             <summary>
-            extensions to HttpClient to allow stubbing and assertions
+            Contains details about the intercepted http call
             </summary>
         </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.CreateSession(System.Net.Http.HttpClient)">
+        <member name="F:SystemTestingTools.InterceptedHttpCall.Request">
             <summary>
-            Create a new session, so logs and requests and responses can be tracked
-            </summary>
-            <param name="httpClient"></param>
-            <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
-        </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionId(System.Net.Http.HttpClient)">
-            <summary>
-            Get Session ID allocated to httpClient, can be useful to interact with other tools
-            </summary>
-            <param name="httpClient"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Will return the response when a matching call gets fired, but only once
-            if you expect this endpoint to be called X times, add X stub endpoints
-            </summary>
-            <param name="httpClient"></param>
-            <param name="httpMethod"></param>
-            <param name="Url"></param>
-            <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
-            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
-        </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Exception,System.Collections.Generic.Dictionary{System.String,System.String})">
-            <summary>
-            Will throw an exception when a matching call gets fired, but only once
-            if you expect this endpoint to be called X times, add X stub endpoints
-            </summary>
-            <param name="httpClient"></param>
-            <param name="httpMethod"></param>
-            <param name="Url"></param>
-            <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
-            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
-        </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionLogs(System.Net.Http.HttpClient)">
-            <summary>
-            Get all logs related to the current session
-            </summary>
-            <param name="httpClient"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionOutgoingRequests(System.Net.Http.HttpClient)">
-            <summary>
-            Get all outgoing Http requests related to the current session
-            </summary>
-            <param name="httpClient"></param>
-            <returns></returns>
-        </member>
-        <member name="T:SystemTestingTools.HttpRequestMessageWrapper">
-            <summary>
-            Wraps requests
+            The request sent
             </summary>
         </member>
-        <member name="P:SystemTestingTools.HttpRequestMessageWrapper.Request">
+        <member name="F:SystemTestingTools.InterceptedHttpCall.Duration">
             <summary>
-            The outgoing http request
+            How long it took for a response or exception
             </summary>
         </member>
-        <member name="P:SystemTestingTools.HttpRequestMessageWrapper.RequestTime">
+        <member name="F:SystemTestingTools.InterceptedHttpCall.Response">
             <summary>
-            When the Http request happened
+            The response received (if null, there is an exception)
             </summary>
         </member>
-        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.GetEndpoint">
+        <member name="F:SystemTestingTools.InterceptedHttpCall.Exception">
             <summary>
-            Get the full endpoint, in the format "HttpVerb FullUrl"
+            The exception thrown, there will be one if the response is null
+            </summary>
+        </member>
+        <member name="P:SystemTestingTools.InterceptedHttpCall.HttpContextAccessor">
+            <summary>
+            Get http context
+            </summary>
+        </member>
+        <member name="P:SystemTestingTools.InterceptedHttpCall.RootStubsFolder">
+            <summary>
+            The root folder where all the stubs are stored
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.InterceptedHttpCall.SaveAsRecording(SystemTestingTools.FolderRelativePath,SystemTestingTools.FileName,System.Int32)">
+            <summary>
+            Save the request and response to a file; this same file can be used later to be returned as a response
+            it will not save or throw an error if there is no response (an exception occurred)
+            </summary>
+            <param name="relativeFolder">Relative folder inside the base folder where your stubs will be saved</param>
+            <param name="fileName">stub filename, should not contain the extension, if none passed the HttpStatus will be the name</param>
+            <param name="howManyFilesToKeep">if 0, it will keep an infinite number of files, and add a number at the end, example: FILENAME_0001, FILENAME_0002
+            if 1, it will keep just one, and overwrite it everytime
+            if >1, it will create files with a number at the end, but once the limit is reached, it will stop creating files, no overwritting</param>
+            <returns>a task to be awaited</returns>
+        </member>
+        <member name="M:SystemTestingTools.InterceptedHttpCall.KeepResultUnchanged">
+            <summary>
+            Return the same HttpResponse or exception received, without any changes
             </summary>
             <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.GetHeaderValue(System.String)">
+        <member name="M:SystemTestingTools.InterceptedHttpCall.ReturnRecording(SystemTestingTools.Recording,SystemTestingTools.Reason)">
             <summary>
-            Get the values of a header separated by comma, null if not present
+            Return the recording file response
             </summary>
-            <param name="key"></param>
+            <param name="recording"></param>
+            <param name="reason"></param>
             <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.ReadBody">
+        <member name="M:SystemTestingTools.InterceptedHttpCall.ReturnStub(SystemTestingTools.StubHttpResponseMessage,SystemTestingTools.Reason)">
             <summary>
-            Read the request body as string
+            Returns a stubbed response (obtained via one of the ResponseFactory methods)
             </summary>
-        </member>
-        <member name="M:SystemTestingTools.HttpRequestMessageWrapper.ReadJsonBody``1">
-            <summary>
-            Read the request body and parse it as a given class
-            </summary>
-        </member>
-        <member name="T:SystemTestingTools.HttpResponseMessageExtensions">
-            <summary>
-            Useful extensions for the microsoft HttpResponseMessage
-            </summary>
-        </member>
-        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ModifyJsonBody``1(System.Net.Http.HttpResponseMessage,System.Action{``0})">
-            <summary>
-            Parse the response body as a class, change it and store it again in the response
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="response"></param>
-            <param name="dtoModifier"></param>
-        </member>
-        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadJsonBody``1(System.Net.Http.HttpResponseMessage)">
-            <summary>
-            Read the response body and parse it as a given class
-            </summary>
-            <typeparam name="T"></typeparam>
-            <param name="httpResponse"></param>
+            <param name="stub"></param>
+            <param name="reason"></param>
             <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadBody(System.Net.Http.HttpResponseMessage)">
+        <member name="M:SystemTestingTools.InterceptedHttpCall.ReturnHandCraftedResponse(System.Net.Http.HttpResponseMessage,SystemTestingTools.Reason)">
             <summary>
-            Read the response body as string
+            Return a handcrafted http response 
             </summary>
-            <param name="httpResponse"></param>
+            <param name="newResponse"></param>
+            <param name="reason"></param>
             <returns></returns>
         </member>
-        <member name="T:SystemTestingTools.CustomEndpointBehaviour">
+        <member name="M:SystemTestingTools.InterceptedHttpCall.Summarize">
             <summary>
-            copied from https://medium.com/trueengineering/realization-of-the-connections-pool-with-wcf-for-net-core-with-usage-of-httpclientfactory-c2cb2676423e
+            Summarize the request and response
             </summary>
-        </member>
-        <member name="M:SystemTestingTools.FileWriter.Write(SystemTestingTools.RequestResponse)">
-            <summary>
-            
-            </summary>
-            <param name="log"></param>
-            <returns>created file name</returns>
-        </member>
-        <member name="T:SystemTestingTools.HttpCallsInterceptorHandler">
-            <summary>
-            The handler that will allow SystemTestingTools to intercept OUTGOING http calls and return stubs
-            </summary>
-        </member>
-        <member name="M:SystemTestingTools.HttpCallsInterceptorHandler.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
-            <summary>
-            intercepts the http request that was about to hit a downstream server and return a stub instead
-            </summary>
-            <param name="request"></param>
-            <param name="cancellationToken"></param>
             <returns></returns>
         </member>
-        <member name="T:SystemTestingTools.Internal.InterceptionFilter">
+        <member name="T:SystemTestingTools.InterceptionConfiguration">
             <summary>
-            Will add a LAST handler to all HttpClients
-            inspired by https://github.com/justeat/httpclient-interception
+            Configuration of the interception
             </summary>
         </member>
-        <member name="T:SystemTestingTools.RequestResponseRecorder">
+        <member name="F:SystemTestingTools.InterceptionConfiguration.RootStubsFolder">
             <summary>
-            Use this handle to record responses you get, so you can use it for stubbing later
+            Where stubs can be found / recorded
+            Will use to "App_Data/SystemTestingTools" if null 
             </summary>
         </member>
-        <member name="M:SystemTestingTools.RequestResponseRecorder.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+        <member name="F:SystemTestingTools.InterceptionConfiguration.ExposeStubsAs">
             <summary>
-            Lets outgoing requests pass through, to log requests and responses
-            </summary>
-            <param name="request"></param>
-            <param name="cancellationToken"></param>
-            <returns></returns>
-        </member>
-        <member name="M:SystemTestingTools.StringFormattingHelper.FormatJson(System.String)">
-            <summary>
-            copied from https://stackoverflow.com/questions/4580397/json-formatter-in-c
+            Expose stubs and recordings (if configured) as this URL, to enable this feature you need to call IApplicationBuilder.ExposeStubsForDirectoryBrowsing()
             </summary>
         </member>
-        <member name="M:SystemTestingTools.StringFormattingHelper.FormatXml(System.String)">
+        <member name="F:SystemTestingTools.InterceptionConfiguration.ForwardHeadersPrefix">
             <summary>
-            copied from https://stackoverflow.com/questions/1123718/format-xml-string-to-print-friendly-xml-string
+            Forward headers that start with this prefix to downstream systems, so we can use it to drive stubbing downstream
             </summary>
-        </member>
-        <member name="T:SystemTestingTools.NonFunctionalLogger">
-            <summary>
-            class used to assign as a mandatory logger but does not log anything, because the namespace is not one we are interested in
-            </summary>
-        </member>
-        <member name="M:SystemTestingTools.IServiceCollectionExtensions.RecordHttpClientRequestsAndResponses(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String)">
-            <summary>
-            Will intercept every http call, and record details of the request and response in a text file, this file can be used later to load up stubs, so you can test without hitting external dependencies
-            </summary>
-            <param name="serviceCollection"></param>
-            <param name="folder">Folder full path where the response text files will be saved</param>
-            <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
-            <returns></returns>
         </member>
         <member name="T:SystemTestingTools.LoggedEvent">
             <summary>
@@ -213,76 +128,250 @@
             The class (with namespace) that logged it
             </summary>
         </member>
-        <member name="T:SystemTestingTools.ContextRepo">
+        <member name="T:SystemTestingTools.Recording">
             <summary>
-            Contains a stub of usual instrumentation, containing logs and requests
+            A recording of a request / response
             </summary>
         </member>
-        <member name="F:SystemTestingTools.ContextRepo.UnsessionedLogs">
+        <member name="F:SystemTestingTools.Recording.File">
             <summary>
-            Get the logs not linked to any user session
+            file where it came from
             </summary>
         </member>
-        <member name="T:SystemTestingTools.ResponseFactory">
+        <member name="F:SystemTestingTools.Recording.DateTime">
             <summary>
-            Contains methods to create easily create HttpResponseMessage
+            when the recording happened
             </summary>
         </member>
-        <member name="M:SystemTestingTools.ResponseFactory.FromRecordedFile(System.String)">
+        <member name="F:SystemTestingTools.Recording.Request">
             <summary>
-            Reads the response of a file recorded by SystemTestingTools
+            the request details
             </summary>
-            <param name="fileFullPath"></param>
-            <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.ResponseFactory.FromFiddlerLikeResponseFile(System.String)">
+        <member name="F:SystemTestingTools.Recording.Response">
             <summary>
-            Read a file with the format like
-            HTTP/1.1 200 OK
-            Header1: some value
-            Header2: some other value
-            
-            {"Message":"some json content"}
-            
-            Or the format generated by the recorder function v1
+            the response details
             </summary>
-            <param name="fileFullPath"></param>
-            <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.ResponseFactory.FromBodyOnlyFile(System.String,System.Net.HttpStatusCode)">
+        <member name="T:SystemTestingTools.StubHttpResponseMessage">
             <summary>
-            Read from a file containing the body of the response
+            A HttpResponseMessage representing a stub
             </summary>
-            <param name="fileFullPath"></param>
+        </member>
+        <member name="P:SystemTestingTools.StubHttpResponseMessage.File">
+            <summary>
+            The file it was generated from
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.StubHttpResponseMessage.#ctor(System.Net.HttpStatusCode)">
+            <summary>
+            A HttpResponseMessage representing a stub
+            </summary>
             <param name="statusCode"></param>
-            <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.ResponseFactory.From(System.String,System.Net.HttpStatusCode)">
+        <member name="M:SystemTestingTools.StubHttpResponseMessage.ModifyStubJsonBody``1(System.Action{``0})">
             <summary>
-            Read from a string containing the body of the response
-            </summary>
-            <param name="content">body of the response</param>
-            <param name="statusCode"></param>
-            <returns></returns>
-        </member>
-        <member name="T:SystemTestingTools.WcfHttpInterceptor">
-            <summary>
-            methods that allows you to work with WCF http calls
+            Parse the response body as a class, change it and store it again in the response
             </summary>
         </member>
-        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateRequestResponseRecorder(System.String)">
+        <member name="M:SystemTestingTools.StubHttpResponseMessage.ToString">
             <summary>
-            Create an IEndpointBehavior that will save requests and responses in a text file in a folder
+            Summarize
             </summary>
-            <param name="folderName">where the files will be saved</param>
-            <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
             <returns></returns>
         </member>
-        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateInterceptor">
+        <member name="T:SystemTestingTools.HttpClientExtensions">
             <summary>
-            Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with stub responses instead
+            extensions to HttpClient to allow stubbing and assertions
             </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.CreateSession(System.Net.Http.HttpClient)">
+            <summary>
+            Create a new session, so logs and requests and responses can be tracked
+            </summary>
+            <param name="httpClient"></param>
+            <returns>the SessionId, can be used to interact with other tools that might need a session</returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionId(System.Net.Http.HttpClient)">
+            <summary>
+            Get Session ID allocated to httpClient, can be useful to interact with other tools
+            </summary>
+            <param name="httpClient"></param>
             <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String},System.Int32)">
+            <summary>
+            Will return the response when a matching call gets fired, but only once
+            if you expect this endpoint to be called X times, add X stub endpoints
+            </summary>
+            <param name="httpClient"></param>
+            <param name="httpMethod"></param>
+            <param name="Url"></param>
+            <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
+            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
+            <param name="counter">How many times should this response be returned, if requested one more time than the limit, it will throw an exception. choose 0 for infinite</param>
+        </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.AppendHttpCallStub(System.Net.Http.HttpClient,System.Net.Http.HttpMethod,System.Uri,System.Exception,System.Collections.Generic.Dictionary{System.String,System.String},System.Int32)">
+            <summary>
+            Will throw an exception when a matching call gets fired, but only once
+            if you expect this endpoint to be called X times, add X stub endpoints
+            </summary>
+            <param name="httpClient"></param>
+            <param name="httpMethod"></param>
+            <param name="Url"></param>
+            <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
+            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
+            /// <param name="counter">How many times should this response be returned, if requested one more time than the limit, it will throw an exception. choose 0 for infinite</param>
+        </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionLogs(System.Net.Http.HttpClient)">
+            <summary>
+            Get all logs related to the current session
+            </summary>
+            <param name="httpClient"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionOutgoingRequests(System.Net.Http.HttpClient)">
+            <summary>
+            Get all outgoing Http requests related to the current session
+            </summary>
+            <param name="httpClient"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.HttpRequestMessageExtensions">
+            <summary>
+            HttpRequestMessage extension methods
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.GetDatesSent(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Get the dates this request was sent (if a retry was configured, there might be more than one). If it was intercepted by SystemTestingTools, this will be present
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.GetEndpoint(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Get the full endpoint, in the format "HttpVerb FullUrl"
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.GetHeaderValue(System.Net.Http.HttpRequestMessage,System.String,System.String)">
+            <summary>
+            Get the values of a header (joined by 'separator' if more than one), null if not present
+            </summary>
+            <param name="key">header key</param>
+            <param name="separator">the separator string to join multiple values</param>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.GetSoapAction(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Gets the SOAP Action header value for a SOAP (WCF) call
+            this can be useful to identify the method called, as the URL is the same for all methods
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.ReadBody(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Read the request body as string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.ReadJsonBody``1(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            Read the request body and parse it as a given class
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpRequestMessageExtensions.GetQueryValue(System.Net.Http.HttpRequestMessage,System.String)">
+            <summary>
+            Gets the value for a parameter in the query string
+            </summary>
+            <param name="request"></param>
+            <param name="key"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.HttpResponseMessageExtensions">
+            <summary>
+            Useful extensions for the microsoft HttpResponseMessage
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ModifyJsonBody``1(System.Net.Http.HttpResponseMessage,System.Action{``0})">
+            <summary>
+            Parse the response body as a class, change it and store it again in the response
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadJsonBody``1(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Read the response body and parse it as a given class
+            </summary>
+            <typeparam name="T"></typeparam>
+            <param name="httpResponse"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.ReadBody(System.Net.Http.HttpResponseMessage)">
+            <summary>
+            Read the response body as string
+            </summary>
+            <param name="httpResponse"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.GetHeaderValue(System.Net.Http.HttpResponseMessage,System.String,System.String)">
+            <summary>
+            Get the values of a header, null if not present
+            </summary>
+            <param name="key"></param>
+            <param name="separator">the separator string to join multiple values</param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.HttpResponseMessageExtensions.GetHeaderValue(System.Net.Http.HttpContent,System.String,System.String)">
+            <summary>
+            Get the values of a header, null if not present
+            </summary>
+            <param name="key"></param>
+            <param name="separator">the separator string to join multiple values</param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.IApplicationBuilderExtensions">
+            <summary>
+            IApplicationBuilder extensions
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.IApplicationBuilderExtensions.ExposeStubsForDirectoryBrowsing(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Exposed the SystemTestingTools stubs folder for browsing, the address will be /Stubs by default, or Configuration.ExposeFolderForNavigationAs
+            </summary>
+            <param name="app"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.IHttpContextAccessorExtensions">
+            <summary>
+            HttpRequestMessage extension methods
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.IHttpContextAccessorExtensions.GetRequestHeaderValue(Microsoft.AspNetCore.Http.IHttpContextAccessor,System.String,System.String)">
+            <summary>
+            Get the values of a header (joined by 'separator' if more than one), null if not present
+            </summary>
+            <param name="key"></param>
+            <param name="separator">the separator string to join multiple values</param>
+            <returns>returns null if header is not there, otherwise the value is returned</returns>
+        </member>
+        <member name="M:SystemTestingTools.IServiceCollectionExtensions.InterceptHttpCallsAfterSending(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Func{SystemTestingTools.InterceptedHttpCall,System.Threading.Tasks.Task{SystemTestingTools.InterceptedHttpCall}},SystemTestingTools.InterceptionConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="serviceCollection">services</param>
+            <param name="func">the function that will handle request / responses</param>
+            <param name="config">the optional configuration for the interception</param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.ServiceEndpointExtensions">
+            <summary>
+            Extensions for ServiceEndpoint (WCF) configuration
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.ServiceEndpointExtensions.EnableHttpInterception(System.ServiceModel.Description.ServiceEndpoint)">
+            <summary>
+            This enables the interception of http calls in this endpoint for stubbing:
+            - in automated testing, by calling
+            - in development environment, by calling first services.InterceptHttpCallsAfterSending
+            </summary>
+            <param name="endpoint"></param>
         </member>
         <member name="T:SystemTestingTools.WebHostBuilderExtensions">
             <summary>
@@ -298,9 +387,17 @@
         </member>
         <member name="M:SystemTestingTools.WebHostBuilderExtensions.ConfigureInterceptionOfHttpClientCalls(Microsoft.AspNetCore.Hosting.IWebHostBuilder)">
             <summary>
-            Intercept outgoing HttpClient calls so we can return stubs and make assertions later
+            obsolete method
             </summary>
             <param name="builder"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.WebHostBuilderExtensions.InterceptHttpCallsBeforeSending(Microsoft.AspNetCore.Hosting.IWebHostBuilder,System.Boolean)">
+            <summary>
+            Intercept outgoing HttpClient calls before they leave the computer, so we can return stubs and make assertions later
+            </summary>
+            <param name="builder">the builder</param>
+            <param name="keepListOfOutgoingRequests">keep the sent requests, so HttpClient.GetSessionOutgoingRequests() can retrieve them; turn it to false if you are doing performance tests, as the growth in the list might look like a memory leak</param>
             <returns></returns>
         </member>
         <member name="M:SystemTestingTools.WebHostBuilderExtensions.IntercepLogs(Microsoft.AspNetCore.Hosting.IWebHostBuilder,Microsoft.Extensions.Logging.LogLevel,System.String[],System.String[])">
@@ -311,6 +408,274 @@
             <param name="minimumLevelToIntercept"></param>
             <param name="namespaceToIncludeStart">Beginning of namespaces sources of logs allow; if null, all  to sources will be included. Example: MyNamespaceName</param>
             <param name="namespaceToExcludeStart">Beginning of namespaces sources of logs disallow; if null, no exclusion will apply. Exclusions are applied AFTER inclusion filter. Example: Microsoft</param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.CustomEndpointBehaviour">
+            <summary>
+            copied from https://medium.com/trueengineering/realization-of-the-connections-pool-with-wcf-for-net-core-with-usage-of-httpclientfactory-c2cb2676423e
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.Internal.HttpCallInterceptor">
+            <summary>
+            Use this handle to record responses you get, so you can use it for stubbing later
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.Internal.HttpCallInterceptor.SendAsync(System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Lets outgoing requests pass through, to log requests and responses
+            </summary>
+            <param name="request"></param>
+            <param name="cancellationToken"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.Internal.InterceptionFilter">
+            <summary>
+            Will add a LAST handler to all HttpClients
+            inspired by https://github.com/justeat/httpclient-interception
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.StringFormattingHelper.FormatJson(System.String)">
+            <summary>
+            copied from https://stackoverflow.com/questions/4580397/json-formatter-in-c
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.StringFormattingHelper.FormatXml(System.String)">
+            <summary>
+            copied from https://stackoverflow.com/questions/1123718/format-xml-string-to-print-friendly-xml-string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.NonFunctionalLogger">
+            <summary>
+            class used to assign as a mandatory logger but does not log anything, because the namespace is not one we are interested in
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.ResponseFactory">
+            <summary>
+            Contains methods to create easily create HttpResponseMessage
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.ResponseFactory.FromRecordedFile(SystemTestingTools.FileFullPath)">
+            <summary>
+            Reads the response of a file recorded by SystemTestingTools
+            </summary>
+            <param name="fileFullPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.ResponseFactory.FromFiddlerLikeResponseFile(SystemTestingTools.FileFullPath)">
+            <summary>
+            Read a file with the format like
+            HTTP/1.1 200 OK
+            Header1: some value
+            Header2: some other value
+            
+            {"Message":"some json content"}
+            
+            Or the format generated by the recorder function v1
+            </summary>
+            <param name="fileFullPath"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.ResponseFactory.FromBodyOnlyFile(SystemTestingTools.FileFullPath,System.Net.HttpStatusCode)">
+            <summary>
+            Read from a file containing the body of the response
+            </summary>
+            <param name="fileFullPath"></param>
+            <param name="statusCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.ResponseFactory.From(System.String,System.Net.HttpStatusCode)">
+            <summary>
+            Read from a string containing the body of the response
+            </summary>
+            <param name="content">body of the response</param>
+            <param name="statusCode"></param>
+            <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.UnsessionedData">
+            <summary>
+            Contains data not associated with any session
+            </summary>
+        </member>
+        <member name="F:SystemTestingTools.UnsessionedData.UnsessionedLogs">
+            <summary>
+            Get the logs not linked to any user session
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.UnsessionedData.AppendGlobalHttpCallStub(System.Net.Http.HttpMethod,System.Uri,System.Net.Http.HttpResponseMessage,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Add a global stub, so it can be used infinitely if a stub is not found for a session. Basically a 'default' 
+            </summary>
+            <param name="httpMethod"></param>
+            <param name="Url"></param>
+            <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
+            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
+        </member>
+        <member name="M:SystemTestingTools.UnsessionedData.AppendGlobalHttpCallStub(System.Net.Http.HttpMethod,System.Uri,System.Exception,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Add a global stub to return an exception when a match is found, so it can be used infinitely nothing is found for a session. Basically a 'default' 
+            </summary>
+            <param name="httpMethod"></param>
+            <param name="Url"></param>
+            <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
+            <param name="headerMatches">Optional headers that must match for the response to be returned</param>
+        </member>
+        <member name="T:SystemTestingTools.FileFullPath">
+            <summary>
+            Full path to a file that exists in disk
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FileFullPath.#ctor(System.String)">
+            <summary>
+            Full path to a file that exists in disk
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FileFullPath.op_Implicit(System.String)~SystemTestingTools.FileFullPath">
+            <summary>
+            convert from string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FileFullPath.op_Implicit(SystemTestingTools.FileFullPath)~System.String">
+            <summary>
+            convert to string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.FileName">
+            <summary>
+            Filename (without an extension)
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FileName.#ctor(System.String)">
+            <summary>
+            Filename (without an extension)
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FileName.op_Implicit(System.String)~SystemTestingTools.FileName">
+            <summary>
+            convert from string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FileName.op_Implicit(SystemTestingTools.FileName)~System.String">
+            <summary>
+            convert to string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.FolderAbsolutePath">
+            <summary>
+            Existing folder absolute path
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderAbsolutePath.#ctor(System.String)">
+            <summary>
+            Existing folder absolute path
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderAbsolutePath.TestPermissions">
+            <summary>
+            We test for the right permissions from the start, to check before we need if something could go wrong later
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderAbsolutePath.op_Implicit(System.String)~SystemTestingTools.FolderAbsolutePath">
+            <summary>
+            convert from string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderAbsolutePath.op_Implicit(SystemTestingTools.FolderAbsolutePath)~System.String">
+            <summary>
+            convert to string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.FolderRelativePath">
+            <summary>
+            Part of a folder path
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderRelativePath.#ctor(System.String)">
+            <summary>
+            Part of a folder path
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderRelativePath.op_Implicit(System.String)~SystemTestingTools.FolderRelativePath">
+            <summary>
+            convert from string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.FolderRelativePath.op_Implicit(SystemTestingTools.FolderRelativePath)~System.String">
+            <summary>
+            convert to string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.Reason">
+            <summary>
+            Reason why a stub is being returned
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.Reason.#ctor(System.String)">
+            <summary>
+            Reason why a stub is being returned
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.Reason.op_Implicit(System.String)~SystemTestingTools.Reason">
+            <summary>
+            convert from string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.Reason.op_Implicit(SystemTestingTools.Reason)~System.String">
+            <summary>
+            convert to string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.RelativeUri">
+            <summary>
+            Relative Uri to be added to a domain
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.RelativeUri.#ctor(System.String)">
+            <summary>
+            Relative Uri to be added to a domain
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:SystemTestingTools.RelativeUri.op_Implicit(System.String)~SystemTestingTools.RelativeUri">
+            <summary>
+            convert from string
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.RelativeUri.op_Implicit(SystemTestingTools.RelativeUri)~System.String">
+            <summary>
+            convert to string
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.StringValueObject">
+            <summary>
+            Inspired by https://stackoverflow.com/questions/3436101/create-custom-string-class
+            </summary>
+        </member>
+        <member name="F:SystemTestingTools.StringValueObject._value">
+            <summary>
+            Underlying string value
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.StringValueObject.#ctor(System.String)">
+            <summary>
+            String backed object
+            </summary>
+        </member>
+        <member name="T:SystemTestingTools.WcfHttpInterceptor">
+            <summary>
+            methods that allows you to work with WCF http calls
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateRequestResponseRecorder(System.String)">
+            <summary>
+            obsolete method
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:SystemTestingTools.WcfHttpInterceptor.CreateInterceptor">
+            <summary>
+            Obsolete method
+            </summary>
             <returns></returns>
         </member>
     </members>

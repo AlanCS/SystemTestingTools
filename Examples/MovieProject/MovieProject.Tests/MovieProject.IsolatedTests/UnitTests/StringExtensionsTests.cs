@@ -1,5 +1,6 @@
-﻿using MovieProject.Logic.Extensions;
-using Shouldly;
+﻿using FluentAssertions;
+using MovieProject.Logic.Extensions;
+
 using Xunit;
 
 namespace MovieProject.IsolatedTests.UnitTests
@@ -20,7 +21,7 @@ namespace MovieProject.IsolatedTests.UnitTests
         [Theory]
         public void CanFormatDuration(string durationInMinutes, string durationFormatted)
         {
-            durationInMinutes.FormatDuration().ShouldBe(durationFormatted);
+            durationInMinutes.FormatDuration().Should().Be(durationFormatted);
         }
 
         [InlineData(null, "Unknown")]
@@ -36,7 +37,7 @@ namespace MovieProject.IsolatedTests.UnitTests
         [Theory]
         public void CanCleanYear(string yearString, string expectedResult)
         {
-            yearString.CleanYear().ShouldBe(expectedResult);
+            yearString.CleanYear().Should().Be(expectedResult);
         }
 
         [InlineData("", "")]
@@ -46,7 +47,7 @@ namespace MovieProject.IsolatedTests.UnitTests
         [Theory]
         public void CanCleanNA(string originalString, string expectedResult)
         {
-            originalString.CleanNA().ShouldBe(expectedResult);
+            originalString.CleanNA().Should().Be(expectedResult);
         }
     }
 }

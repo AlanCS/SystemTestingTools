@@ -1,9 +1,10 @@
+using FluentAssertions;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MovieProject.Logic;
 using MovieProject.Logic.Option;
-using Shouldly;
+
 using System;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,11 +33,11 @@ namespace IsolatedTests.UnitTests
 
             Func<Task<int>> func = () => { return Task.FromResult(++count); };
 
-            (await sut.GetOrSetFromCache("abc", func)).ShouldBe(1);
-            (await sut.GetOrSetFromCache("abc", func)).ShouldBe(1);
-            (await sut.GetOrSetFromCache("abc", func)).ShouldBe(1);
+            (await sut.GetOrSetFromCache("abc", func)).Should().Be(1);
+            (await sut.GetOrSetFromCache("abc", func)).Should().Be(1);
+            (await sut.GetOrSetFromCache("abc", func)).Should().Be(1);
 
-            (await sut.GetOrSetFromCache("def", func)).ShouldBe(2);
+            (await sut.GetOrSetFromCache("def", func)).Should().Be(2);
         }
 
         [Fact]
@@ -48,11 +49,11 @@ namespace IsolatedTests.UnitTests
 
             Func<Task<int>> func = () => { return Task.FromResult(++count); };
 
-            (await sut.GetOrSetFromCache("abc", func)).ShouldBe(1);
-            (await sut.GetOrSetFromCache("abc", func)).ShouldBe(2);
-            (await sut.GetOrSetFromCache("abc", func)).ShouldBe(3);
+            (await sut.GetOrSetFromCache("abc", func)).Should().Be(1);
+            (await sut.GetOrSetFromCache("abc", func)).Should().Be(2);
+            (await sut.GetOrSetFromCache("abc", func)).Should().Be(3);
 
-            (await sut.GetOrSetFromCache("def", func)).ShouldBe(4);
+            (await sut.GetOrSetFromCache("def", func)).Should().Be(4);
         }
     }
 }
