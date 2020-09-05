@@ -311,7 +311,7 @@ services.AddSingleton<ICalculatorSoap, CalculatorSoapClient>(factory => {
     return client;
 });
 ```
-[Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L99)
+[Real life example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L115)
 
 And then you can stub WCF Http calls, example (and you can use the header filters to avoid crossed wires):
 ```C#
@@ -403,6 +403,9 @@ Unfortunately life is not all rainbows and unicorns :smiley:, here are potential
 It can store (in the designated folder) user private data or other confidential information (if you deal with that sort of data), in ways that don't comply to your local laws (or company rules) about privacy / security / compliance.
 
 If that's a concern, make sure you only enable this function in non production environments; and leave the option to have a configuration to disable it in an emergency, just in case.
+
+[Example](/Examples/MovieProject/MovieProject.Web/Startup.cs#L64)
+
 
 ## 2 -The recorder generated file format divider
 
