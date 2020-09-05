@@ -1,0 +1,77 @@
+SystemTestingTools_Recording_V2
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
+Date: 2020-08-31 09:33:36.092 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/movie/matrix)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 2.0.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 657 ms
+
+REQUEST
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=matrix
+Referer:https://github.com/AlanCS/SystemTestingTools
+Request-Id:|37e86b06-407953b3abe73a25.1.
+
+
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Sun, 30 Aug 2020 23:33:35 GMT
+Connection:keep-alive
+Set-Cookie:__cfduid=dfc03c7b9b134b373fabbad0a63e8adfe1598830415; expires=Tue, 29-Sep-20 23:33:35 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:MISS
+Accept-Ranges:bytes
+cf-request-id:04e35126c80000da4a412ff200000001
+Server:cloudflare
+CF-RAY:5cb251514944da4a-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:1026
+Expires:Mon, 31 Aug 2020 00:33:35 GMT
+Last-Modified:Sun, 30 Aug 2020 23:33:35 GMT
+
+{
+    "Title": "The Matrix",
+    "Year": "1999",
+    "Rated": "R",
+    "Released": "31 Mar 1999",
+    "Runtime": "136 min",
+    "Genre": "Action, Sci-Fi",
+    "Director": "Lana Wachowski, Lilly Wachowski",
+    "Writer": "Lilly Wachowski, Lana Wachowski",
+    "Actors": "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss, Hugo Weaving",
+    "Plot": "A computer hacker learns from mysterious rebels about the true nature of his reality and his role in the war against its controllers.",
+    "Language": "English",
+    "Country": "USA",
+    "Awards": "Won 4 Oscars. Another 37 wins & 50 nominations.",
+    "Poster": "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
+    "Ratings": [
+        {
+            "Source": "Internet Movie Database",
+            "Value": "8.7/10"
+        },
+        {
+            "Source": "Rotten Tomatoes",
+            "Value": "88%"
+        },
+        {
+            "Source": "Metacritic",
+            "Value": "73/100"
+        }
+    ],
+    "Metascore": "73",
+    "imdbRating": "8.7",
+    "imdbVotes": "1,624,177",
+    "imdbID": "tt0133093",
+    "Type": "movie",
+    "DVD": "21 Sep 1999",
+    "BoxOffice": "N/A",
+    "Production": "Warner Bros. Pictures",
+    "Website": "N/A",
+    "Response": "True"
+}

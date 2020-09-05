@@ -5,25 +5,25 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>    
     <Authors>AlanCS</Authors>
-    <Company>Open Source (MIT license)</Company>
+    <Company>Open Source project</Company>
     <Product />
     <Description>
-      Tool that allows you to extend the capabilities of Microsoft.AspNetCore.TestHost.TestServer, allowing you to run more comprehensive + deterministic tests by:
-      - intercepting Http calls, returning stub responses
-      - asserting outgoing Http calls
-      - recording outgoing Http calls (requests and responses), for documentation purposes
-      - asserting logs
+      **SystemTestingTools** (for .net core 3.1+) extends your test capabilities, providing ways to create / return stubs, allowing you to run more comprehensive / deterministic / reliable tests in your local dev machine / build tool and in non-prod environments.
+
+      * supporting interception of Http (HttpClient or WCF) calls:
+      * before they are sent, returning stubs (ideal for automated testing)
+      * after they are sent, where you can save the request and response (recording), log appropriately or replace bad responses by stubs (ideal for dev/test environments that are flaky or not ready)
+      * asserting outgoing calls (ie: making sure out downstream calls have SessionIds)
+      * intercept logs and run asserts on them
     </Description>
-    <Copyright>https://github.com/AlanCS/SystemTestingTools/blob/master/LICENSE</Copyright>
-    <PackageLicenseUrl></PackageLicenseUrl>
+    <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/AlanCS/SystemTestingTools</PackageProjectUrl>
     <RepositoryType>GitHub</RepositoryType>
     <PackageTags>Stub stubbing Automation Testing Test Fake Dowsntream Integration Http HttpClient TestServer</PackageTags>
     <Title>Tool to extend the capabilities of your .net core tests to run more comprehensive + deterministic scenarios, supports: HTTP stubbing/assertions/recording and asserting logs.</Title>
     <Summary>Tool to extend the capabilities of your .net core tests to run more comprehensive + deterministic scenarios, supports: HTTP stubbing/assertions/recording and asserting logs.</Summary>
-    <PackageReleaseNotes>Please check changelog: https://github.com/AlanCS/SystemTestingTools/blob/master/CHANGELOG.md </PackageReleaseNotes>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageReleaseNotes>Please check changelog: https://github.com/AlanCS/SystemTestingTools/blob/master/CHANGELOG.md </PackageReleaseNotes>    
     <PackageIcon>icon.png</PackageIcon>
     <DefaultLanguage>en-US</DefaultLanguage>
     <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
@@ -41,7 +41,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="Version">
-    <Version>1.3.10.0</Version>
+    <Version>2.0.4</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\LICENSE">
+    <None Include="..\..\LICENSE" Link="LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>

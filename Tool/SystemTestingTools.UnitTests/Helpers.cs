@@ -1,10 +1,11 @@
-﻿using Shouldly;
+﻿
 using System.Net.Http;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 using System.Net.Http.Headers;
 using System.Diagnostics;
+using FluentAssertions;
 
 namespace SystemTestingTools.UnitTests
 {
@@ -20,10 +21,10 @@ namespace SystemTestingTools.UnitTests
 
         public static async Task<string> GetResponseString(this HttpResponseMessage httpResponse)
         {
-            httpResponse.Content.ShouldNotBeNull();
+            httpResponse.Content.Should().NotBeNull();
 
             var responseBody = await httpResponse.Content.ReadAsStringAsync();
-            responseBody.ShouldNotBeNull();
+            responseBody.Should().NotBeNull();
 
             return responseBody;
         }

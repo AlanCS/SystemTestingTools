@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿
+using FluentAssertions;
 using Xunit;
 
 namespace SystemTestingTools.UnitTests
@@ -13,7 +14,7 @@ namespace SystemTestingTools.UnitTests
 
             var prettyJson = jsonString.FormatJson();
 
-            prettyJson.ShouldBe(@"{
+            prettyJson.Should().Be(@"{
     ""status"": ""OK"",
      ""results"": [
          {
@@ -95,7 +96,7 @@ namespace SystemTestingTools.UnitTests
 
             var prettyXml = xmlString.FormatXml();
 
-            prettyXml.ShouldBe(@"<?xml version=""1.0"" encoding=""utf-8""?>
+            prettyXml.Should().Be(@"<?xml version=""1.0"" encoding=""utf-8""?>
 <soap:Envelope xmlns:soap=""http://schemas.xmlsoap.org/soap/envelope/"" xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
   <soap:Body>
     <AddResponse xmlns=""http://tempuri.org/"">

@@ -1,5 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using Shouldly;
+﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
+
 using Xunit;
 
 namespace SystemTestingTools.UnitTests
@@ -17,7 +18,7 @@ namespace SystemTestingTools.UnitTests
 
             var result = logger.CreateLogger(fullNamespace);
 
-            result.IsEnabled(LogLevel.Critical).ShouldBe(canLog);
+            result.IsEnabled(LogLevel.Critical).Should().Be(canLog);
         }
 
         [Theory]
@@ -30,7 +31,7 @@ namespace SystemTestingTools.UnitTests
 
             var result = logger.CreateLogger(fullNamespace);
 
-            result.IsEnabled(LogLevel.Critical).ShouldBe(canLog);
+            result.IsEnabled(LogLevel.Critical).Should().Be(canLog);
         }
 
         [Theory]
@@ -45,7 +46,7 @@ namespace SystemTestingTools.UnitTests
 
             var result = logger.CreateLogger(fullNamespace);
 
-            result.IsEnabled(LogLevel.Critical).ShouldBe(canLog);
+            result.IsEnabled(LogLevel.Critical).Should().Be(canLog);
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace SystemTestingTools.UnitTests
 
             var result = logger.CreateLogger("MyFancyApp");
 
-            result.IsEnabled(LogLevel.Critical).ShouldBe(true);
+            result.IsEnabled(LogLevel.Critical).Should().Be(true);
         }
     }
 }

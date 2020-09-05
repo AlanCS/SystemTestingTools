@@ -1,0 +1,44 @@
+SystemTestingTools_Recording_V2
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
+Date: 2020-08-26 21:23:49.377 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (GET https://localhost:44374/api/math/add?firstNumber=4)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 2.0.0.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 194 ms
+
+REQUEST
+post http://www.dneonline.com/calculator.asmx
+Cache-Control:no-cache, max-age=0
+SOAPAction:"http://tempuri.org/Add"
+Request-Id:|fa99371e-4347e6a8ed68d6b1.1.
+Content-Type:text/xml; charset=utf-8
+Content-Length:161
+
+<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
+  <s:Body>
+    <Add xmlns="http://tempuri.org/">
+      <intA>4</intA>
+      <intB>3</intB>
+    </Add>
+  </s:Body>
+</s:Envelope>
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Cache-Control:max-age=0, private
+Server:Microsoft-IIS/7.5
+X-AspNet-Version:2.0.50727
+X-Powered-By:ASP.NET
+Date:Wed, 26 Aug 2020 11:23:48 GMT
+Content-Type:text/xml; charset=utf-8
+
+<?xml version="1.0" encoding="utf-8"?>
+<soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <soap:Body>
+    <AddResponse xmlns="http://tempuri.org/">
+      <AddResult>7</AddResult>
+    </AddResponse>
+  </soap:Body>
+</soap:Envelope>

@@ -1,3 +1,54 @@
+## 2.0.4
+
+Major new version to support a major new feature: Enable http interception after the request is sent, so you can return healthy stubs instead of a bad response, log, record the request/response or perform any action you wish.
+
+In the spirit of 'everything as code', you provide a lambda to process HttpRequestMessage and HttpResponseMessage; and with the help of a lot of our new helper methods, you can return stubs, log detailed messages or record the request/response to the file system.
+
+- New feature set
+  - IServiceCollection.InterceptHttpCallsAfterSending() will receive a lambda with the input parameter InterceptedHttpCall, which contains fields HttpRequestMessage, HttpResponseMessage or Exception, Duration
+    - Optional parameter InterceptionConfiguration, with the parameters:
+        - RootStubsFolder (default = /App_Data/SystemTestingTools) where stubs / recording will be read / written from
+        - ExposeStubsAs (default = Stubs), the URL where your stubs will be browsable (if you call ExposeStubsForDirectoryBrowsing() )
+        - ForwardHeadersPrefix (default = SystemTestingTools), will forward any header that starts with this prefix to downstream calls; useful in conjunction with InterceptHttpCallsBeforeSending(), so you could drive stubs in downstream systems
+  - IApplicationBuilder.ExposeStubsForDirectoryBrowsing() will expose the stubs folder for navigation
+  - InterceptedHttpCall (besides the properties mentioned above) also contains these methods and :
+    - SaveAsRecording(): will save the request and response (if no exception ocurrred) to a text file in the RootStubsFolder. Optional params:
+        - relativeFolder: sub folder inside RootStubsFolder where to save, if not provided it will save to root
+        - fileName: the name of the file (without extension), if not provided the HttpStatus of the response will be used (Ok, Accepted, NotFound, ...)
+        - howManyFilesToKeep: if zero (the default value), it will keep 'infinite' files, if one obviously only one will be kept, and any other number will be the maximum number. If it's configured to keep more than one, it will add a number at the end of the file name, example: Ok_00001.txt, NotFound_00001.txt, NotFound_00002.txt
+    - KeepResultUnchanged(): return the same result, without changing anything, same response, or if an exceptino occurred, it will be re-thrown
+    - Summarize(): Returns the most important metadata of the interception: the full endpoint and the response http status OR exception message; useful if you want to log it or quickly see what happened. Examples:
+        - POST http://www.dneonline.com/calculator.asmx received httpStatus [OK]
+        - GET http://www.omdbapia.com?type=movie&t=matrix received exception [No such host is known.]    
+    - ReturnRecording(): Return the recording response, you can obtain the recording by searching for it in RecordingCollection
+    - ReturnStub(): Return a stub HttpResponse, it can obtained via one of the ResponseFactory methods
+    - ReturnHandCraftedResponse(): Return a hand crafted HttpResponse created by you
+    - Note: All the 'Return' methods require a string reason field, for you to explain why you are not returning the original result. This will be put in a header in the response (SystemTestingToolsStub), so consumers will know they are not receiving a live/real response. You can use the method Summarize() to help you create a reason if you wish. Example: "Recording [omdb/new/happy/matrix] reason GET http://www.omdbapia.com?type=movie&t=matrix received httpStatus [BadGateway]"
+    - RootStubsFolder: exposes the root folder where all the stubs are found, can be useful to create a  full path for a stub
+    - HttpContextAccessor: can be useful to check details about the current request, like headers and parameters
+  - RecordingCollection contains a list of recordings in base folder. You can use this to find a recording of interest (like a succesfull response for the same endpoint you are hitting now) and return that response instead of the one you currently have    
+
+- New features in existing capabilities
+  - More extension methods for HttpRequestMessage, to make it's usage easier: GetHeaderValue(), 
+  GetSoapAction(), ReadBody() and ReadBody\<T>(), GetQueryValue()
+  - ServiceEndpoint.EnableHttpInterception() will allow WCF (SOAP) calls to be intercepted by both IServiceCollection.InterceptHttpCallsBeforeSending() and IWebHostBuilder.InterceptHttpCallsAfterSending()
+  - IWebHostBuilder.InterceptHttpCallsBeforeSending() (formerly known as 'ConfigureInterceptionOfHttpClientCalls') has a new parameter keepListOfOutgoingRequests (optional, default=true); turn it off if you are doing performance tests, as the keeping track of calls might throw stats off or look like a memory leak.
+  - HttpClient.AppendHttpCallStub() has a new parameter 'counter' (optional, default=1); to represent how many times that response stub will be returned, if more than the limit, an exception will be thrown. Set 0 for infinite, which is very useful for performance testing
+  - UnsessionedData.AppendGlobalHttpCallStub will append a response (or an exception) to be returned by a when a matching request is intercepted. This is similar to HttpClient.AppendHttpCallStub, which adds stubs to a session; but the global method will add a stub to all sessions; the interceptor will look for a match in the session, and if not found it will look in the global configuration. This is useful as a 'fall back', so you don't have to configure the same response in many methods; can also be useful when doing performance testing, as the 'counter' of this global response is infinite, meaning no matter how many requests are intercepted, the same response will be returned
+
+- Breaking changes
+  - IWebHostBuilder.ConfigureInterceptionOfHttpClientCalls() has been renamed to IWebHostBuilder.InterceptHttpCallsBeforeSending(), to better show it's intent.
+  - ContextRepo has been renamed to UnsessionedData, to better show it's intent.    
+  - Class WcfHttpInterceptor and it's methods have been decommissioned:
+    - CreateRequestResponseRecorder() is no longer necessary, ServiceEndpoint.EnableHttpInterception() enables IServiceCollection.InterceptHttpCallsBeforeSending() to detect http WCF calls
+    - CreateInterceptor() is no longer necessary, ServiceEndpoint.EnableHttpInterception() enables IWebHostBuilder.InterceptHttpCallsAfterSending() to detect http WCF calls
+  - Class HttpRequestMessageWrapper has been decommissioned, it was only useful to contain the date the request was sent, this can now be achieved with the extension method GetDatesSent(). Everywhere that used HttpRequestMessageWrapper now uses HttpRequestMessage
+  - When using extension method GetHeaderValue() or recording requests and responses; the divider between many values in a header has been changed from comma to || (pipe + pipe), as this is a less likely divider to match an existing valid value
+
+- Notes
+    - Stub vs Recording: a stub (as per industry standard) is a fake response you will return instead of a real response from a downstream system. A recording is a subtype of stub, because it contains a response and also the request that generated it; it's a new concept created by SystemTestingTools, to enable more scenarios: matching the current request with a recording so you can return a healthy response when your downstream system is momentarily unhealthy, documenting how the response was obtained and how to reproduce it, ...
+
+
 ## 1.3.10
 - New features (backwards compatible)
     - Recorder now generates files with duration of request and a identifier header (SystemTestingTools_Recording.V2), which will enable future features. It can only be read by the new method ResponseFactory.FromRecordedFile()    

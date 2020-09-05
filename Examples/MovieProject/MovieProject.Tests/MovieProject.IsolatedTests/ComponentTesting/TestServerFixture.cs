@@ -18,6 +18,8 @@ namespace IsolatedTests.ComponentTestings
 
         public string StubsFolder { get; private set; }
 
+        public static string MovieUrl = "http://www.omdbapi.com/?apikey=863d6589&type=movie";
+
         public TestServerFixture()
         {
             StartServer();
@@ -27,22 +29,30 @@ namespace IsolatedTests.ComponentTestings
         private void StartServer()
         {
             StubsFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Stubs";
-
-            Startup.wcfInterceptor = WcfHttpInterceptor.CreateInterceptor(); // you only need this line if you are working with HTTP WCF calls
-            
+           
             var builder = Program.CreateWebHostBuilder(new string[0]) // use the exact same builder as the website, to test the wiring
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     // make small changes to configuration, such as disabling caching
                     config.AddJsonFile("appsettings.tests.json", optional: false, reloadOnChange: true);
                 })                
-                .ConfigureInterceptionOfHttpClientCalls()
+                .InterceptHttpCallsBeforeSending()
                 .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
                                 namespaceToIncludeStart: new[] { "MovieProject" },
                                 namespaceToExcludeStart: new[] { "Microsoft" }) // redundand exclusion, just here to show the possible configuration
                 .UseEnvironment("Development");
 
+            SetupGlobalStubs();
+
             Server = new TestServer(builder);   
+        }
+
+        private void SetupGlobalStubs()
+        {
+            // this will be the default response, returned if it can't find a match for the session
+            var response = ResponseFactory.FromFiddlerLikeResponseFile($"{StubsFolder}/OmdbApi/Fake_Responses/Happy/200_NoRunTime_NoPlot_YearTooOld.txt");
+            var comeAlongMovieUrl = $"{MovieUrl}&t=fantastika";
+            UnsessionedData.AppendGlobalHttpCallStub(HttpMethod.Get, new System.Uri(comeAlongMovieUrl), response);
         }
 
         /// <summary>
@@ -58,10 +68,10 @@ namespace IsolatedTests.ComponentTestings
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
                 throw new ApplicationException("TestServer doesn't respond to basic request to /healthcheck");
 
-            if(ContextRepo.UnsessionedLogs.Count != 1)
-                throw new ApplicationException($"Expected to find 1 log during startup, found {ContextRepo.UnsessionedLogs.Count}");
+            if(UnsessionedData.UnsessionedLogs.Count != 1)
+                throw new ApplicationException($"Expected to find 1 log during startup, found {UnsessionedData.UnsessionedLogs.Count}");
 
-            var firstMessage = ContextRepo.UnsessionedLogs.First()?.ToString();
+            var firstMessage = UnsessionedData.UnsessionedLogs.First()?.ToString();
             if (firstMessage != "Information: Application is starting")
                 throw new ApplicationException($"First log was not the expected one: {firstMessage}");
         }

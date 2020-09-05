@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("SystemTestingTools.UnitTests")]
@@ -85,5 +89,49 @@ namespace SystemTestingTools
 
             return KnownContentTypes.Other;
         }
+
+        private static Regex HeaderParser = new Regex(@"(.+?):(.+?)$", RegexOptions.Compiled | RegexOptions.Multiline);
+
+        internal static Dictionary<string, string> GetHeaders(string headerContents)
+        {
+            var result = new Dictionary<string, string>();
+
+            if (string.IsNullOrWhiteSpace(headerContents)) return result;
+
+            var headers = HeaderParser.Matches(headerContents);
+
+            if (headers.Count == 0) throw new ArgumentException($"Header part of content could not be parsed");
+
+            result = headers.ToDictionary(c => c.Groups[1].Value, c => c.Groups[2].Value.Trim());
+
+            return result;
+        }
+
+        internal static StringContent ParseHeadersAndBody(string headerContent, string bodyContent, HttpHeaders headers)
+        {
+            string contentType = null;
+            Dictionary<string, string> headerDic = null;
+            if (!string.IsNullOrEmpty(headerContent))
+            {
+                headerDic = GetHeaders(headerContent);
+                headerDic.TryGetValue("Content-Type", out contentType);
+            }
+            var format = ParseContentType(contentType);
+
+            var result = new StringContent(bodyContent, format.encoding, format.mediaType);
+
+            if (headerDic != null)
+                foreach (var header in headerDic)
+                {
+                    if (header.Key.ToLower() == "content-type") continue; // this has already been added when creating new StringContent(
+
+                    if (!headers.TryAddWithoutValidation(header.Key, header.Value))
+                        if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value))
+                            throw new ApplicationException($"Could not add header '{header.Key}'");
+                }
+
+            return result;
+        }
+
     }
 }

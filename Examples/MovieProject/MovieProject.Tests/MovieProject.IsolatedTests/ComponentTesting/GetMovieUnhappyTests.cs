@@ -1,5 +1,7 @@
+using FluentAssertions;
+using FluentAssertions.Execution;
 using MovieProject.Web;
-using Shouldly;
+
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -30,28 +32,30 @@ namespace IsolatedTests.ComponentTestings
             client.CreateSession();
             var exception = new HttpRequestException("weird network error");
             // add exception twice because we configured a retry
-            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
-            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception);
+            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(MatrixMovieUrl), exception, counter: 2);
 
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
 
-            // assert logs
-            var logs = client.GetSessionLogs();
-            logs.Count.ShouldBe(1);
-            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} threw exception [weird network error]");
+            using (new AssertionScope())
+            {
+                // assert logs
+                var logs = client.GetSessionLogs();
+                logs.Count.Should().Be(1);
+                logs[0].ToString().Should().StartWith($"Critical: GET {MatrixMovieUrl} threw exception [weird network error]");
 
-            // assert outgoing            
-            var outgoingRequests = client.GetSessionOutgoingRequests();
-            outgoingRequests.Count.ShouldBe(2); // because of retry
+                // assert outgoing            
+                var outgoingRequests = client.GetSessionOutgoingRequests();
+                outgoingRequests.Count.Should().Be(2); // because of retry
 
-            AssertMatrixEndpointCalled(outgoingRequests[0]);
-            AssertMatrixEndpointCalled(outgoingRequests[1]);
+                AssertMatrixEndpointCalled(outgoingRequests[0]);
+                AssertMatrixEndpointCalled(outgoingRequests[1]);
 
-            // assert return
-            httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
-            var message = await httpResponse.ReadBody();
-            message.ShouldBe(Constants.DownstreamErrorMessage);
+                // assert return
+                httpResponse.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+                var message = await httpResponse.ReadBody();
+                message.Should().Be(Constants.DownstreamErrorMessage);
+            }
         }
 
         [InlineData(HttpStatusCode.TooManyRequests, "Fake_Responses/Unhappy/429_TooManyRequests_ProperlyFormatted.txt", "Too many requests with your api key")]
@@ -61,7 +65,7 @@ namespace IsolatedTests.ComponentTestings
         [InlineData(HttpStatusCode.OK, "Real_Responses/Unhappy/200_SomethingWentWrong_WhenSendingEmptyMovieName.txt", "Something went wrong")]
         [InlineData(HttpStatusCode.Unauthorized, "Real_Responses/Unhappy/401_InvalidKey.txt", "Invalid API key!")]
         [InlineData(HttpStatusCode.Unauthorized, "Real_Responses/Unhappy/401_LimitReached.txt", "Request limit reached")]
-        [InlineData(HttpStatusCode.RequestTimeout, "Fake_Responses/Unhappy/408_Timeout.txt", "")]
+        [InlineData(HttpStatusCode.RequestTimeout, "Fake_Responses/Unhappy/408_Timeout.txt", " ")]
         [Theory]
         public async Task When_DownstreamSystemReturnsError_Then_LogError_And_ReturnDefaultErrorMessage(HttpStatusCode httpStatus, string fileName, string logContent)
         {
@@ -79,29 +83,32 @@ namespace IsolatedTests.ComponentTestings
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
 
-            // assert logs
-            var logs = client.GetSessionLogs();
-            logs.Count.ShouldBe(1);
-            // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
-            // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
-            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} had exception");
-            logs[0].Message.ShouldContain(logContent);
-            logs[0].Message.ShouldContain($" response HttpStatus={(int)httpStatus} and body=[");
-
-            // assert outgoing            
-            var outgoingRequests = client.GetSessionOutgoingRequests();
-            outgoingRequests.Count.ShouldBe(isTransientDownstreamError ? 2 : 1); // 2 calls because we configured a retry
-            AssertMatrixEndpointCalled(outgoingRequests[0]);
-
-            if (isTransientDownstreamError)
+            using (new AssertionScope())
             {
-                AssertMatrixEndpointCalled(outgoingRequests[1]);
-            }            
+                // assert logs
+                var logs = client.GetSessionLogs();
+                logs.Count.Should().Be(1);
+                // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
+                // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
+                logs[0].ToString().Should().StartWith($"Critical: GET {MatrixMovieUrl} had exception");
+                logs[0].Message.Should().Contain(logContent);
+                logs[0].Message.Should().Contain($" response HttpStatus={(int)httpStatus} and body=[");
 
-            // assert return
-            httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
-            var message = await httpResponse.ReadBody();
-            message.ShouldBe(Constants.DownstreamErrorMessage);
+                // assert outgoing            
+                var outgoingRequests = client.GetSessionOutgoingRequests();
+                outgoingRequests.Count.Should().Be(isTransientDownstreamError ? 2 : 1); // 2 calls because we configured a retry
+                AssertMatrixEndpointCalled(outgoingRequests[0]);
+
+                if (isTransientDownstreamError)
+                {
+                    AssertMatrixEndpointCalled(outgoingRequests[1]);
+                }
+
+                // assert return
+                httpResponse.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+                var message = await httpResponse.ReadBody();
+                message.Should().Be(Constants.DownstreamErrorMessage);
+            }
         }
 
         [Fact]
@@ -117,22 +124,25 @@ namespace IsolatedTests.ComponentTestings
             // act
             var httpResponse = await client.GetAsync("/api/movie/matrix");
 
-            // assert logs
-            var logs = client.GetSessionLogs();
-            logs.Count.ShouldBe(1);
-            // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
-            // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
-            logs[0].ToString().ShouldStartWith($"Critical: GET {MatrixMovieUrl} had exception [DTO is invalid] while [processing response], response HttpStatus=200 and body=[");
-            logs[0].Message.ShouldContain(@"""weirdRoot"":");
+            using (new AssertionScope())
+            {
+                // assert logs
+                var logs = client.GetSessionLogs();
+                logs.Count.Should().Be(1);
+                // we check that we log downstream errors specifically with extra details so we can easily debug, the format should be
+                // Critical: URL returned invalid response: http status=XXX and body [FULL RESPONSE BODY HERE]
+                logs[0].ToString().Should().StartWith($"Critical: GET {MatrixMovieUrl} had exception [DTO is invalid] while [processing response], response HttpStatus=200 and body=[");
+                logs[0].Message.Should().Contain(@"""weirdRoot"":");
 
-            // assert outgoing            
-            var outgoingRequests = client.GetSessionOutgoingRequests();
-            AssertMatrixEndpointCalled(outgoingRequests[0]);
+                // assert outgoing            
+                var outgoingRequests = client.GetSessionOutgoingRequests();
+                AssertMatrixEndpointCalled(outgoingRequests[0]);
 
-            // assert return
-            httpResponse.StatusCode.ShouldBe(HttpStatusCode.InternalServerError);
-            var message = await httpResponse.ReadBody();
-            message.ShouldBe(Constants.DownstreamErrorMessage);
+                // assert return
+                httpResponse.StatusCode.Should().Be(HttpStatusCode.InternalServerError);
+                var message = await httpResponse.ReadBody();
+                message.Should().Be(Constants.DownstreamErrorMessage);
+            }
         }
 
 
@@ -149,25 +159,27 @@ namespace IsolatedTests.ComponentTestings
             // act
             var httpResponse = await client.GetAsync($"/api/{route}");
 
-
             // assert logs
-            var logs = client.GetSessionLogs();
-            logs.Count.ShouldBe(1);
-            logs[0].ToString().ShouldBe($"Warning: Bad request={correctMessage} = [{culprit}]");
+            using (new AssertionScope())
+            {
+                var logs = client.GetSessionLogs();
+                logs.Count.Should().Be(1);
+                logs[0].ToString().Should().Be($"Warning: Bad request={correctMessage} = [{culprit}]");
 
-            // assert outgoing
-            client.GetSessionOutgoingRequests().Count.ShouldBe(0);
+                // assert outgoing
+                client.GetSessionOutgoingRequests().Count.Should().Be(0);
 
-            // assert return
-            httpResponse.StatusCode.ShouldBe(HttpStatusCode.BadRequest);
-            var message = await httpResponse.ReadBody();
-            message.ShouldBe($"{correctMessage} = [{culprit}]");
+                // assert return
+                httpResponse.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+                var message = await httpResponse.ReadBody();
+                message.Should().Be($"{correctMessage} = [{culprit}]");
+            }
         }
 
-        private void AssertMatrixEndpointCalled(HttpRequestMessageWrapper request)
+        private void AssertMatrixEndpointCalled(HttpRequestMessage request)
         {
-            request.GetEndpoint().ShouldBe($"GET {MatrixMovieUrl}");
-            request.GetHeaderValue("Referer").ShouldBe(MovieProject.Logic.Constants.Website);
+            request.GetEndpoint().Should().Be($"GET {MatrixMovieUrl}");
+            request.GetHeaderValue("Referer").Should().Be(MovieProject.Logic.Constants.Website);
         }
     }
 }

@@ -1,16 +1,17 @@
-using Shouldly;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SystemTestingTools;
-using System.Linq;   
 using Xunit;
 
 namespace IsolatedTests.ComponentTestings
 {
     [Collection("SharedServer collection")]
-    [Trait("Project", "Mathr Component Tests (Happy)")]
+    [Trait("Project", "Math Component Tests (Happy)")]
     public class MathHappyTests
     {
         private readonly TestServerFixture Fixture;
@@ -47,20 +48,23 @@ namespace IsolatedTests.ComponentTestings
 
             async Task Asserts(string soapMethodName, string correctReturnedValue)
             {
-                // assert logs
-                var logs = client.GetSessionLogs();
-                logs.ShouldBeEmpty();
+                using (new AssertionScope())
+                {
+                    // assert logs
+                    var logs = client.GetSessionLogs();
+                    logs.Should().BeEmpty();
 
-                // assert outgoing
-                var outgoingRequests = client.GetSessionOutgoingRequests();
-                outgoingRequests.Last().GetEndpoint().ShouldBe($"POST {Url}"); // only the last one matters, as they accumulate over the 2 requests
-                outgoingRequests.Last().GetHeaderValue("SOAPAction").ShouldBe(string.Format(@"""http://tempuri.org/{0}""", soapMethodName));
+                    // assert outgoing
+                    var outgoingRequests = client.GetSessionOutgoingRequests();
+                    outgoingRequests.Last().GetEndpoint().Should().Be($"POST {Url}"); // only the last one matters, as they accumulate over the 2 requests
+                    outgoingRequests.Last().GetHeaderValue("SOAPAction").Should().Be(string.Format(@"""http://tempuri.org/{0}""", soapMethodName));
 
-                // assert return
-                httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+                    // assert return
+                    httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-                var returnedValue = await httpResponse.ReadBody();
-                returnedValue.ShouldBe(correctReturnedValue);
+                    var returnedValue = await httpResponse.ReadBody();
+                    returnedValue.Should().Be(correctReturnedValue);
+                }
             }
         }
     }

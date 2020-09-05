@@ -1,4 +1,5 @@
-﻿using Shouldly;
+﻿
+using FluentAssertions;
 using System.Text;
 using Xunit;
 
@@ -14,8 +15,8 @@ namespace SystemTestingTools.UnitTests
         public void ParseContentType_Unhappy(string format)
         {
             var response = Helper.ParseContentType(format);
-            response.encoding.ShouldBe(Encoding.UTF8);
-            response.mediaType.ShouldBe("text/plain");
+            response.encoding.Should().Be(Encoding.UTF8);
+            response.mediaType.Should().Be("text/plain");
         }
 
         [Theory]
@@ -29,8 +30,8 @@ namespace SystemTestingTools.UnitTests
         public void ParseContentType_Happy(string format, string encoding, string mediaType)
         {
             var response = Helper.ParseContentType(format);
-            response.encoding.ShouldBe(Encoding.GetEncoding(encoding));
-            response.mediaType.ShouldBe(mediaType);
+            response.encoding.Should().Be(Encoding.GetEncoding(encoding));
+            response.mediaType.Should().Be(mediaType);
         }
 
         [Theory]
@@ -40,7 +41,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("text/plain")]
         public void GetKnownContentType_tests(string value)
         {
-            Helper.GetKnownContentType(value).ShouldBe(Helper.KnownContentTypes.Other);
+            Helper.GetKnownContentType(value).Should().Be(Helper.KnownContentTypes.Other);
         }
 
         [Theory]
@@ -48,7 +49,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("TEXT/xml")]
         public void GetKnownContentType_Tests_Xml(string value)
         {
-            Helper.GetKnownContentType(value).ShouldBe(Helper.KnownContentTypes.Xml);
+            Helper.GetKnownContentType(value).Should().Be(Helper.KnownContentTypes.Xml);
         }
 
         [Theory]
@@ -56,7 +57,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("TEXT/json")]
         public void GetKnownContentType_Tests_Json(string value)
         {
-            Helper.GetKnownContentType(value).ShouldBe(Helper.KnownContentTypes.Json);
+            Helper.GetKnownContentType(value).Should().Be(Helper.KnownContentTypes.Json);
         }
     }
 }

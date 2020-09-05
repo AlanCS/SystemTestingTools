@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.168
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemTestingTools", "Tool\SystemTestingTools\SystemTestingTools.csproj", "{25BF2CAB-CEBC-46F5-BE36-D28423D1A5EB}"
 EndProject
@@ -19,7 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.IsolatedTests"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SystemTestingTools.UnitTests", "Tool\SystemTestingTools.UnitTests\SystemTestingTools.UnitTests.csproj", "{58806D58-5E6C-4BF5-BC0D-FFC454785101}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieProject.ContractTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.IntegrationTests\MovieProject.IntegrationTests.csproj", "{6E5D1F7F-329F-4923-81BE-EB6935687BBF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.IntegrationTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.IntegrationTests\MovieProject.IntegrationTests.csproj", "{6E5D1F7F-329F-4923-81BE-EB6935687BBF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.InterceptionUnhappyTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.InterceptionUnhappyTests\MovieProject.InterceptionUnhappyTests.csproj", "{A0E383D5-182A-43FB-907C-43B20454EF27}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.InterceptionHappyTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.InterceptionHappyTests\MovieProject.InterceptionHappyTests.csproj", "{BCA6A68C-13EE-4921-B410-97FE5950C7E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +55,14 @@ Global
 		{6E5D1F7F-329F-4923-81BE-EB6935687BBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E5D1F7F-329F-4923-81BE-EB6935687BBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E5D1F7F-329F-4923-81BE-EB6935687BBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A0E383D5-182A-43FB-907C-43B20454EF27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0E383D5-182A-43FB-907C-43B20454EF27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0E383D5-182A-43FB-907C-43B20454EF27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0E383D5-182A-43FB-907C-43B20454EF27}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -63,6 +75,8 @@ Global
 		{999AF142-0919-4163-9ACC-A61C5D4DDBC2} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
 		{58806D58-5E6C-4BF5-BC0D-FFC454785101} = {F7FCC964-796F-44A5-9961-1B781BFF3DD2}
 		{6E5D1F7F-329F-4923-81BE-EB6935687BBF} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
+		{A0E383D5-182A-43FB-907C-43B20454EF27} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
+		{BCA6A68C-13EE-4921-B410-97FE5950C7E1} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AADE9C77-F94E-42F3-9E44-D3A6F2F8B489}

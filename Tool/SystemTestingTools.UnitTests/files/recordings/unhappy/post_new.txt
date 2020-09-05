@@ -1,0 +1,50 @@
+SystemTestingTools_Recording_V2
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
+Date: 2020-08-25 19:22:12.829 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: MovieProject.Web 1.0.0.0 (POST https://localhost:44374/api/movie?imdb=tt00011)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 1.3.10.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 462 ms
+
+REQUEST
+post http://www.omdbapi.com/?apikey=863d6589&type=movie
+Referer:https://github.com/AlanCS/SystemTestingTools
+SystemTestingTools_Stubs:gibberish
+Request-Id:|d965bbc7-4858cbfaf0e34479.1.
+Content-Type:application/json; charset=utf-8
+Content-Length:94
+
+{
+    "Id": "tt00011",
+    "Name": "TO BE RESEARCHED",
+    "Year": null,
+    "Plot": null,
+    "Runtime": null,
+    "Language": 0
+}
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Tue, 25 Aug 2020 09:22:12 GMT
+Connection:keep-alive
+Set-Cookie:__cfduid=d64f4d66e8a986fe09878ac6f794fdc861598347331; expires=Thu, 24-Sep-20 09:22:11 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
+Cache-Control:public, max-age=3600
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:DYNAMIC
+cf-request-id:04c685e0f10000d6999324e200000001
+Server:cloudflare
+CF-RAY:5c843f47ee01d699-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:49
+Expires:Tue, 25 Aug 2020 10:22:12 GMT
+Last-Modified:Tue, 25 Aug 2020 09:22:12 GMT
+
+{
+    "Response": "False",
+    "Error": "Incorrect IMDb ID."
+}

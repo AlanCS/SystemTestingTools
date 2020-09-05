@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using System.IO;
 using System.Text.RegularExpressions;
-using System.Linq;
-using System.Collections.Generic;
-using static SystemTestingTools.Helper;
 
 namespace SystemTestingTools
 {
@@ -20,32 +16,37 @@ namespace SystemTestingTools
         // part 4 = body
         private static Regex FiddlerFilePartsRegex = new Regex(@"HTTP/[^\n]+?([0-9]{3}).+?\n(.*?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
-        private static Regex DividerRegex = new Regex(@"(.+?)\n--\!\?@Divider\:.+?\n(.+)", RegexOptions.Compiled | RegexOptions.Singleline);
-
-        private static Regex HeaderParser = new Regex(@"(.+?):(.+?)$", RegexOptions.Compiled | RegexOptions.Multiline);
+        private static Regex DividerRegex = new Regex(@"(.+?)\n--\!\?@Divider\:.+?\n(.+)", RegexOptions.Compiled | RegexOptions.Singleline);        
 
         /// <summary>
         /// Reads the response of a file recorded by SystemTestingTools
         /// </summary>
         /// <param name="fileFullPath"></param>
         /// <returns></returns>
-        public static HttpResponseMessage FromRecordedFile(string fileFullPath)
+        public static StubHttpResponseMessage FromRecordedFile(FileFullPath fileFullPath)
         {
-            string content = ReadFile(fileFullPath);
+            string content = fileFullPath.ReadContent();
+            var divider = DividerRegex.Match(content);
 
             if (!content.StartsWith("SystemTestingTools_Recording", StringComparison.InvariantCultureIgnoreCase))
-                throw new ArgumentException($"File is not in the right format, please consult {Constants.Website} or try using ReadFiddlerResponseFormat()");
+            {
+                if(divider.Success) // old types of recordings are not supported anymore, we needed to make it standardized to only new formats
+                    throw new ArgumentException($"File is an old recording, please use ReadFiddlerResponseFormat() or regenerate it");
 
-            var divider = DividerRegex.Match(content);
+                throw new ArgumentException($"File is not in the right format, please consult {Constants.Website} or try using ReadFiddlerResponseFormat()");
+            }
+            
             if(!divider.Success)
                 throw new ArgumentException("Could not find divider in file");
 
             content = DividerRegex.Match(content).Groups[2].Value;
 
-            return ReadFiddlerResponseFormat(content);
+            var response = ReadFiddlerResponseFormat(content);
+            response.SetFile(fileFullPath);
+            return response;
         }
 
-        private static HttpResponseMessage ReadFiddlerResponseFormat(string content)
+        internal static StubHttpResponseMessage ReadFiddlerResponseFormat(string content)
         {
             var fileParts = FiddlerFilePartsRegex.Match(content);
 
@@ -58,30 +59,9 @@ namespace SystemTestingTools
                 throw new ArgumentException($"Not a valid Http Status code: {httpStatusCode}");
 
             var httpStatus = (HttpStatusCode)httpStatusCode;
-            var response = new HttpResponseMessage(httpStatus);
+            var response = new StubHttpResponseMessage(httpStatus);
 
-            var headerContent = fileParts.Groups[2].Value.Trim();
-            string contentType = null;
-            Dictionary<string, string> headerDic = null;
-            if (!string.IsNullOrEmpty(headerContent))
-            {
-                var headers = HeaderParser.Matches(fileParts.Groups[2].Value.Trim());
-                if (headers.Count == 0) throw new ArgumentException($"Header part of content could not be parsed");
-                headerDic = headers.ToDictionary(c => c.Groups[1].Value, c => c.Groups[2].Value.Trim());
-                headerDic.TryGetValue("Content-Type", out contentType);
-            }
-            var format = Helper.ParseContentType(contentType);
-
-            var body = fileParts.Groups[4].Value.Trim();
-            response.Content = new StringContent(body, format.encoding, format.mediaType);
-
-            if (headerDic != null)
-                foreach (var header in headerDic)
-                {
-                    if (!response.Headers.TryAddWithoutValidation(header.Key, header.Value))
-                        if (!response.Content.Headers.TryAddWithoutValidation(header.Key, header.Value))
-                            throw new ApplicationException($"Could not add header '{header.Key}'");
-                }
+            response.Content = Helper.ParseHeadersAndBody(fileParts.Groups[2].Value.Trim(), fileParts.Groups[4].Value.Trim(), response.Headers);
 
             return response;
         }
@@ -98,9 +78,9 @@ namespace SystemTestingTools
         /// </summary>
         /// <param name="fileFullPath"></param>
         /// <returns></returns>
-        public static HttpResponseMessage FromFiddlerLikeResponseFile(string fileFullPath)
+        public static StubHttpResponseMessage FromFiddlerLikeResponseFile(FileFullPath fileFullPath)
         {
-            string content = ReadFile(fileFullPath);
+            string content = fileFullPath.ReadContent();
 
             if(content.StartsWith("SystemTestingTools_Recording", StringComparison.InvariantCultureIgnoreCase))
                 throw new ArgumentException($"For this format, use FromRecordedFile()");
@@ -108,8 +88,12 @@ namespace SystemTestingTools
             if (DividerRegex.IsMatch(content))
                 content = DividerRegex.Match(content).Groups[2].Value;
 
-            return ReadFiddlerResponseFormat(content);
+            var response = ReadFiddlerResponseFormat(content);
+            response.SetFile(fileFullPath);
+            return response;
         }
+
+
 
         /// <summary>
         /// Read from a file containing the body of the response
@@ -117,24 +101,18 @@ namespace SystemTestingTools
         /// <param name="fileFullPath"></param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        public static HttpResponseMessage FromBodyOnlyFile(string fileFullPath, HttpStatusCode statusCode)
+        public static StubHttpResponseMessage FromBodyOnlyFile(FileFullPath fileFullPath, HttpStatusCode statusCode)
         {
-            string content = ReadFile(fileFullPath);
+            string content = fileFullPath.ReadContent();
 
-            var contentType = KnownContentTypes.Other;
-            if (fileFullPath.EndsWith(".json", StringComparison.CurrentCultureIgnoreCase))
-                contentType = KnownContentTypes.Json;
-            if (fileFullPath.EndsWith(".xml", StringComparison.CurrentCultureIgnoreCase))
-                contentType = KnownContentTypes.Xml;
+            var response = new StubHttpResponseMessage(statusCode);
 
-            var response = new HttpResponseMessage(statusCode);
+            response.Content = new StringContent(content, System.Text.Encoding.Default, fileFullPath.GetExtension().GetContentType());
 
-            response.Content = new StringContent(content, System.Text.Encoding.Default, contentType.GetContentType());
+            response.SetFile(fileFullPath);
 
             return response;
-        }
-
-        
+        }        
 
         /// <summary>
         /// Read from a string containing the body of the response
@@ -142,24 +120,15 @@ namespace SystemTestingTools
         /// <param name="content">body of the response</param>
         /// <param name="statusCode"></param>
         /// <returns></returns>
-        public static HttpResponseMessage From(string content, HttpStatusCode statusCode)
+        public static StubHttpResponseMessage From(string content, HttpStatusCode statusCode)
         {
-            var response = new HttpResponseMessage(statusCode);
+            var response = new StubHttpResponseMessage(statusCode);
 
             response.Content = new StringContent(content);
 
+            response.File = "Raw content";
+
             return response;
-        }
-
-        private static string ReadFile(string fileFullPath)
-        {
-            if (!File.Exists(fileFullPath)) throw new ArgumentException($"Could not find file '{fileFullPath}'");
-
-            string content = File.ReadAllText(fileFullPath);
-
-            if (string.IsNullOrEmpty(content)) throw new ArgumentException($"File content is empty");
-
-            return content;
         }
     }
 }

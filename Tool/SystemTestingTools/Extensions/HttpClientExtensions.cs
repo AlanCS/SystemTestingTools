@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using SystemTestingTools.Internal;
 
 namespace SystemTestingTools
 {
@@ -18,10 +19,10 @@ namespace SystemTestingTools
         public static string CreateSession(this HttpClient httpClient)
         {
             var sessionId = Guid.NewGuid().ToString();
-            httpClient.DefaultRequestHeaders.Add(Constants.headerName, sessionId);
-            ContextRepo.StubbedEndpoints.Add(sessionId, new List<StubEndpoint>());
-            ContextRepo.SessionLogs.Add(sessionId, new List<LoggedEvent>());
-            ContextRepo.OutgoingRequests.Add(sessionId, new List<HttpRequestMessageWrapper>());
+            httpClient.DefaultRequestHeaders.Add(Constants.sessionHeaderName, sessionId);
+            Constants.TestStubs.StubbedEndpoints.Add(sessionId, new List<StubEndpoint>());
+            Constants.TestStubs.SessionLogs.Add(sessionId, new List<LoggedEvent>());
+            Constants.TestStubs.OutgoingRequests.Add(sessionId, new List<HttpRequestMessage>());
             return sessionId;
         }
 
@@ -32,7 +33,7 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static string GetSessionId(this HttpClient httpClient)
         {
-            var values = httpClient.DefaultRequestHeaders.GetValues(Constants.headerName);
+            var values = httpClient.DefaultRequestHeaders.GetValues(Constants.sessionHeaderName);
 
             if (values.Count() != 1) throw new ApplicationException("You need to call 'CreateSession' first");
 
@@ -48,19 +49,13 @@ namespace SystemTestingTools
         /// <param name="Url"></param>
         /// <param name="response">You can create your response, or use ResponseFactory to create one for you</param>
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
-        public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
+        /// <param name="counter">How many times should this response be returned, if requested one more time than the limit, it will throw an exception. choose 0 for infinite</param>
+        public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null, int counter = 1)
         {
             var sessionId = GetSessionId(httpClient);
 
-            ContextRepo.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, response, headerMatches));
+            Constants.TestStubs.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, response, headerMatches, counter));
         }
-
-        [Obsolete("This call has been renamed to AppendHttpCallStub", true)]
-        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
-        {
-            // old method, renamed it because Stub is a better word for what it does
-        }
-        
 
         /// <summary>
         /// Will throw an exception when a matching call gets fired, but only once
@@ -71,17 +66,12 @@ namespace SystemTestingTools
         /// <param name="Url"></param>
         /// <param name="exception">The exception that will be throw when HttpClient.SendAsync gets called</param>
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
-        public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
+        /// /// <param name="counter">How many times should this response be returned, if requested one more time than the limit, it will throw an exception. choose 0 for infinite</param>
+        public static void AppendHttpCallStub(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null, int counter = 1)
         {
             var sessionId = GetSessionId(httpClient);
 
-            ContextRepo.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches));
-        }
-
-        [Obsolete("This call has been renamed to AppendHttpCallStub", true)]
-        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
-        {
-            // old method, renamed it because Stub is a better word for what it does
+            Constants.TestStubs.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches, counter));
         }
 
         /// <summary>
@@ -93,7 +83,7 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionId(httpClient);
 
-            return ContextRepo.SessionLogs[sessionId];
+            return Constants.TestStubs.SessionLogs[sessionId];
         }
 
         /// <summary>
@@ -101,11 +91,25 @@ namespace SystemTestingTools
         /// </summary>
         /// <param name="httpClient"></param>
         /// <returns></returns>
-        public static List<HttpRequestMessageWrapper> GetSessionOutgoingRequests(this HttpClient httpClient)
+        public static List<HttpRequestMessage> GetSessionOutgoingRequests(this HttpClient httpClient)
         {
+            if (!Constants.KeepListOfSentRequests) return null;
+
             var sessionId = GetSessionId(httpClient);
 
-            return ContextRepo.OutgoingRequests[sessionId];
+            return Constants.TestStubs.OutgoingRequests[sessionId];
+        }
+
+        [Obsolete("This call has been renamed to AppendHttpCallStub", true)]
+        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
+        {
+            // old method, renamed it because Stub is a better word for what it does
+        }
+
+        [Obsolete("This call has been renamed to AppendHttpCallStub", true)]
+        public static void AppendMockHttpCall(this HttpClient httpClient, HttpMethod httpMethod, System.Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
+        {
+            // old method, renamed it because Stub is a better word for what it does
         }
     }
 }

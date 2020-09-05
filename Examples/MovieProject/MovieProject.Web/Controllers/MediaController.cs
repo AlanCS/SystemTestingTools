@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MovieProject.Logic;
 using MovieProject.Logic.DTO;
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 
 namespace MovieProject.Web.Controllers

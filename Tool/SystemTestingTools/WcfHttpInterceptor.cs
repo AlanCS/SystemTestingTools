@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
 using System.ServiceModel.Description;
 
 namespace SystemTestingTools
@@ -9,23 +9,24 @@ namespace SystemTestingTools
     public static class WcfHttpInterceptor
     {
         /// <summary>
-        /// Create an IEndpointBehavior that will save requests and responses in a text file in a folder
+        /// obsolete method
         /// </summary>
-        /// <param name="folderName">where the files will be saved</param>
-        /// <param name="callerPath">Please don't pass this parameter, it will be used by .net to track the file that called this method</param>
+        /// <param name="folderName"></param>
         /// <returns></returns>
+        [Obsolete("Please use extension method ServiceEndpoint.EnableHttpInterception() instead; that will enable extension methods IServiceCollection.InterceptHttpCallsAfterSending() or IWebHostBuilder.InterceptHttpCallsBeforeSending() to see it", true)]
         public static IEndpointBehavior CreateRequestResponseRecorder(string folderName)
         {
-            return new CustomEndpointBehaviour(() => new RequestResponseRecorder(folderName, true));
+            return null;
         }
 
         /// <summary>
-        /// Create an IEndpointBehavior that will not allow requests to leave the machine, and will response with stub responses instead
+        /// Obsolete method
         /// </summary>
         /// <returns></returns>
+        [Obsolete("Please use extension method ServiceEndpoint.EnableHttpInterception() instead; that will enable extension methods IServiceCollection.InterceptHttpCallsAfterSending() or IWebHostBuilder.InterceptHttpCallsBeforeSending() to see it", true)]
         public static IEndpointBehavior CreateInterceptor()
         {
-            return new CustomEndpointBehaviour(() => new HttpCallsInterceptorHandler());
+            return null;
         }
     }
 }

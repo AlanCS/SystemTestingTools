@@ -1,4 +1,5 @@
-using Shouldly;
+using FluentAssertions;
+using FluentAssertions.Execution;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -39,31 +40,34 @@ namespace IsolatedTests.ComponentTestings
             // act
             var httpResponse = await client.GetAsync("/api/users");
 
-            // assert logs
-            var logs = client.GetSessionLogs();
-            logs.ShouldBeEmpty();
+            using (new AssertionScope())
+            {
+                // assert logs
+                var logs = client.GetSessionLogs();
+                logs.Should().BeEmpty();
 
-            // assert outgoing
-            var outgoingRequests = client.GetSessionOutgoingRequests();
-            outgoingRequests.Count.ShouldBe(1);
-            outgoingRequests[0].GetEndpoint().ShouldBe($"GET {Url}");
-            outgoingRequests[0].GetHeaderValue("Referer").ShouldBe(MovieProject.Logic.Constants.Website);
+                // assert outgoing
+                var outgoingRequests = client.GetSessionOutgoingRequests();
+                outgoingRequests.Count.Should().Be(1);
+                outgoingRequests[0].GetEndpoint().Should().Be($"GET {Url}");
+                outgoingRequests[0].GetHeaderValue("Referer").Should().Be(MovieProject.Logic.Constants.Website);
 
-            // assert return
-            httpResponse.StatusCode.ShouldBe(HttpStatusCode.OK);
+                // assert return
+                httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
 
-            var list = await httpResponse.ReadJsonBody<List<string>>();
-            list.Count.ShouldBe(10);
-            list[0].ShouldBe("Changed in code");
-            list[1].ShouldBe("Chelsey Dietrich");
-            list[2].ShouldBe("Clementina DuBuque");
-            list[3].ShouldBe("Clementine Bauch");
-            list[4].ShouldBe("Ervin Howell");
-            list[5].ShouldBe("Glenna Reichert");
-            list[6].ShouldBe("Kurtis Weissnat");
-            list[7].ShouldBe("Mrs. Dennis Schulist");
-            list[8].ShouldBe("Nicholas Runolfsdottir V");
-            list[9].ShouldBe("Patricia Lebsack");
+                var list = await httpResponse.ReadJsonBody<List<string>>();
+                list.Count.Should().Be(10);
+                list[0].Should().Be("Changed in code");
+                list[1].Should().Be("Chelsey Dietrich");
+                list[2].Should().Be("Clementina DuBuque");
+                list[3].Should().Be("Clementine Bauch");
+                list[4].Should().Be("Ervin Howell");
+                list[5].Should().Be("Glenna Reichert");
+                list[6].Should().Be("Kurtis Weissnat");
+                list[7].Should().Be("Mrs. Dennis Schulist");
+                list[8].Should().Be("Nicholas Runolfsdottir V");
+                list[9].Should().Be("Patricia Lebsack");
+            }
         }
     }
 }
