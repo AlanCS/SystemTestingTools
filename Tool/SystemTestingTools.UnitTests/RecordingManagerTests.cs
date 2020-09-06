@@ -105,7 +105,7 @@ Server:Kestrel
             var sut = new RecordingManager(folder);
 
             // act
-            var recordings = sut.GetRecordings();
+            var recordings = sut.GetRecordings(folder);
 
             // asserts
             recordings.Count.Should().Be(2);

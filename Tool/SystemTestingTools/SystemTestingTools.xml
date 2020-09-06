@@ -449,6 +449,16 @@
             class used to assign as a mandatory logger but does not log anything, because the namespace is not one we are interested in
             </summary>
         </member>
+        <member name="T:SystemTestingTools.RecordingCollection">
+            <summary>
+            Collection of recording files
+            </summary>
+        </member>
+        <member name="F:SystemTestingTools.RecordingCollection.Recordings">
+            <summary>
+            The list of recordings available for usage
+            </summary>
+        </member>
         <member name="T:SystemTestingTools.ResponseFactory">
             <summary>
             Contains methods to create easily create HttpResponseMessage

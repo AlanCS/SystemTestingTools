@@ -53,9 +53,9 @@ namespace SystemTestingTools
             Constants.GlobalConfiguration = config;
             Constants.GlobalRecordingManager = new RecordingManager(config.RootStubsFolder);
 
-            serviceCollection.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallInterceptor(false))));            
+            serviceCollection.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallInterceptor(false))));
 
-            RecordingCollection.Recordings.AddRange(Constants.GlobalRecordingManager.GetRecordings());
+            RecordingCollection.LoadFrom(config.RootStubsFolder);
 
             return serviceCollection;
         }

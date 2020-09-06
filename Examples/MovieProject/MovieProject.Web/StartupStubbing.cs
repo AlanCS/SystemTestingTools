@@ -13,6 +13,7 @@ namespace MovieProject.Web
             return serviceCollection.InterceptHttpCallsAfterSending(async (intercept) =>
             {
                 bool IsHappyPath = false;
+
                 // we check content length because downstream returns a 200 for not found, we can tell by the size it's likely a bad response
                 if (intercept.Response?.IsSuccessStatusCode ?? false && intercept.Response.Content.Headers.ContentLength > 100)
                 {
@@ -20,13 +21,13 @@ namespace MovieProject.Web
                     if (intercept.Request.RequestUri.ToString().Contains("omdb"))
                     {
                         var movieName = intercept.Request.GetQueryValue("t");
-                        await intercept.SaveAsRecording("omdb/new/happy", movieName.Replace(" ", "_"), 1);
+                        await intercept.SaveAsRecording("omdb/new/happy", movieName.Replace(" ", "_"), 1); // save only 1 happy response per movie name
                     }
                     else
                     {
-                        var action = intercept.Request.GetSoapAction();
+                        var action = intercept.Request.GetSoapAction(); // it's a SOAP method, so we grab the action to best describe it
                         action = action.Split("/").LastOrDefault();
-                        await intercept.SaveAsRecording("math/new/happy", action, howManyFilesToKeep: 50);
+                        await intercept.SaveAsRecording("math/new/happy", action, howManyFilesToKeep: 50); // save up to 50 happy responses for action
                     }
                 }
 
@@ -38,14 +39,13 @@ namespace MovieProject.Web
                 }
 
                 if (IsHappyPath)
-                    return intercept.KeepResultUnchanged();
-
-                await intercept.SaveAsRecording("new/unhappy");
+                    return intercept.KeepResultUnchanged(); // the real downstream system returned a good response, no reason to replace with stubs
 
                 var message = intercept.Summarize();
 
                 logger.LogError(intercept.Exception, message);
 
+                // get the most recent recording (stub), so we can be sure to be testing against the latest if possible
                 var recentRecording = RecordingCollection.Recordings.FirstOrDefault(
                     recording => recording.File.Contains("new/happy")
                     && recording.Request.RequestUri.PathAndQuery == intercept.Request.RequestUri.PathAndQuery
@@ -54,6 +54,8 @@ namespace MovieProject.Web
                 if (recentRecording != null)
                     return intercept.ReturnRecording(recentRecording, message);
 
+                // fall back #1, return a recording from the pre-approved folder, stored in github and vouched by a developer; might not be the latest
+                // but returns a good response to unblock developers
                 var oldRecording = RecordingCollection.Recordings.FirstOrDefault(
                     recording => recording.File.Contains("pre-approved/happy")
                     && recording.Request.RequestUri.PathAndQuery == intercept.Request.RequestUri.PathAndQuery
@@ -62,6 +64,7 @@ namespace MovieProject.Web
                 if (oldRecording != null)
                     return intercept.ReturnRecording(oldRecording, message);
 
+                // fall back #2, we return a dummy response
                 var fallBackRecording = RecordingCollection.Recordings.FirstOrDefault(
                     recording => recording.File.Contains("last_fallback"));
 
