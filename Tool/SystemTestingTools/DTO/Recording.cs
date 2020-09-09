@@ -9,9 +9,12 @@ namespace SystemTestingTools
     public class Recording
     {
         /// <summary>
-        /// file where it came from
+        /// File (relative path) where it came from
         /// </summary>
         public string File = string.Empty;
+
+
+        internal string FileFullPath = string.Empty;
 
         /// <summary>
         /// when the recording happened

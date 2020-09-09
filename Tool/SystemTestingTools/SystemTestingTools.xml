@@ -135,7 +135,7 @@
         </member>
         <member name="F:SystemTestingTools.Recording.File">
             <summary>
-            file where it came from
+            File (relative path) where it came from
             </summary>
         </member>
         <member name="F:SystemTestingTools.Recording.DateTime">
@@ -359,6 +359,26 @@
             <param name="func">the function that will handle request / responses</param>
             <param name="config">the optional configuration for the interception</param>
             <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.RecordingExtensions">
+            <summary>
+            Extensions related to recordings (sub type of Stubs, that also contain the request detail)
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.RecordingExtensions.ReSendRequest(SystemTestingTools.Recording,System.Net.Http.HttpClient)">
+            <summary>
+            Re-send the request of the recording, using exactly the same URL and headers
+            </summary>
+            <param name="recording">the recording whose request will be re-sent</param>
+            <param name="client">the httpClient to be used for the call, if none passed; a new one will be created. Pass one if you need non default configurations such as proxy or timeout</param>
+            <returns>the response for the request</returns>
+        </member>
+        <member name="M:SystemTestingTools.RecordingExtensions.ReSendRequestAndUpdateFile(System.Collections.Generic.IEnumerable{SystemTestingTools.Recording},System.Net.Http.HttpClient)">
+            <summary>
+            Re-send the request of the recording, using exactly the same URL and headers, and update the relevant file
+            </summary>
+            <param name="recordings">the list of recordings whose request will be re-sent</param>
+            <param name="client">the httpClient to be used for the calls, if none passed; a new one will be created. Pass one if you need non default configurations such as proxy or timeout</param>
         </member>
         <member name="T:SystemTestingTools.ServiceEndpointExtensions">
             <summary>

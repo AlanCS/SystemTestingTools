@@ -146,13 +146,13 @@ namespace SystemTestingTools.Internal
 
         public static bool IsValid(string content)
         {
-            return content.StartsWith("SystemTestingTools_Recording_") && content.Contains("--!?@Divider: ");
+            return content.Contains("--!?@Divider: ");
         }
 
         // part 1 = date time of the recording
         // part 2 = request details
         // part 3 = response details
-        private static Regex RecordingRegex = new Regex(@"SystemTestingTools_Recording.+?Date:(.+?)\n.+?REQUEST.+?\n(.+?)--\!\?@Divider:.+?\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RecordingRegex = new Regex(@".+?\nDate:(.+?)\n.+?REQUEST.+?\n(.+?)--\!\?@Divider:.+?\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static Regex DateRegex = new Regex(@"(2.+?)\(", RegexOptions.Compiled | RegexOptions.Singleline);
 

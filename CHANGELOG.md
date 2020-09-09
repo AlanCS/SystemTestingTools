@@ -1,3 +1,24 @@
+## 2.0.6
+- Bugfix
+    - fixing bug in IEnumerable\<Recording>.ReSendRequestAndUpdateFile() where it wouldn't work outside a running website with interception configured
+
+## 2.0.5
+- New features
+    - Extension method Recording.ReSendRequest() will resend the request and return the response, but it will not update the recording itself
+    - Extension method IEnumerable\<Recording>.ReSendRequestAndUpdateFile() will resend the requests and update the recordings themselves (in memory and file system)
+
+Use cases: when you need to update the recordings because you suspect the response might change and that's relevant for your business; or the latest recording format (with extra fields) adds more value to you.
+
+Example:
+
+```c#
+RecordingCollection.LoadFrom(folder);
+await RecordingCollection.Recordings
+    .Where(c => c.DateTime >= DateTime.Now.AddYears(-1)) // put any filters here (or none)
+    .ReSendRequestAndUpdateFile();
+```
+
+
 ## 2.0.4
 
 Major new version to support a major new feature: Enable http interception after the request is sent, so you can return healthy stubs instead of a bad response, log, record the request/response or perform any action you wish.

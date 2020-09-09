@@ -7,15 +7,12 @@
     <Authors>AlanCS</Authors>
     <Company>Open Source project</Company>
     <Product />
-    <Description>
-      **SystemTestingTools** (for .net core 3.1+) extends your test capabilities, providing ways to create / return stubs, allowing you to run more comprehensive / deterministic / reliable tests in your local dev machine / build tool and in non-prod environments.
-
+    <Description>**SystemTestingTools** (for .net core 3.1+) extends your test capabilities, providing ways to create / return stubs, allowing you to run more comprehensive / deterministic / reliable tests in your local dev machine / build tool and in non-prod environments.
       * supporting interception of Http (HttpClient or WCF) calls:
       * before they are sent, returning stubs (ideal for automated testing)
       * after they are sent, where you can save the request and response (recording), log appropriately or replace bad responses by stubs (ideal for dev/test environments that are flaky or not ready)
       * asserting outgoing calls (ie: making sure out downstream calls have SessionIds)
-      * intercept logs and run asserts on them
-    </Description>
+      * intercept logs and run asserts on them</Description>
     <licenseUrl>https://licenses.nuget.org/MIT</licenseUrl>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>https://github.com/AlanCS/SystemTestingTools</PackageProjectUrl>
@@ -41,7 +38,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="Version">
-    <Version>2.0.4</Version>
+    <Version>2.0.6</Version>
   </PropertyGroup>
 
   <ItemGroup>

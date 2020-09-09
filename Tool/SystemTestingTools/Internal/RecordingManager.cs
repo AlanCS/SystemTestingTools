@@ -20,7 +20,7 @@ namespace SystemTestingTools
         private static Regex fileNameRegex = new Regex(@".+?([0-9]+)\.", RegexOptions.Compiled);
         private readonly FolderAbsolutePath baseDirectory;
 
-        public RecordingManager(FolderAbsolutePath baseDirectory)
+        public RecordingManager(FolderAbsolutePath baseDirectory = null)
         {
             this.baseDirectory = baseDirectory;
         }
@@ -38,9 +38,14 @@ namespace SystemTestingTools
 
             if (finalFileName == null) return null; // limit reached
 
-            _fileSystem.CreateFile(finalFolder, finalFileName, RecordingFormatter.Format(log));
+            SaveToFile(Path.Combine(finalFolder, finalFileName), log);
 
             return finalFileName;
+        }
+
+        public void SaveToFile(string fullFileName, RequestResponse log)
+        {
+            _fileSystem.CreateFile(fullFileName, RecordingFormatter.Format(log));
         }
 
         public List<Recording> GetRecordings(FolderAbsolutePath folder)
@@ -53,6 +58,7 @@ namespace SystemTestingTools
                 if (!RecordingFormatter.IsValid(content)) continue;
                 var recording = RecordingFormatter.Read(content);
                 if (recording == null) continue;
+                recording.FileFullPath = fullFilePath;
                 recording.File = StandardizeFileNameForDisplay(folder, fullFilePath);
                 list.Add(recording);
             }

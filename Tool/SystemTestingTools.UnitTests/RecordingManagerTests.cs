@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SystemTestingTools.Internal;
 using Xunit;
 
 namespace SystemTestingTools.UnitTests
@@ -99,19 +100,27 @@ Server:Kestrel
         }
 
         [Fact]
-        public async Task GetRecordings_Works()
+        public async Task GetRecordings_Including_Old_One_Works_And_ResendAndUpdate()
         {
             var folder = Path.Combine(Path.GetFullPath("../../../"), "files/recordings");
+
             var sut = new RecordingManager(folder);
 
             // act
             var recordings = sut.GetRecordings(folder);
 
             // asserts
-            recordings.Count.Should().Be(2);
+            recordings.Count.Should().Be(3);
 
-            await AssertHappyRecording(recordings[0]);
-            await AssertUnhappyRecording(recordings[1]);
+            recordings[0].File.Should().Be("happy/200_ContainsSomeFields_PacificChallenge");
+            recordings[0].FileFullPath.Should().EndWith(@"recordings\happy\200_ContainsSomeFields_PacificChallenge.txt");
+
+            await AssertHappyRecording(recordings[1]);
+            await AssertUnhappyRecording(recordings[2]);
+
+            await recordings.ReSendRequestAndUpdateFile();
+
+            recordings.Should().OnlyContain(c => c.DateTime >= DateTime.Now.AddSeconds(-1));
         }
 
         private static async Task AssertHappyRecording(Recording recording)

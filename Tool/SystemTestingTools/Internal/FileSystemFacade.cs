@@ -7,7 +7,7 @@ namespace SystemTestingTools
     internal interface IFileSystemFacade
     {
         bool FolderExists(string folderPath);
-        void CreateFile(string folderPath, string fileName, string content);
+        void CreateFile(string fullFileName, string content);
         void DeleteFolder(string folderPath);
         void CreateFolder(string folderPath);
         List<string> GetTextFileNames(string folderPath, string fileName);
@@ -53,9 +53,9 @@ namespace SystemTestingTools
             return File.ReadAllText(fullFileName);
         }
 
-        public void CreateFile(string folderPath, string fileName, string content)
+        public void CreateFile(string fullFileName, string content)
         {
-            var fullFileName = Path.Combine(folderPath, $"{fileName}.txt");
+            if (!fullFileName.EndsWith(".txt")) fullFileName += ".txt";
 
             using (var file = File.CreateText(fullFileName))
             {

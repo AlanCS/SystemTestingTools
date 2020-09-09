@@ -13,8 +13,8 @@ namespace SystemTestingTools
         public static List<Recording> Recordings = new List<Recording>();
 
         internal static void LoadFrom(FolderAbsolutePath folder)
-        {
-            Recordings.AddRange(Constants.GlobalRecordingManager.GetRecordings(folder));
+        {            
+            Recordings.AddRange(new RecordingManager().GetRecordings(folder));
         }
     }
 }

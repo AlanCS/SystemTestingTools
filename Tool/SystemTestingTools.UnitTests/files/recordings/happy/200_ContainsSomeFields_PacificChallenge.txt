@@ -1,0 +1,77 @@
+SystemTestingTools_Recording_V2
+Observations: !! EXPLAIN WHY THIS EXAMPLE IS IMPORTANT HERE !!
+Date: 2020-09-09 11:09:35.186 (UTC+10:00) Canberra, Melbourne, Sydney
+Recorded from: ReSharperTestRunner64 1.2.3.28 (No httpcontext available)
+Local machine: DESKTOP-ODVA6EU
+User: DESKTOP-ODVA6EU\AlanPC
+Using tool: SystemTestingTools 2.0.5.0 (https://github.com/AlanCS/SystemTestingTools/)
+Duration: 80 ms
+
+REQUEST
+get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=pacific challenge
+Referer:https://github.com/AlanCS/SystemTestingTools
+Content-Type:text/plain; charset=utf-8
+Content-Length:0
+
+
+
+
+
+
+
+
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 200 OK
+Date:Wed, 09 Sep 2020 01:09:34 GMT
+Connection:keep-alive
+Set-Cookie:__cfduid=d7ad6ab2a0422084deddca60416d0a9a61599613774; expires=Fri, 09-Oct-20 01:09:34 GMT; path=/; domain=.omdbapi.com; HttpOnly; SameSite=Lax
+Cache-Control:public, max-age=86400
+Vary:*
+X-AspNet-Version:4.0.30319
+X-Powered-By:ASP.NET
+Access-Control-Allow-Origin:*
+CF-Cache-Status:HIT
+Age:3120
+Accept-Ranges:bytes
+cf-request-id:051202446e000016d91f370200000001
+Server:cloudflare
+CF-RAY:5cfd064d7e8e16d9-SYD
+Content-Type:application/json; charset=utf-8
+Content-Length:709
+Expires:Wed, 09 Sep 2020 01:17:34 GMT
+Last-Modified:Wed, 09 Sep 2020 00:17:34 GMT
+
+{
+    "Title": "Pacific Challenge",
+    "Year": "1975",
+    "Rated": "G",
+    "Released": "01 Jan 1975",
+    "Runtime": "83 min",
+    "Genre": "Documentary, Adventure",
+    "Director": "Robert Amram",
+    "Writer": "Robert Amram",
+    "Actors": "Vital Alsar, Robert Webber",
+    "Plot": "Documentary detailing the six-month crossing of the Pacific Ocean by a rafting expedition of 12 men on three balsa-wood rafts, from Guayaquil, Ecuador, to Ballina, Australia.",
+    "Language": "English",
+    "Country": "USA",
+    "Awards": "N/A",
+    "Poster": "N/A",
+    "Ratings": [
+        {
+            "Source": "Internet Movie Database",
+            "Value": "8.3/10"
+        }
+    ],
+    "Metascore": "N/A",
+    "imdbRating": "8.3",
+    "imdbVotes": "9",
+    "imdbID": "tt0073505",
+    "Type": "movie",
+    "DVD": "N/A",
+    "BoxOffice": "N/A",
+    "Production": "N/A",
+    "Website": "N/A",
+    "Response": "True"
+}

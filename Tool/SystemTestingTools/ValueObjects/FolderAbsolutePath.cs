@@ -37,7 +37,7 @@ namespace SystemTestingTools
 
             try
             {
-                _fileSystem.CreateFile(testFolder, "test.txt", "testing to see if we have the needed permissions for stub saving");
+                _fileSystem.CreateFile(Path.Combine(testFolder, "test.txt"), "testing to see if we have the needed permissions for stub saving");
             }
             catch (Exception e)
             {

@@ -9,7 +9,7 @@ namespace MovieProject.Web
     {
         public static IServiceCollection AddInterceptionAndStubs(this IServiceCollection serviceCollection, ILogger logger)
         {
-            // the bellow call won't be used if IWebHostBuilder.InterceptHttpCallsBeforeSending() is used
+            // the bellow call won't be used if IWebHostBuilder.InterceptHttpCallsBeforeSending() is used (which happens in test projects)
             return serviceCollection.InterceptHttpCallsAfterSending(async (intercept) =>
             {
                 bool IsHappyPath = false;
@@ -21,13 +21,13 @@ namespace MovieProject.Web
                     if (intercept.Request.RequestUri.ToString().Contains("omdb"))
                     {
                         var movieName = intercept.Request.GetQueryValue("t");
-                        await intercept.SaveAsRecording("omdb/new/happy", movieName.Replace(" ", "_"), 1); // save only 1 happy response per movie name
+                        await intercept.SaveAsRecording("omdb/new/happy", movieName.Replace(" ", "_"), 1);
                     }
                     else
                     {
-                        var action = intercept.Request.GetSoapAction(); // it's a SOAP method, so we grab the action to best describe it
+                        var action = intercept.Request.GetSoapAction();
                         action = action.Split("/").LastOrDefault();
-                        await intercept.SaveAsRecording("math/new/happy", action, howManyFilesToKeep: 50); // save up to 50 happy responses for action
+                        await intercept.SaveAsRecording("math/new/happy", action, howManyFilesToKeep: 50);
                     }
                 }
 
@@ -39,7 +39,9 @@ namespace MovieProject.Web
                 }
 
                 if (IsHappyPath)
-                    return intercept.KeepResultUnchanged(); // the real downstream system returned a good response, no reason to replace with stubs
+                    return intercept.KeepResultUnchanged();
+
+                await intercept.SaveAsRecording("new/unhappy");
 
                 var message = intercept.Summarize();
 
