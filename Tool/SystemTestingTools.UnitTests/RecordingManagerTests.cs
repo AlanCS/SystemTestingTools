@@ -100,20 +100,26 @@ Server:Kestrel
         }
 
         [Fact]
-        public async Task GetRecordings_Including_Old_One_Works_And_ResendAndUpdate()
+        public async Task GetRecordings_Including_Old_One_And_ResendAndUpdate_Works()
         {
             var folder = Path.Combine(Path.GetFullPath("../../../"), "files/recordings");
 
-            var sut = new RecordingManager(folder);
+            var destinationFolder = folder.Replace("/recordings", "/recordings_temp");
+
+            // we copy files from original folder to another one, because they will be updated, and we need to keep the original files for 
+            // repeatable unit testing
+            CopyFolderAndFiles(folder, destinationFolder); 
+
+            var sut = new RecordingManager(destinationFolder);
 
             // act
-            var recordings = sut.GetRecordings(folder);
+            var recordings = sut.GetRecordings(destinationFolder);
 
             // asserts
             recordings.Count.Should().Be(3);
 
-            recordings[0].File.Should().Be("happy/200_ContainsSomeFields_PacificChallenge");
-            recordings[0].FileFullPath.Should().EndWith(@"recordings\happy\200_ContainsSomeFields_PacificChallenge.txt");
+            recordings[0].File.Should().Be(@"happy\200_ContainsSomeFields_PacificChallenge");
+            recordings[0].FileFullPath.Should().EndWith(@"recordings_temp\happy\200_ContainsSomeFields_PacificChallenge.txt");
 
             await AssertHappyRecording(recordings[1]);
             await AssertUnhappyRecording(recordings[2]);
@@ -121,12 +127,36 @@ Server:Kestrel
             await recordings.ReSendRequestAndUpdateFile();
 
             recordings.Should().OnlyContain(c => c.DateTime >= DateTime.Now.AddSeconds(-1));
+
+            Directory.Delete(destinationFolder, true); // clear folder as not needed anymore
+        }
+
+
+        public static void CopyFilesRecursively(DirectoryInfo source, DirectoryInfo target)
+        {
+            foreach (DirectoryInfo dir in source.GetDirectories())
+                CopyFilesRecursively(dir, target.CreateSubdirectory(dir.Name));
+            foreach (FileInfo file in source.GetFiles())
+                file.CopyTo(Path.Combine(target.FullName, file.Name));
+        }
+
+        public static void CopyFolderAndFiles(string sourcePath, string targetPath)
+        {
+            var source = new DirectoryInfo(sourcePath);
+            var target = new DirectoryInfo(targetPath);
+
+            if (target.Exists)
+                target.Delete(true);
+
+            target.Create();
+
+            CopyFilesRecursively(source, target);
         }
 
         private static async Task AssertHappyRecording(Recording recording)
         {
             recording.DateTime.Should().Be(DateTime.Parse("2020-08-18 20:26:34.231"));
-            recording.File.Should().Be("happy/TheMatrix");
+            recording.File.Should().Be(@"happy\TheMatrix");
 
             recording.Request.Should().NotBeNull();
             recording.Request.GetEndpoint().Should().Be("get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=matrix");
@@ -153,7 +183,7 @@ Server:Kestrel
         private static async Task AssertUnhappyRecording(Recording recording)
         {
             recording.DateTime.Should().Be(DateTime.Parse("2020-08-25 19:22:12.829"));
-            recording.File.Should().Be("unhappy/post_new");
+            recording.File.Should().Be(@"unhappy\post_new");
 
             recording.Request.Should().NotBeNull();
             recording.Request.GetEndpoint().Should().Be("post http://www.omdbapi.com/?apikey=863d6589&type=movie");

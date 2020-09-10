@@ -67,10 +67,10 @@ namespace SystemTestingTools
 
         private static string StandardizeFileNameForDisplay(FolderAbsolutePath folder,  string str)
         {
-            // we replace something like C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Tool\SystemTestingTools.UnitTests\files/recordings\200\TheMatrix.txt
-            // to happy/TheMatrix, so we can easily search by folder name
+            // we replace something like C:\Users\AlanPC\Documents\GitHub\SystemTestingTools\Tool\SystemTestingTools.UnitTests\files/recordings\happy\TheMatrix.txt
+            // to happy\TheMatrix, so we can easily search by folder name
 
-            return str.Replace(folder, "").Replace(".txt", "").TrimStart('/', '\\').Replace("\\","/");
+            return str.Replace(folder, "").Replace(".txt", "").TrimStart('/', '\\').Replace("/", "\\");
         }
 
         private FileName GetFinalFileName(string finalFolder, FileName fileName, int howManyFilesToKeep)

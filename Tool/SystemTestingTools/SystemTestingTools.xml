@@ -479,6 +479,12 @@
             The list of recordings available for usage
             </summary>
         </member>
+        <member name="M:SystemTestingTools.RecordingCollection.LoadFrom(SystemTestingTools.FolderAbsolutePath)">
+            <summary>
+            Add recordings found in this folder to 'Recordings' property
+            </summary>
+            <param name="folder">the root folder where recordings will be found, deep folder search will be performed</param>
+        </member>
         <member name="T:SystemTestingTools.ResponseFactory">
             <summary>
             Contains methods to create easily create HttpResponseMessage
