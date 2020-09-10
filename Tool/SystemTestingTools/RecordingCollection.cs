@@ -12,7 +12,11 @@ namespace SystemTestingTools
         /// </summary>
         public static List<Recording> Recordings = new List<Recording>();
 
-        internal static void LoadFrom(FolderAbsolutePath folder)
+        /// <summary>
+        /// Add recordings found in this folder to 'Recordings' property
+        /// </summary>
+        /// <param name="folder">the root folder where recordings will be found, deep folder search will be performed</param>
+        public static void LoadFrom(FolderAbsolutePath folder)
         {            
             Recordings.AddRange(new RecordingManager().GetRecordings(folder));
         }

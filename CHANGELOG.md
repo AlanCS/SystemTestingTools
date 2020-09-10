@@ -1,3 +1,7 @@
+## 2.0.7
+- Bugfix
+    - fixing bug in RecordingCollection.LoadFrom() where it wasn't public
+
 ## 2.0.6
 - Bugfix
     - fixing bug in IEnumerable\<Recording>.ReSendRequestAndUpdateFile() where it wouldn't work outside a running website with interception configured
