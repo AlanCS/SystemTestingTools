@@ -118,7 +118,7 @@ Server:Kestrel
             // asserts
             recordings.Count.Should().Be(3);
 
-            recordings[0].File.Should().Be(@"happy\200_ContainsSomeFields_PacificChallenge");
+            recordings[0].File.Should().Be(@"happy/200_ContainsSomeFields_PacificChallenge");
             recordings[0].FileFullPath.Should().EndWith(@"recordings_temp\happy\200_ContainsSomeFields_PacificChallenge.txt");
 
             await AssertHappyRecording(recordings[1]);
@@ -156,7 +156,7 @@ Server:Kestrel
         private static async Task AssertHappyRecording(Recording recording)
         {
             recording.DateTime.Should().Be(DateTime.Parse("2020-08-18 20:26:34.231"));
-            recording.File.Should().Be(@"happy\TheMatrix");
+            recording.File.Should().Be(@"happy/TheMatrix");
 
             recording.Request.Should().NotBeNull();
             recording.Request.GetEndpoint().Should().Be("get http://www.omdbapi.com/?apikey=863d6589&type=movie&t=matrix");
@@ -183,7 +183,7 @@ Server:Kestrel
         private static async Task AssertUnhappyRecording(Recording recording)
         {
             recording.DateTime.Should().Be(DateTime.Parse("2020-08-25 19:22:12.829"));
-            recording.File.Should().Be(@"unhappy\post_new");
+            recording.File.Should().Be(@"unhappy/post_new");
 
             recording.Request.Should().NotBeNull();
             recording.Request.GetEndpoint().Should().Be("post http://www.omdbapi.com/?apikey=863d6589&type=movie");

@@ -37,7 +37,6 @@ namespace SystemTestingTools.UnitTests
 
             sut.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
-            sut.Content.Headers.ShouldContainHeader("Content-Length", "0");
             sut.Content.Headers.ShouldContainHeader("Expires", "Sat, 02 Mar 2019 02:53:56 GMT");
 
             sut.Headers.ShouldContainHeader("Server", "Kestrel");
@@ -76,7 +75,6 @@ namespace SystemTestingTools.UnitTests
             sut.StatusCode.Should().Be(HttpStatusCode.OK);
             
             sut.Content.Headers.ShouldContainHeader("Content-Type", "application/json; charset=utf-8");
-            sut.Content.Headers.ShouldContainHeader("Content-Length", "47");
             sut.Content.Headers.ShouldContainHeader("Expires", "Thu, 28 Feb 2019 10:42:23 GMT");
             sut.Content.Headers.ShouldContainHeader("Last-Modified", "Wed, 27 Feb 2019 10:42:23 GMT");
 

@@ -49,7 +49,7 @@ namespace MovieProject.Web
 
                 // get the most recent recording (stub), so we can be sure to be testing against the latest if possible
                 var recentRecording = RecordingCollection.Recordings.FirstOrDefault(
-                    recording => recording.File.Contains("new/happy")
+                    recording => recording.File.Contains(@"new/happy")
                     && recording.Request.RequestUri.PathAndQuery == intercept.Request.RequestUri.PathAndQuery
                     && recording.Request.GetSoapAction() == intercept.Request.GetSoapAction());
 
@@ -59,7 +59,7 @@ namespace MovieProject.Web
                 // fall back #1, return a recording from the pre-approved folder, stored in github and vouched by a developer; might not be the latest
                 // but returns a good response to unblock developers
                 var oldRecording = RecordingCollection.Recordings.FirstOrDefault(
-                    recording => recording.File.Contains("pre-approved/happy")
+                    recording => recording.File.Contains(@"pre-approved/happy")
                     && recording.Request.RequestUri.PathAndQuery == intercept.Request.RequestUri.PathAndQuery
                     && recording.Request.GetSoapAction() == intercept.Request.GetSoapAction());
 

@@ -124,6 +124,7 @@ namespace SystemTestingTools
                 foreach (var header in headerDic)
                 {
                     if (header.Key.ToLower() == "content-type") continue; // this has already been added when creating new StringContent(
+                    if (header.Key.ToLower() == "content-length") continue; // this is created automatically by .net, if we add a wrong value here; it will crop the content
 
                     if (!headers.TryAddWithoutValidation(header.Key, header.Value))
                         if (!result.Headers.TryAddWithoutValidation(header.Key, header.Value))

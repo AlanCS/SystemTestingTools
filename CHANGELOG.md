@@ -1,3 +1,9 @@
+## 2.0.8
+- Bugfix
+    - Recording.ReSendRequest() and Recording.ReSendRequestAndUpdateFile() had bugs at times when the content-length header was smaller then actual content; now we rely on automatic configuration from .net
+- Breaking change
+    - Recording.File used to contain folder dividers mixed between foward slash and backwards slash; now it's standardized to forward slash
+
 ## 2.0.7
 - Bugfix
     - fixing bug in RecordingCollection.LoadFrom() where it wasn't public

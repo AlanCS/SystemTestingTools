@@ -66,7 +66,7 @@ namespace MovieProject.InterceptionTests
                 {
                     // assert return
                     httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-                    httpResponse.GetHeaderValue("SystemTestingToolsStub").Should().Be($"Recording [omdb/pre-approved/happy/matrix] reason {errorMessage}");
+                    httpResponse.GetHeaderValue("SystemTestingToolsStub").Should().Be($@"Recording [omdb/pre-approved/happy/matrix] reason {errorMessage}");
 
                     var movie = await httpResponse.ReadJsonBody<Logic.DTO.Media>();
                     movie.Id.Should().Be("tt0133093");
@@ -98,7 +98,7 @@ namespace MovieProject.InterceptionTests
 
                 // assert return
                 httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-                httpResponse.GetHeaderValue("SystemTestingToolsStub").Should().Be($"Recording [omdb/pre-approved/happy/last_fallback] reason {errorMessage} and could not find better match");
+                httpResponse.GetHeaderValue("SystemTestingToolsStub").Should().Be($@"Recording [omdb/pre-approved/happy/last_fallback] reason {errorMessage} and could not find better match");
 
                 var movie = await httpResponse.ReadJsonBody<Logic.DTO.Media>();
                 movie.Id.Should().Be("tt0123456");
