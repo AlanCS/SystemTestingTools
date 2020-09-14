@@ -72,7 +72,7 @@ namespace SystemTestingTools
         public static async Task<T> ReadJsonBody<T>(this HttpRequestMessage request) where T : class
         {
             var content = await request.ReadBody() ?? throw new ArgumentNullException("Body is null or empty");
-            var dto = JsonSerializer.Deserialize<T>(content, Constants.GetJsonOptions());
+            var dto = JsonSerializer.Deserialize<T>(content, Global.GetJsonOptions());
             return dto;
         }
 

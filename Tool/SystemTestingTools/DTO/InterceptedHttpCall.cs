@@ -35,7 +35,7 @@ namespace SystemTestingTools
         {
             get
             {
-                return Constants.httpContextAccessor;
+                return Global.httpContextAccessor;
             }
         }
 
@@ -46,7 +46,7 @@ namespace SystemTestingTools
         {
             get
             {
-                return Constants.GlobalConfiguration.RootStubsFolder;
+                return Global.InterceptionConfiguration.RootStubsFolder;
             }
         }
 
@@ -84,7 +84,7 @@ namespace SystemTestingTools
 
             var requestResponse = await RecordingFormatter.Summarize(Request, Response, Duration);
 
-            var finalFileName = Constants.GlobalRecordingManager.Save(requestResponse, relativeFolder, fileName, howManyFilesToKeep);
+            var finalFileName = Global.GlobalRecordingManager.Save(requestResponse, relativeFolder, fileName, howManyFilesToKeep);
 
             var recording = new Recording() { File = finalFileName, DateTime = DateTime.Now, Request = Request, Response = Response };
 
@@ -112,7 +112,7 @@ namespace SystemTestingTools
         {
             if (recording == null) throw new ArgumentNullException(nameof(recording));
             NewResponse = recording.Response;
-            Constants.AddResponseHeader($"Recording [{recording.File}] reason {reason}");
+            Global.AddResponseHeader($"Recording [{recording.File}] reason {reason}");
             return this;
         }
 
@@ -126,7 +126,7 @@ namespace SystemTestingTools
         {
             if (stub == null) throw new ArgumentNullException(nameof(stub));
             NewResponse = stub;
-            Constants.AddResponseHeader($"Stub [{stub.File}] reason {reason}");
+            Global.AddResponseHeader($"Stub [{stub.File}] reason {reason}");
             return this;
         }
 
@@ -140,7 +140,7 @@ namespace SystemTestingTools
         {
             if (newResponse == null) throw new ArgumentNullException(nameof(newResponse));
             NewResponse = newResponse;
-            Constants.AddResponseHeader($"HandCraftedResponse reason {reason}");
+            Global.AddResponseHeader($"HandCraftedResponse reason {reason}");
             return this;
         }
 

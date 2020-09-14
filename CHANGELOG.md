@@ -1,3 +1,8 @@
+## 2.0.9
+- New feature
+    - Recording.ReSendRequest() and Recording.ReSendRequestAndUpdateFile() uses by default an HttpClient with automatic follow redirect and automatic decompression; this fits most scenarios, but if doesn't fit yours, you can provide your own HttpClient
+    - Minor refactorings that don't affect funcionality
+
 ## 2.0.8
 - Bugfix
     - Recording.ReSendRequest() and Recording.ReSendRequestAndUpdateFile() had bugs at times when the content-length header was smaller then actual content; now we rely on automatic configuration from .net

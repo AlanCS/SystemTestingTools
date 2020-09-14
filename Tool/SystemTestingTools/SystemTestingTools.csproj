@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="Version">
-    <Version>2.0.8</Version>
+    <Version>2.0.9</Version>
   </PropertyGroup>
 
   <ItemGroup>

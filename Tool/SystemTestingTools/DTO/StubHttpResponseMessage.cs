@@ -29,8 +29,8 @@ namespace SystemTestingTools
 
         internal void SetFile(FileFullPath fullPath)
         {
-            if (Constants.GlobalConfiguration?.RootStubsFolder != null)
-                File = fullPath.ToString().Replace(Constants.GlobalConfiguration.RootStubsFolder, "").TrimStart('\\', '/');
+            if (Global.InterceptionConfiguration?.RootStubsFolder != null)
+                File = fullPath.ToString().Replace(Global.InterceptionConfiguration.RootStubsFolder, "").TrimStart('\\', '/');
             else
                 File = fullPath;
         }

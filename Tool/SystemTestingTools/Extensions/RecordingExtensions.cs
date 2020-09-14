@@ -13,7 +13,11 @@ namespace SystemTestingTools
     /// </summary>
     public static class RecordingExtensions
     {
-        private static HttpClient defaultClient = new HttpClient();
+        private static readonly HttpClient defaultClient = new HttpClient(new HttpClientHandler()
+        {
+            AllowAutoRedirect = true,
+            AutomaticDecompression = System.Net.DecompressionMethods.All
+        });
 
         /// <summary>
         /// Re-send the request of the recording, using exactly the same URL and headers

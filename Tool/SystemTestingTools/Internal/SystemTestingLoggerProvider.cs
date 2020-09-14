@@ -94,14 +94,14 @@ namespace SystemTestingTools
         {
             if(IsLogDisabled(logLevel)) return; // for some reasons, some logs are getting here when they shouldn't; so we do one last check here
 
-            var session = Constants.TestStubs.GetSession();
+            var session = Global.TestStubs.GetSession();
 
             var log = new LoggedEvent(logLevel, formatter(state, exception), source);
 
             if (session == null)
                 UnsessionedData.UnsessionedLogs.Add(log);
             else
-                Constants.TestStubs.SessionLogs[session].Add(log);
+                Global.TestStubs.SessionLogs[session].Add(log);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using SystemTestingTools.Internal;
 
 namespace SystemTestingTools
 {

@@ -16,7 +16,7 @@ namespace SystemTestingTools
         /// <param name="endpoint"></param>
         public static void EnableHttpInterception(this ServiceEndpoint endpoint)
         {
-            if (Constants.GlobalConfiguration == null && !Constants.InterceptHttpBeforeSending) 
+            if (Global.InterceptionConfiguration == null && !Global.InterceptHttpBeforeSending) 
                 throw new System.Exception("Add the line services.InterceptHttpCallsAfterSending (for development environment interception) or IWebHostBuilder.ConfigureInterceptionOfHttpClientCalls (for automated testing interception) first");
 
             endpoint.EndpointBehaviors.Add(new CustomEndpointBehaviour(() => new HttpCallInterceptor(true)));

@@ -6,6 +6,7 @@ using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using static SystemTestingTools.Internal.Enums;
 
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 [assembly: InternalsVisibleTo("SystemTestingTools.UnitTests")]
@@ -43,36 +44,6 @@ namespace SystemTestingTools
                 // worst case scenario when trying to parse some weird charset
                 return Encoding.UTF8;
             }            
-        }
-
-        internal static string SeparatedByComa(this IEnumerable<string> values)
-        {
-            return string.Join(",", values);
-        }
-
-        internal static void ApppendHeaders<T1, T2>(this Dictionary<T1, T2> currentDic, Dictionary<T1, T2> otherDic)
-        {
-            foreach (var item in otherDic)
-                currentDic.Add(item.Key, item.Value);
-        }
-
-        internal enum KnownContentTypes
-        {
-            Json,
-            Xml,
-            Other // for now, we only care about the most common
-        }
-
-        internal static string GetContentType(this KnownContentTypes contentType)
-        {
-            switch (contentType)
-            {
-                case KnownContentTypes.Json:
-                    return "application/json";
-                case KnownContentTypes.Xml:
-                    return "application/xml";
-            }
-            return "text/plain";
         }
 
         internal static KnownContentTypes GetKnownContentType(string contentType)

@@ -20,9 +20,9 @@ namespace SystemTestingTools
         {
             var sessionId = Guid.NewGuid().ToString();
             httpClient.DefaultRequestHeaders.Add(Constants.sessionHeaderName, sessionId);
-            Constants.TestStubs.StubbedEndpoints.Add(sessionId, new List<StubEndpoint>());
-            Constants.TestStubs.SessionLogs.Add(sessionId, new List<LoggedEvent>());
-            Constants.TestStubs.OutgoingRequests.Add(sessionId, new List<HttpRequestMessage>());
+            Global.TestStubs.StubbedEndpoints.Add(sessionId, new List<StubEndpoint>());
+            Global.TestStubs.SessionLogs.Add(sessionId, new List<LoggedEvent>());
+            Global.TestStubs.OutgoingRequests.Add(sessionId, new List<HttpRequestMessage>());
             return sessionId;
         }
 
@@ -54,7 +54,7 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionId(httpClient);
 
-            Constants.TestStubs.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, response, headerMatches, counter));
+            Global.TestStubs.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, response, headerMatches, counter));
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionId(httpClient);
 
-            Constants.TestStubs.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches, counter));
+            Global.TestStubs.StubbedEndpoints[sessionId].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches, counter));
         }
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionId(httpClient);
 
-            return Constants.TestStubs.SessionLogs[sessionId];
+            return Global.TestStubs.SessionLogs[sessionId];
         }
 
         /// <summary>
@@ -93,11 +93,11 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static List<HttpRequestMessage> GetSessionOutgoingRequests(this HttpClient httpClient)
         {
-            if (!Constants.KeepListOfSentRequests) return null;
+            if (!Global.KeepListOfSentRequests) return null;
 
             var sessionId = GetSessionId(httpClient);
 
-            return Constants.TestStubs.OutgoingRequests[sessionId];
+            return Global.TestStubs.OutgoingRequests[sessionId];
         }
 
         [Obsolete("This call has been renamed to AppendHttpCallStub", true)]

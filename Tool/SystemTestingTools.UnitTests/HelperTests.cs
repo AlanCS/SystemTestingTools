@@ -2,6 +2,7 @@
 using FluentAssertions;
 using System.Text;
 using Xunit;
+using static SystemTestingTools.Internal.Enums;
 
 namespace SystemTestingTools.UnitTests
 {
@@ -41,7 +42,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("text/plain")]
         public void GetKnownContentType_tests(string value)
         {
-            Helper.GetKnownContentType(value).Should().Be(Helper.KnownContentTypes.Other);
+            Helper.GetKnownContentType(value).Should().Be(KnownContentTypes.Other);
         }
 
         [Theory]
@@ -49,7 +50,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("TEXT/xml")]
         public void GetKnownContentType_Tests_Xml(string value)
         {
-            Helper.GetKnownContentType(value).Should().Be(Helper.KnownContentTypes.Xml);
+            Helper.GetKnownContentType(value).Should().Be(KnownContentTypes.Xml);
         }
 
         [Theory]
@@ -57,7 +58,7 @@ namespace SystemTestingTools.UnitTests
         [InlineData("TEXT/json")]
         public void GetKnownContentType_Tests_Json(string value)
         {
-            Helper.GetKnownContentType(value).Should().Be(Helper.KnownContentTypes.Json);
+            Helper.GetKnownContentType(value).Should().Be(KnownContentTypes.Json);
         }
     }
 }

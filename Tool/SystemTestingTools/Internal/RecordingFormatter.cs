@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using static SystemTestingTools.Internal.Enums;
 using static SystemTestingTools.RequestResponse;
 
 namespace SystemTestingTools.Internal
@@ -71,7 +72,7 @@ namespace SystemTestingTools.Internal
             {
                 var contentType = Helper.GetKnownContentType(requestOrResponse.Headers.GetValueOrDefault("Content-Type"));
 
-                bool IsResponseXml = requestOrResponse is ResponseInfo && contentType == Helper.KnownContentTypes.Xml;
+                bool IsResponseXml = requestOrResponse is ResponseInfo && contentType == KnownContentTypes.Xml;
 
                 foreach (var header in requestOrResponse.Headers.ToList())
                 {
@@ -91,13 +92,13 @@ namespace SystemTestingTools.Internal
 
                 switch (contentType)
                 {
-                    case Helper.KnownContentTypes.Json:
+                    case KnownContentTypes.Json:
                         content.AppendLine(requestOrResponse.Body.FormatJson());
                         break;
-                    case Helper.KnownContentTypes.Xml:
+                    case KnownContentTypes.Xml:
                         content.AppendLine(requestOrResponse.Body.FormatXml());
                         break;
-                    case Helper.KnownContentTypes.Other:
+                    case KnownContentTypes.Other:
                         content.AppendLine(requestOrResponse.Body);
                         break;
                 }
@@ -110,7 +111,7 @@ namespace SystemTestingTools.Internal
 
             result.Metadata.DateTime = DateTime.Now;
             result.Metadata.Timezone = TimeZoneInfo.Local.ToString();
-            result.Metadata.RecordedFrom = $"{Constants.GetAppNameAndVersion()} ({Constants.TestStubs.GetUrl()})";
+            result.Metadata.RecordedFrom = $"{Global.GetAppNameAndVersion()} ({Global.TestStubs.GetUrl()})";
 
             result.Metadata.User = $"{Environment.UserDomainName}\\{Environment.UserName}";
             result.Metadata.LocalMachine = Environment.MachineName;

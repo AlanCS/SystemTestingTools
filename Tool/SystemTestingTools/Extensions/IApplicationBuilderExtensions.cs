@@ -16,13 +16,13 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static IApplicationBuilder ExposeStubsForDirectoryBrowsing(this IApplicationBuilder app)
         {
-            if (Constants.GlobalConfiguration == null) throw new System.Exception("Add the line services.InterceptHttpCallsAfterSending() first");
+            if (Global.InterceptionConfiguration == null) throw new System.Exception("Add the line services.InterceptHttpCallsAfterSending() first");
 
             // copied from https://docs.microsoft.com/en-us/aspnet/core/fundamentals/static-files?view=aspnetcore-3.1
             app.UseFileServer(new FileServerOptions
             {
-                FileProvider = new PhysicalFileProvider(Constants.GlobalConfiguration.RootStubsFolder),
-                RequestPath = new PathString("/" + Constants.GlobalConfiguration.ExposeStubsAs),
+                FileProvider = new PhysicalFileProvider(Global.InterceptionConfiguration.RootStubsFolder),
+                RequestPath = new PathString("/" + Global.InterceptionConfiguration.ExposeStubsAs),
                 EnableDirectoryBrowsing = true
             });
 

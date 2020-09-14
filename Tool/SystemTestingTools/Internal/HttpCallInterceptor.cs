@@ -30,7 +30,7 @@ namespace SystemTestingTools.Internal
         {
             ForwardHeader(request);
 
-            if (Constants.InterceptHttpBeforeSending)
+            if (Global.InterceptHttpBeforeSending)
                 return await Before(request);
 
             return await After(request, cancellationToken);
@@ -48,10 +48,10 @@ namespace SystemTestingTools.Internal
         {
             var watch = Stopwatch.StartNew();
 
-            if (Constants.GlobalConfiguration.ForwardHeadersPrefix != null)
-                if (Constants.httpContextAccessor?.HttpContext?.Request?.Headers != null)
-                    foreach (var keyValue in Constants.httpContextAccessor.HttpContext.Request.Headers)
-                        if (keyValue.Key.StartsWith(Constants.GlobalConfiguration.ForwardHeadersPrefix))
+            if (Global.InterceptionConfiguration.ForwardHeadersPrefix != null)
+                if (Global.httpContextAccessor?.HttpContext?.Request?.Headers != null)
+                    foreach (var keyValue in Global.httpContextAccessor.HttpContext.Request.Headers)
+                        if (keyValue.Key.StartsWith(Global.InterceptionConfiguration.ForwardHeadersPrefix))
                             request.Headers.TryAddWithoutValidation(keyValue.Key, keyValue.Value.ToArray());
 
             InterceptedHttpCall call;
@@ -70,14 +70,14 @@ namespace SystemTestingTools.Internal
                 call = new InterceptedHttpCall(request, TimeSpan.FromMilliseconds(watch.ElapsedMilliseconds), ex);
             }
 
-            if (Constants.KeepListOfSentRequests)
+            if (Global.KeepListOfSentRequests)
             {
-                var testSession = Constants.TestStubs.GetSession();
+                var testSession = Global.TestStubs.GetSession();
                 if (testSession != null)  // outside a test session (in dev/test environments), this session will be null
-                    Constants.TestStubs.OutgoingRequests[testSession].Add(request);
+                    Global.TestStubs.OutgoingRequests[testSession].Add(request);
             }
 
-            var afterReview = await Constants.handlerAfterResponse(call);
+            var afterReview = await Global.handlerAfterResponse(call);
 
             if (afterReview.ShouldKeepUnchanged)
             {
@@ -93,11 +93,11 @@ namespace SystemTestingTools.Internal
 
         private async Task<HttpResponseMessage> Before(HttpRequestMessage request)
         {
-            var session = Constants.TestStubs.GetSession();
+            var session = Global.TestStubs.GetSession();
 
             if (session == null) throw new ApplicationException("No session found");
 
-            Constants.TestStubs.OutgoingRequests[session].Add(request);
+            Global.TestStubs.OutgoingRequests[session].Add(request);
 
             var stubResponse = await FindStub(request, session);
 
@@ -113,13 +113,13 @@ namespace SystemTestingTools.Internal
         private static async Task<HttpResponseMessage> FindStub(HttpRequestMessage request, string session)
         {
             // there could be more than one stub for the same endpoint, perhaps returning different responses, we grab the first
-            var match = Constants.TestStubs.StubbedEndpoints[session].FirstOrDefault(c => c.IsMatch(request));
+            var match = Global.TestStubs.StubbedEndpoints[session].FirstOrDefault(c => c.IsMatch(request));
 
             if (match == null) return null;
 
             if (match.Counter >= 1)
             {
-                if (match.Counter == 1) Constants.TestStubs.StubbedEndpoints[session].Remove(match);
+                if (match.Counter == 1) Global.TestStubs.StubbedEndpoints[session].Remove(match);
                 match.Counter--;
             }
 

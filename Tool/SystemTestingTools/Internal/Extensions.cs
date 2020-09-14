@@ -1,7 +1,9 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using static SystemTestingTools.Internal.Enums;
 
 namespace SystemTestingTools.Internal
 {
@@ -32,6 +34,29 @@ namespace SystemTestingTools.Internal
 
             }
             return newResponse;
+        }
+
+        internal static string SeparatedByComa(this IEnumerable<string> values)
+        {
+            return string.Join(",", values);
+        }
+
+        internal static void ApppendHeaders<T1, T2>(this Dictionary<T1, T2> currentDic, Dictionary<T1, T2> otherDic)
+        {
+            foreach (var item in otherDic)
+                currentDic.Add(item.Key, item.Value);
+        }
+
+        internal static string GetContentType(this KnownContentTypes contentType)
+        {
+            switch (contentType)
+            {
+                case KnownContentTypes.Json:
+                    return "application/json";
+                case KnownContentTypes.Xml:
+                    return "application/xml";
+            }
+            return "text/plain";
         }
     }
 }

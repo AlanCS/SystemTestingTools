@@ -37,7 +37,7 @@ namespace SystemTestingTools
         {
             var services = serviceCollection.BuildServiceProvider();
             var context = services.GetService<IHttpContextAccessor>();
-            Constants.httpContextAccessor = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+            Global.httpContextAccessor = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
 
             if (config == null) config = new InterceptionConfiguration();
 
@@ -49,9 +49,9 @@ namespace SystemTestingTools
                 config.RootStubsFolder = finalFolder;
             }
 
-            Constants.handlerAfterResponse = func;
-            Constants.GlobalConfiguration = config;
-            Constants.GlobalRecordingManager = new RecordingManager(config.RootStubsFolder);
+            Global.handlerAfterResponse = func;
+            Global.InterceptionConfiguration = config;
+            Global.GlobalRecordingManager = new RecordingManager(config.RootStubsFolder);
 
             serviceCollection.Replace(ServiceDescriptor.Singleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallInterceptor(false))));
 

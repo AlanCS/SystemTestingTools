@@ -24,7 +24,7 @@ namespace SystemTestingTools
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         public static void AppendGlobalHttpCallStub(HttpMethod httpMethod, Uri Url, HttpResponseMessage response, Dictionary<string, string> headerMatches = null)
         {
-            Constants.TestStubs.StubbedEndpoints[Constants.GlobalSession].Add(new StubEndpoint(httpMethod, Url, response, headerMatches, 0));
+            Global.TestStubs.StubbedEndpoints[Constants.GlobalSession].Add(new StubEndpoint(httpMethod, Url, response, headerMatches, 0));
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace SystemTestingTools
         /// <param name="headerMatches">Optional headers that must match for the response to be returned</param>
         public static void AppendGlobalHttpCallStub(HttpMethod httpMethod, Uri Url, Exception exception, Dictionary<string, string> headerMatches = null)
         {
-            Constants.TestStubs.StubbedEndpoints[Constants.GlobalSession].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches, 0));
+            Global.TestStubs.StubbedEndpoints[Constants.GlobalSession].Add(new StubEndpoint(httpMethod, Url, exception, headerMatches, 0));
         }
     }
 }
