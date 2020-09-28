@@ -87,13 +87,14 @@ Server:Kestrel
         [Fact]
         public void When_Files_Dont_Exist_Create_First_File()
         {
+            var tempFolder = Path.GetTempPath();
             var fileSystem = Substitute.For<IFileSystemFacade>();
-            fileSystem.GetTextFileNames(folder, "bla").Returns(new List<string>());
-            var sut = new RecordingManager(folder);
+            fileSystem.GetTextFileNames(tempFolder, "bla").Returns(new List<string>());
+            var sut = new RecordingManager(tempFolder);
             sut._fileSystem = fileSystem;
 
             // act
-            var fileName = sut.Save(CreateLog(), folder, "bla");
+            var fileName = sut.Save(CreateLog(), tempFolder, "bla");
 
             // asserts
             fileName.Should().Be("bla_0001");

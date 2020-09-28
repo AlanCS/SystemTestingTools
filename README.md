@@ -8,7 +8,7 @@
     * asserting outgoing calls (ie: making sure out downstream calls have SessionIds)
 * intercept logs and run asserts on them
 
-[Nuget package](https://www.nuget.org/packages/SystemTestingTools/) | [CHANGE LOG](CHANGELOG.md)
+[Nuget package](https://www.nuget.org/packages/SystemTestingTools/) | [CHANGE LOG](CHANGELOG.md) | [![Build status](https://ci.appveyor.com/api/projects/status/github/AlanCS/systemtestingtools?branch=master&svg=true)](https://ci.appveyor.com/project/AlanCS/systemtestingtools)
 
 Recommended article to understand the philosophy behind T shaped testing, and how to best leverage this tool:  https://www.linkedin.com/pulse/evolving-past-test-pyramid-shaped-testing-alan-sarli
 
