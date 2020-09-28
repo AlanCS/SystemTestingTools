@@ -14,9 +14,9 @@ before_build:
   # Display .NET Core version
   - cmd: dotnet --version
   # Display minimal restore text
-  - cmd: dotnet restore --verbosity m
+  - cmd: dotnet restore --verbosity m > RestoreResult.txt
 build_script:
-  - cmd: dotnet build --no-restore  --verbosity m --configuration Release
+  - cmd: dotnet build --no-restore  --verbosity m --configuration Release > BuildResult.txt
 after_build:
   # For once the build has completed
 clone_depth: 1
@@ -25,7 +25,9 @@ test_script:
 on_finish :
   # any cleanup in here
 artifacts:
- - path: 'TestResult.txt'
+ - path: 'RestoreResult.txt'
+ - path: 'BuildResult.txt'
+ - path: 'TestResult.txt' 
  - path: '**\*.nupkg'
    name: NugetPackage
 deploy: off
