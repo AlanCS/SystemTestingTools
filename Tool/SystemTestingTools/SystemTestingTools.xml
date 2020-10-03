@@ -230,6 +230,13 @@
             <param name="httpClient"></param>
             <returns></returns>
         </member>
+        <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionEvents(System.Net.Http.HttpClient)">
+            <summary>
+            Get all events related to the current session
+            </summary>
+            <param name="httpClient"></param>
+            <returns></returns>
+        </member>
         <member name="M:SystemTestingTools.HttpClientExtensions.GetSessionOutgoingRequests(System.Net.Http.HttpClient)">
             <summary>
             Get all outgoing Http requests related to the current session
@@ -347,9 +354,17 @@
             <summary>
             Get the values of a header (joined by 'separator' if more than one), null if not present
             </summary>
-            <param name="key"></param>
+            <param name="accessor">accessor</param>
+            <param name="key">the header name</param>
             <param name="separator">the separator string to join multiple values</param>
             <returns>returns null if header is not there, otherwise the value is returned</returns>
+        </member>
+        <member name="M:SystemTestingTools.IHttpContextAccessorExtensions.AddSessionEvent(Microsoft.AspNetCore.Http.IHttpContextAccessor,System.String)">
+            <summary>
+            Adds an event to this session
+            </summary>
+            <param name="accessor">accessor</param>
+            <param name="value">value to add to the session</param>
         </member>
         <member name="M:SystemTestingTools.IServiceCollectionExtensions.InterceptHttpCallsAfterSending(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Func{SystemTestingTools.InterceptedHttpCall,System.Threading.Tasks.Task{SystemTestingTools.InterceptedHttpCall}},SystemTestingTools.InterceptionConfiguration)">
             <summary>

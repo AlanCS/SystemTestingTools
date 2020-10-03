@@ -54,8 +54,9 @@ namespace SystemTestingTools
                 {  Constants.GlobalSession, new List<StubEndpoint>() }
             };
 
-            internal static Dictionary<string, List<LoggedEvent>> SessionLogs = new Dictionary<string, List<LoggedEvent>>();
+            internal static Dictionary<string, List<LoggedEvent>> Logs = new Dictionary<string, List<LoggedEvent>>();
             internal static Dictionary<string, List<HttpRequestMessage>> OutgoingRequests = new Dictionary<string, List<HttpRequestMessage>>();
+            internal static Dictionary<string, List<string>> Events = new Dictionary<string, List<string>>();
 
             internal static string GetSession()
             {

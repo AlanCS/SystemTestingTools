@@ -21,7 +21,8 @@ namespace SystemTestingTools
             var sessionId = Guid.NewGuid().ToString();
             httpClient.DefaultRequestHeaders.Add(Constants.sessionHeaderName, sessionId);
             Global.TestStubs.StubbedEndpoints.Add(sessionId, new List<StubEndpoint>());
-            Global.TestStubs.SessionLogs.Add(sessionId, new List<LoggedEvent>());
+            Global.TestStubs.Logs.Add(sessionId, new List<LoggedEvent>());
+            Global.TestStubs.Events.Add(sessionId, new List<string>());
             Global.TestStubs.OutgoingRequests.Add(sessionId, new List<HttpRequestMessage>());
             return sessionId;
         }
@@ -83,7 +84,19 @@ namespace SystemTestingTools
         {
             var sessionId = GetSessionId(httpClient);
 
-            return Global.TestStubs.SessionLogs[sessionId];
+            return Global.TestStubs.Logs[sessionId];
+        }
+
+        /// <summary>
+        /// Get all events related to the current session
+        /// </summary>
+        /// <param name="httpClient"></param>
+        /// <returns></returns>
+        public static List<string> GetSessionEvents(this HttpClient httpClient)
+        {
+            var sessionId = GetSessionId(httpClient);
+
+            return Global.TestStubs.Events[sessionId];
         }
 
         /// <summary>
