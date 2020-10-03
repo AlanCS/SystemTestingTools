@@ -1,3 +1,7 @@
+## 2.0.22
+- New feature
+    - Added 'events' storage, so you can log string describing what happened (ie 'new item added', 'cache cleared'); useful when mocking non http dependencies
+
 ## 2.0.9
 - New feature
     - Recording.ReSendRequest() and Recording.ReSendRequestAndUpdateFile() uses by default an HttpClient with automatic follow redirect and automatic decompression; this fits most scenarios, but if doesn't fit yours, you can provide your own HttpClient

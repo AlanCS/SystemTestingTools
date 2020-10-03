@@ -1,7 +1,10 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using MovieProject.IsolatedTests.ComponentTesting.Mock;
+using MovieProject.Logic.Proxy;
 using MovieProject.Web;
 using System;
 using System.Linq;
@@ -29,18 +32,19 @@ namespace IsolatedTests.ComponentTestings
         private void StartServer()
         {
             StubsFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Stubs";
-           
+
             var builder = Program.CreateWebHostBuilder(new string[0]) // use the exact same builder as the website, to test the wiring
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
                     // make small changes to configuration, such as disabling caching
                     config.AddJsonFile("appsettings.tests.json", optional: false, reloadOnChange: true);
-                })                
+                })
                 .InterceptHttpCallsBeforeSending()
-                .IntercepLogs(minimumLevelToIntercept: LogLevel.Information, 
+                .IntercepLogs(minimumLevelToIntercept: LogLevel.Information,
                                 namespaceToIncludeStart: new[] { "MovieProject" },
                                 namespaceToExcludeStart: new[] { "Microsoft" }) // redundand exclusion, just here to show the possible configuration
-                .UseEnvironment("Development");
+                .UseEnvironment("Development")
+                .ConfigureTestServices(c => c.AddSingleton<IThriftServiceForCarManagement, MockThriftServiceForCarManagement>()); // replace a proxy that talks to a non http dependency                
 
             SetupGlobalStubs();
 

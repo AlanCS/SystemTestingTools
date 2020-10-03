@@ -101,7 +101,7 @@ namespace SystemTestingTools
             if (session == null)
                 UnsessionedData.UnsessionedLogs.Add(log);
             else
-                Global.TestStubs.SessionLogs[session].Add(log);
+                Global.TestStubs.Logs[session].Add(log);
         }
     }
 }
