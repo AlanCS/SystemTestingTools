@@ -73,8 +73,13 @@ namespace SystemTestingTools.Internal
             if (Global.KeepListOfSentRequests)
             {
                 var testSession = Global.TestStubs.GetSession();
-                if (testSession != null)  // outside a test session (in dev/test environments), this session will be null
-                    Global.TestStubs.OutgoingRequests[testSession].Add(request);
+
+                // outside a test session (in dev/test environments), this session will be null
+                if (testSession != null)
+                {
+                    var clonedRequest = await request.Clone();
+                    Global.TestStubs.OutgoingRequests[testSession].Add(clonedRequest);
+                }
             }
 
             var afterReview = await Global.handlerAfterResponse(call);
@@ -97,7 +102,8 @@ namespace SystemTestingTools.Internal
 
             if (session == null) throw new ApplicationException("No session found");
 
-            Global.TestStubs.OutgoingRequests[session].Add(request);
+            var clonedRequest = await request.Clone();
+            Global.TestStubs.OutgoingRequests[session].Add(clonedRequest);
 
             var stubResponse = await FindStub(request, session);
 

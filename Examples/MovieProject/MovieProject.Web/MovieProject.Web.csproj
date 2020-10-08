@@ -16,6 +16,7 @@
     <PackageReference Include="NLog" Version="4.5.8" />
     <PackageReference Include="NLog.Web.AspNetCore" Version="4.6.0" />
     <PackageReference Include="Polly" Version="7.2.0" />
+    <PackageReference Include="Refit.HttpClientFactory" Version="5.2.1" />
     <PackageReference Include="Scrutor" Version="3.0.2" />
     <PackageReference Include="System.Runtime.Caching" Version="4.5.0" />
   </ItemGroup>

@@ -1,0 +1,41 @@
+METADATA
+Date: 2019-08-10 11:41:34.012 (UTC+10:00) Canberra, Melbourne, Sydney
+Requested by code: C:\Users\gavin\Documents\GitHub\SystemTestingTools\Examples\MovieProject\MovieProject.Web\Startup.cs
+Local machine: DESKTOP-25E5M71
+User: DESKTOP-25E5M71\gavin
+Using tool: SystemTestingTools 0.2.0.26 (https://github.com/AlanCS/SystemTestingTools/)
+Observations:
+
+REQUEST
+post https://jsonplaceholder.typicode.com/posts
+Referer:https://github.com/AlanCS/SystemTestingTools
+
+--!?@Divider: Any text BEFORE this line = comments, AFTER = response in Fiddler like format
+
+HTTP/1.1 201 Created
+Date:Mon, 08 Oct 2019 01:41:34 GMT
+Transfer-Encoding:chunked
+Connection:keep-alive
+Set-Cookie:__cfduid=d8e43ce3272b469e858680c1724f8a7891562585867; expires=Tue, 08-Oct-20 11:07:34 GMT; path=/; domain=.typicode.com; HttpOnly
+X-Powered-By:Express
+Vary:Origin,Accept-Encoding
+Access-Control-Allow-Credentials:true
+Cache-Control:public, max-age=14400
+Pragma:no-cache
+X-Content-Type-Options:nosniff
+ETag:W/"160d-1eMSsxeJRfnVLRBmYJSbCiJZ1qQ"
+Via:1.1 vegur
+CF-Cache-Status:HIT
+Age:6471
+Expect-CT:max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+Server:cloudflare
+CF-RAY:4f31c4a6ea68a57c-NRT
+Content-Type:application/json; charset=utf-8
+Expires:Mon, 08 Oct 2019 11:07:34 GMT
+
+{
+  "id": "101",
+  "title": "foo",
+  "body": "bar",
+  "userId": "1"
+}
