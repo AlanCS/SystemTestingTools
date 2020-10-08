@@ -13,6 +13,7 @@ using MovieProject.Logic.Proxy;
 using Polly;
 using Polly.Extensions.Http;
 using Polly.Timeout;
+using Refit;
 using System;
 using System.Net.Http;
 using System.ServiceModel;
@@ -103,6 +104,19 @@ namespace MovieProject.Web
                 .ConfigureHttpClient(c =>
                 {
                     c.BaseAddress = new Uri(user.Value.Url);
+                    c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
+                    c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
+                });
+
+            services.Configure<Post>(_configuration.GetSection("Post"));
+            var post = services.BuildServiceProvider().GetService<IOptions<Post>>();
+
+            services.AddRefitClient<IPostProxy>()
+                .AddPolicyHandler(retryPolicy)
+                .AddPolicyHandler(timeoutPolicy) // We place the timeoutPolicy inside the retryPolicy, to make it time out each try
+                .ConfigureHttpClient(c =>
+                {
+                    c.BaseAddress = new Uri(post.Value.Url);
                     c.DefaultRequestHeaders.Add("Referer", Logic.Constants.Website);
                     c.Timeout = TimeSpan.FromMilliseconds(1500); // Overall timeout across all tries
                 });
