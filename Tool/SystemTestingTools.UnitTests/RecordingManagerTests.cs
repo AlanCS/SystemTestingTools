@@ -89,12 +89,13 @@ Server:Kestrel
         {
             var tempFolder = Path.GetTempPath();
             var fileSystem = Substitute.For<IFileSystemFacade>();
-            fileSystem.GetTextFileNames(tempFolder, "bla").Returns(new List<string>());
+
+            fileSystem.GetTextFileNames(Path.Combine(tempFolder, "temp"), "bla").Returns(new List<string>());
             var sut = new RecordingManager(tempFolder);
             sut._fileSystem = fileSystem;
 
             // act
-            var fileName = sut.Save(CreateLog(), tempFolder, "bla");
+            var fileName = sut.Save(CreateLog(), "temp", "bla");
 
             // asserts
             fileName.Should().Be("bla_0001");

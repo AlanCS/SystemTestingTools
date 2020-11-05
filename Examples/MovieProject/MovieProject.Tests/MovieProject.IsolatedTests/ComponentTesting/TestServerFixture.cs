@@ -31,7 +31,7 @@ namespace IsolatedTests.ComponentTestings
 
         private void StartServer()
         {
-            StubsFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\ComponentTesting\Stubs";
+            StubsFolder = EnvironmentHelper.GetProjectFolder("ComponentTesting/Stubs");
 
             var builder = Program.CreateWebHostBuilder(new string[0]) // use the exact same builder as the website, to test the wiring
                 .ConfigureAppConfiguration((hostingContext, config) =>

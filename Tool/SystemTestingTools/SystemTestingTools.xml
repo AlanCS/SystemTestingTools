@@ -180,6 +180,18 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:SystemTestingTools.EnvironmentHelper">
+            <summary>
+            Helper methods for environment setup
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.EnvironmentHelper.GetProjectFolder(System.String)">
+            <summary>
+            Gets the path where the project is setup, and appends the extra folder name, useful to find your stubs
+            </summary>
+            <param name="folderName"></param>
+            <returns></returns>
+        </member>
         <member name="T:SystemTestingTools.HttpClientExtensions">
             <summary>
             extensions to HttpClient to allow stubbing and assertions

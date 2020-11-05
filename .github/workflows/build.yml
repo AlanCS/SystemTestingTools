@@ -1,0 +1,48 @@
+name: Build + Test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: "0 1 * * *"
+      
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '3.1.x' # SDK Version to use; x will use the latest version of the 3.1 channel
+    - name: Create folder
+      run:  mkdir BuildReports
+    - name: Install dependencies
+      run:  dotnet restore --verbosity m > BuildReports/Restore.txt
+    - name: Build
+      run: dotnet build --no-restore  --verbosity m --configuration Release > BuildReports/Build.txt
+    - name: Test
+      run: dotnet test --configuration Release > BuildReports/Tests.txt
+    - name: Copy generated nuget file
+      shell: bash
+      run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
+    - name: Set build report artifacts
+      if: ${{ always() }} # run this step even if previous steps failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: BuildReports
+        path: |
+          BuildReports/**
+        retention-days: 7
+        if-no-files-found: error
+    - name: Set nuget package artifact
+      if: ${{ success() }} # run this step even if previous steps failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: Nugget package
+        path: SystemTestingTools*.nupkg
+        retention-days: 7        
+        if-no-files-found: error

@@ -62,7 +62,7 @@ namespace MovieProject.ContractTests
                 result.Should().NotBeNull();
                 result.Id.Should().Be("tt0898266");
                 result.Name.Should().Be("The Big Bang Theory");
-                result.Year.Should().Be("2007–2019");
+                result.Year.Should().Be("2007 to 2019");
 
                 logger.DidNotReceiveWithAnyArgs().Log(LogLevel.Critical, "", null);
             }

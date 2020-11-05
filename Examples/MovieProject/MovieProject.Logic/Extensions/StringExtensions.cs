@@ -28,13 +28,17 @@ namespace MovieProject.Logic.Extensions
         }
 
         // example 1998-2005
-        private static readonly Regex seriesYearsRegex = new Regex("^(19|20)[0-9]{2}–(19|20)[0-9]{2}$");
+        private static readonly Regex seriesYearsRegex = new Regex("^(19|20)[0-9]{2}–(19|20)[0-9]{2}$", RegexOptions.Compiled);
         public static string CleanYear(this string yearString)
         {
             if (string.IsNullOrWhiteSpace(yearString)) return Constants.Unknown;
 
             yearString = yearString.Trim();
-            if (seriesYearsRegex.IsMatch(yearString)) return yearString;
+            if (seriesYearsRegex.IsMatch(yearString))
+            {
+                yearString = yearString.Replace("-", " to ").Replace("–", " to ");
+                return yearString;
+            }
 
             if (!int.TryParse(yearString, out var year)) return Constants.Unknown;
 
@@ -42,7 +46,7 @@ namespace MovieProject.Logic.Extensions
                 return Constants.Unknown;
 
             if(year > DateTime.Now.Year +20) // sometimes the service returns in production movies
-                return Constants.Unknown;
+                return Constants.Unknown;            
 
             return year.ToString();
         }

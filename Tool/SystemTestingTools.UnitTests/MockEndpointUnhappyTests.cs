@@ -12,7 +12,7 @@ namespace SystemTestingTools.UnitTests
         private string FilesFolder;
         public StubResponseFactoryUnhappyTests()
         {
-            FilesFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\files\";
+            FilesFolder = EnvironmentHelper.GetProjectFolder("files/");
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void FileIsEmpty()
         {
-            var fullFileName = FilesFolder + @"unhappy\Empty.txt";
+            var fullFileName = FilesFolder + @"unhappy/Empty.txt";
 
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
@@ -40,7 +40,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void NoHttpStatusCode()
         {
-            var fullFileName = FilesFolder + @"unhappy\NoHttpStatusCode.txt";
+            var fullFileName = FilesFolder + @"unhappy/NoHttpStatusCode.txt";
 
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
@@ -52,7 +52,7 @@ namespace SystemTestingTools.UnitTests
         public void OnlyBody()
         {
             // should throw exception if we try to read with method FromFiddlerLikeResponseFile, but not FromBodyOnlyFile
-            var fullFileName = FilesFolder + @"unhappy\OnlyBody.txt";
+            var fullFileName = FilesFolder + @"unhappy/OnlyBody.txt";
 
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
@@ -63,7 +63,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void InvalidHttpStatus()
         {
-            var fullFileName = FilesFolder + @"unhappy\InvalidHttpStatus.txt";
+            var fullFileName = FilesFolder + @"unhappy/InvalidHttpStatus.txt";
 
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
@@ -74,7 +74,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void NoBody()
         {
-            var fullFileName = FilesFolder + @"unhappy\401_NoBody.txt";
+            var fullFileName = FilesFolder + @"unhappy/401_NoBody.txt";
 
             var response = ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 

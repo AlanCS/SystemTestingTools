@@ -13,13 +13,13 @@ namespace SystemTestingTools.UnitTests
         private string FilesFolder;
         public StubResponseFactoryHappyTests()
         {
-            FilesFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\files\";
+            FilesFolder = EnvironmentHelper.GetProjectFolder("files/");
         }
 
         [Fact]
         public async Task Read401File()
         {
-            var sut = ResponseFactory.FromFiddlerLikeResponseFile( FilesFolder + @"happy\401_InvalidKey.txt");
+            var sut = ResponseFactory.FromFiddlerLikeResponseFile( FilesFolder + @"happy/401_InvalidKey.txt");
 
             sut.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
             sut.Headers.ShouldContainHeader("Server", "cloudflare");
@@ -33,7 +33,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public async Task Read401File_WithoutBody()
         {
-            var sut = ResponseFactory.FromFiddlerLikeResponseFile( FilesFolder + @"happy\401_Unauthorized_WithoutBody.txt");
+            var sut = ResponseFactory.FromFiddlerLikeResponseFile( FilesFolder + @"happy/401_Unauthorized_WithoutBody.txt");
 
             sut.StatusCode.Should().Be(HttpStatusCode.Unauthorized);
 
@@ -58,7 +58,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public async Task Read424File()
         {
-            var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy\424_NoHeaders.txt");
+            var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy/424_NoHeaders.txt");
 
             sut.StatusCode.Should().Be(HttpStatusCode.FailedDependency);
 
@@ -70,7 +70,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public async Task Read200File()
         {
-            var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy\200_MovieNotFound.txt");
+            var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy/200_MovieNotFound.txt");
 
             sut.StatusCode.Should().Be(HttpStatusCode.OK);
             
@@ -100,7 +100,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public async Task Read200WithComments()
         {
-            var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy\200_WithComments.txt");
+            var sut = ResponseFactory.FromFiddlerLikeResponseFile(FilesFolder + @"happy/200_WithComments.txt");
 
             sut.StatusCode.Should().Be(HttpStatusCode.OK);
 
@@ -126,7 +126,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public async Task FromBodyOnlyFile()
         {
-            var fullFileName = FilesFolder + @"happy\OnlyBody.txt";
+            var fullFileName = FilesFolder + @"happy/OnlyBody.txt";
 
             var sut = ResponseFactory.FromBodyOnlyFile(fullFileName, HttpStatusCode.OK);
 

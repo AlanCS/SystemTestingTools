@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using FluentAssertions.Execution;
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Xunit;
 
@@ -11,7 +12,7 @@ namespace SystemTestingTools.UnitTests
         private string FilesFolder;
         public ValueObjectsTests()
         {
-            FilesFolder = new Regex(@"\\bin\\.*").Replace(System.Environment.CurrentDirectory, "") + @"\files\";
+            FilesFolder = EnvironmentHelper.GetProjectFolder("files");
         }
 
         [Fact]
@@ -41,8 +42,8 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void FileFullPath_Happy()
         {
-            FileFullPath file1 = FilesFolder + @"happy\401_InvalidKey";
-            FileFullPath file2 = FilesFolder + @"happy\401_InvalidKey.txt";
+            FileFullPath file1 = FilesFolder + @"/happy/401_InvalidKey";
+            FileFullPath file2 = FilesFolder + @"/happy/401_InvalidKey.txt";
         }
 
         [Fact]
@@ -55,7 +56,7 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void FileFullPath_FileDoesntExist_Unhappy()
         {
-            var fullFileName = FilesFolder + @"happy\401_InvalidKeyAAA";
+            var fullFileName = FilesFolder + @"happy/401_InvalidKeyAAA";
 
             var ex = Assert.Throws<ArgumentException>(() => { FileFullPath file = fullFileName; });
 
@@ -65,10 +66,10 @@ namespace SystemTestingTools.UnitTests
         [Fact]
         public void FolderAbsolutePath_Happy()
         {
-            FolderAbsolutePath folder = FilesFolder + "happy";
+            FolderAbsolutePath folder = FilesFolder + "/happy";
 
             folder.AppendPath(null).Should().Be(folder);
-            folder.AppendPath("bla").Should().Be(folder + @"\bla");
+            folder.AppendPath("bla").Should().Be(Path.Combine(folder,"bla"));
         }
 
         [Fact]
@@ -94,7 +95,7 @@ namespace SystemTestingTools.UnitTests
 
         [Theory]
         [InlineData(" ", null)]
-        [InlineData("some/invalid|path", "Invalid chars for folder name found: some/invalid|path")]
+        [InlineData("some/invalid|path\0", "Invalid chars for folder name found: some/invalid|path\0")]
         public void FolderRelativePath_Unhappy(string folder, string expectedMessage)
         {
             if (expectedMessage == null)
