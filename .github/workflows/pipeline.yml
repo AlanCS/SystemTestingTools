@@ -1,4 +1,4 @@
-name: Build + Test
+name: Pipeline
 
 on:
   push:
@@ -7,16 +7,19 @@ on:
     branches: [ master ]
   schedule:
     - cron: "0 1 * * *"
+  release:
+    types: [published, released]    
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+  NUGET_FEED: https://api.nuget.org/v3/index.json
+  NUGET_KEY: ${{ secrets.NUGET_KEY }}    
       
 jobs:
   build:
     runs-on: windows-latest
-
-    env:
-      # Stop wasting time caching packages
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-      # Disable sending usage data to Microsoft
-      DOTNET_CLI_TELEMETRY_OPTOUT: true      
 
     steps:
     - name: Set version
@@ -63,3 +66,11 @@ jobs:
         path: SystemTestingTools*.nupkg
         retention-days: 7        
         if-no-files-found: error
+
+  deploy:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push to NuGet Feed
+        run: dotnet nuget push ./*.nupkg --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY
