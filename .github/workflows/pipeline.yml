@@ -1,0 +1,76 @@
+name: Pipeline
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+  schedule:
+    - cron: "0 1 * * *"
+  release:
+    types: [published, released]    
+
+env:
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+  NUGET_FEED: https://api.nuget.org/v3/index.json
+  NUGET_KEY: ${{ secrets.NUGET_KEY }}    
+      
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Set version
+      id: versioner
+      run: |        
+        if($env:GITHUB_EVENT_NAME -like "release") {
+            #example refs/pull/7/merge
+            $parts = $env:GITHUB_REF.Split("/")
+            $version=$parts[2]
+        }
+        else {
+            $version="0.0.$env:GITHUB_RUN_NUMBER"
+        }    
+        echo "::set-output name=VERSION::$version"
+        Write-Host "$env:GITHUB_EVENT_NAME ($env:GITHUB_REF) generated version $version"
+    - uses: actions/checkout@v2
+    - name: Create folder
+      run:  mkdir BuildReports
+    - name: Install dependencies
+      run:  dotnet restore --verbosity m > BuildReports/Restore.txt
+    - name: Build
+      run: |
+        Write-Host "Version ${{steps.versioner.outputs.VERSION}}"
+        dotnet build --no-restore  --verbosity m --configuration Release /p:Version=${{ steps.versioner.outputs.VERSION }} > BuildReports/Build.txt
+    - name: Test
+      run: dotnet test --no-build --configuration Release > BuildReports/Tests.txt
+    - name: Copy generated nuget file
+      shell: bash
+      run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
+    - name: Set build report artifacts
+      if: ${{ always() }} # run this step even if previous steps failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: BuildReports
+        path: |
+          BuildReports/**
+        retention-days: 7
+        if-no-files-found: error
+    - name: Set nuget package artifact
+      if: ${{ success() }} # run this step even if previous steps failed
+      uses: actions/upload-artifact@v2
+      with:
+        name: Nugget package
+        path: SystemTestingTools*.nupkg
+        retention-days: 7        
+        if-no-files-found: error
+
+  deploy:
+    needs: build
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push to NuGet Feed
+        run: dotnet nuget push ./*.nupkg --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY
