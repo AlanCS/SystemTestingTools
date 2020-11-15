@@ -1,3 +1,7 @@
+## 2.0.29
+- New feature
+    - New class and method EnvironmentHelper.GetProjectFolder() to get folder where you will find the stubs
+
 ## 2.0.22
 - New feature
     - Added 'events' storage, so you can log string describing what happened (ie 'new item added', 'cache cleared'); useful when mocking non http dependencies
