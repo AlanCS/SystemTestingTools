@@ -13,6 +13,11 @@ on:
     - cron: "0 1 * * *"
   release:
     types: [published, created, edited]
+  workflow_dispatch: # manually run
+    inputs:
+      reason:
+        description: 'Reason for triggering'
+        required: true
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
