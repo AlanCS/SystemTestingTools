@@ -3,12 +3,16 @@ name: Pipeline
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+    - '*.md'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+    - '*.md'
   schedule:
     - cron: "0 1 * * *"
   release:
-    types: [published, released]    
+    types: [published, created, edited]
 
 env:
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
