@@ -1,6 +1,6 @@
 ## 2.0.29
 - New feature
-    - New class and method EnvironmentHelper.GetProjectFolder() to get folder where you will find the stubs
+    - New class and method EnvironmentHelper.GetProjectFolder() to get folder where you will find the stubs, makes code a bit simpler
 
 ## 2.0.22
 - New feature
