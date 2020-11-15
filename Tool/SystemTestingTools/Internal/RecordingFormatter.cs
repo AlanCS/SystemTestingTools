@@ -180,9 +180,9 @@ namespace SystemTestingTools.Internal
         // white space
         // body (if any)
         private static Regex RequestRegex = new Regex(@"(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
-        private static HttpRequestMessage GetRequest(string content)
+        private static HttpRequestMessage GetRequest(string requestContent)
         {
-            var match = RequestRegex.Match(content);
+            var match = RequestRegex.Match(requestContent);
 
             if (!match.Success) throw new ApplicationException("Could not parse request data");
 
