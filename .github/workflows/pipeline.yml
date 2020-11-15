@@ -72,7 +72,7 @@ jobs:
       if: ${{ success() }} # run this step even if previous steps failed
       uses: actions/upload-artifact@v2
       with:
-        name: Nuget package
+        name: NugetPackage
         path: SystemTestingTools*.nupkg
         retention-days: 7        
         if-no-files-found: error
@@ -82,9 +82,8 @@ jobs:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-    - name: Download artifact from previous job
-      uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v2
       with:
-         name: Nuget package   
+        name: NugetPackage
     - name: Push to NuGet Feed
       run: dotnet nuget push ./*.nupkg --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY
