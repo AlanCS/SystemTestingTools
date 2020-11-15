@@ -82,9 +82,9 @@ jobs:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-     - name: Download artifact from previous job
-        uses: actions/download-artifact@v2
-        with:
-          name: Nuget package   
-      - name: Push to NuGet Feed
-        run: dotnet nuget push ./*.nupkg --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY
+    - name: Download artifact from previous job
+      uses: actions/download-artifact@v2
+      with:
+         name: Nuget package   
+    - name: Push to NuGet Feed
+      run: dotnet nuget push ./*.nupkg --source $NUGET_FEED --skip-duplicate --api-key $NUGET_KEY
