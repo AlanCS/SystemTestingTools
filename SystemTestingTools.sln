@@ -25,6 +25,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.InterceptionUn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieProject.InterceptionHappyTests", "Examples\MovieProject\MovieProject.Tests\MovieProject.InterceptionHappyTests\MovieProject.InterceptionHappyTests.csproj", "{BCA6A68C-13EE-4921-B410-97FE5950C7E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoviaProjectFramework.Web", "MoviaProjectFramework.Web\MoviaProjectFramework.Web.csproj", "{6723464A-87A3-46E9-803F-D6A67F26042D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCA6A68C-13EE-4921-B410-97FE5950C7E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6723464A-87A3-46E9-803F-D6A67F26042D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6723464A-87A3-46E9-803F-D6A67F26042D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6723464A-87A3-46E9-803F-D6A67F26042D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6723464A-87A3-46E9-803F-D6A67F26042D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -77,6 +83,7 @@ Global
 		{6E5D1F7F-329F-4923-81BE-EB6935687BBF} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
 		{A0E383D5-182A-43FB-907C-43B20454EF27} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
 		{BCA6A68C-13EE-4921-B410-97FE5950C7E1} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
+		{6723464A-87A3-46E9-803F-D6A67F26042D} = {C7ABA7AC-1685-4BA4-A2AE-DDE594E78BB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AADE9C77-F94E-42F3-9E44-D3A6F2F8B489}
