@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Text;
-using System.Text.Json;
 using System.Threading.Tasks;
 using SystemTestingTools.Internal;
 
@@ -24,7 +23,7 @@ namespace SystemTestingTools
             var enconding = Encoding.GetEncoding(response.Content.Headers.ContentType.CharSet);
             var mediaType = response.Content.Headers.ContentType.MediaType.ToString();
 
-            response.Content = new StringContent(JsonSerializer.Serialize(dto), enconding, mediaType);
+            response.Content = new StringContent(JsonSerializerAdapter.Serialize(dto), enconding, mediaType);
         }
 
         /// <summary>
@@ -36,7 +35,7 @@ namespace SystemTestingTools
         public static async Task<T> ReadJsonBody<T>(this HttpResponseMessage httpResponse) where T : class
         {
             var content = await httpResponse.ReadBody() ?? throw new ArgumentNullException("Body is null or empty");
-            var dto = JsonSerializer.Deserialize<T>(content, Global.GetJsonOptions());
+            var dto = JsonSerializerAdapter.Deserialize<T>(content);
             return dto;
         }
 

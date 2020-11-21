@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace SystemTestingTools
@@ -20,8 +18,8 @@ namespace SystemTestingTools
         /// <returns></returns>
         public static string GetProjectFolder(string folderName)
         {
-            var projectFolder = folderCleanerRegex.Replace(System.Environment.CurrentDirectory, "");
-            var finalFolder = System.IO.Path.Combine(projectFolder, folderName);
+            var projectFolder = folderCleanerRegex.Replace(Environment.CurrentDirectory, "");
+            var finalFolder = Path.Combine(projectFolder, folderName);
             if (!Directory.Exists(finalFolder)) throw new ArgumentException($"Folder doesn't exist: {finalFolder}");
             return finalFolder;
         }

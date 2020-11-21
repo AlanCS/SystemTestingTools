@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -48,9 +47,9 @@ namespace SystemTestingTools.Internal
         {
             var watch = Stopwatch.StartNew();
 
+            
             if (Global.InterceptionConfiguration.ForwardHeadersPrefix != null)
-                if (Global.httpContextAccessor?.HttpContext?.Request?.Headers != null)
-                    foreach (var keyValue in Global.httpContextAccessor.HttpContext.Request.Headers)
+                    foreach (var keyValue in HttpContextProxy.GetAllHeaders())
                         if (keyValue.Key.StartsWith(Global.InterceptionConfiguration.ForwardHeadersPrefix))
                             request.Headers.TryAddWithoutValidation(keyValue.Key, keyValue.Value.ToArray());
 

@@ -40,7 +40,7 @@ namespace MoviaProjectFramework.Web
                 .Named<HttpClient>("omdbHttpClient")
                 .SingleInstance();
 
-            builder.Register<IMovieDatabaseProxy>(c => new MovieDatabaseProxy(c.Resolve("omdbHttpClient"), null));
+            //builder.Register<IMovieDatabaseProxy>(c => new MovieDatabaseProxy(c.ResolveNamed<HttpClient>("omdbHttpClient"), null));
 
             var Container = builder.Build();
         }

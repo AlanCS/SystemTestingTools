@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using static SystemTestingTools.Helper;
 using static SystemTestingTools.Internal.Enums;
 
 namespace SystemTestingTools

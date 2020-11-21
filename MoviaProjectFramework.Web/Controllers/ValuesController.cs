@@ -1,10 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 
 namespace MoviaProjectFramework.Web.Controllers
 {
     public class ValuesController : ApiController
     {
+        public ValuesController()
+        {
+
+        }
         // GET api/values
         public IEnumerable<string> Get()
         {
@@ -14,6 +20,8 @@ namespace MoviaProjectFramework.Web.Controllers
         // GET api/values/5
         public string Get(int id)
         {
+            LogLevel logLevel;
+            var test = HttpContext.Current.Request.Url;
             return "value";
         }
 

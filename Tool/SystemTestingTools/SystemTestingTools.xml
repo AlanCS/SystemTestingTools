@@ -387,39 +387,6 @@
             <param name="config">the optional configuration for the interception</param>
             <returns></returns>
         </member>
-        <member name="T:SystemTestingTools.RecordingExtensions">
-            <summary>
-            Extensions related to recordings (sub type of Stubs, that also contain the request detail)
-            </summary>
-        </member>
-        <member name="M:SystemTestingTools.RecordingExtensions.ReSendRequest(SystemTestingTools.Recording,System.Net.Http.HttpClient)">
-            <summary>
-            Re-send the request of the recording, using exactly the same URL and headers
-            </summary>
-            <param name="recording">the recording whose request will be re-sent</param>
-            <param name="client">the httpClient to be used for the call, if none passed; a new one will be created. Pass one if you need non default configurations such as proxy or timeout</param>
-            <returns>the response for the request</returns>
-        </member>
-        <member name="M:SystemTestingTools.RecordingExtensions.ReSendRequestAndUpdateFile(System.Collections.Generic.IEnumerable{SystemTestingTools.Recording},System.Net.Http.HttpClient)">
-            <summary>
-            Re-send the request of the recording, using exactly the same URL and headers, and update the relevant file
-            </summary>
-            <param name="recordings">the list of recordings whose request will be re-sent</param>
-            <param name="client">the httpClient to be used for the calls, if none passed; a new one will be created. Pass one if you need non default configurations such as proxy or timeout</param>
-        </member>
-        <member name="T:SystemTestingTools.ServiceEndpointExtensions">
-            <summary>
-            Extensions for ServiceEndpoint (WCF) configuration
-            </summary>
-        </member>
-        <member name="M:SystemTestingTools.ServiceEndpointExtensions.EnableHttpInterception(System.ServiceModel.Description.ServiceEndpoint)">
-            <summary>
-            This enables the interception of http calls in this endpoint for stubbing:
-            - in automated testing, by calling
-            - in development environment, by calling first services.InterceptHttpCallsAfterSending
-            </summary>
-            <param name="endpoint"></param>
-        </member>
         <member name="T:SystemTestingTools.WebHostBuilderExtensions">
             <summary>
             Extends WebHostBuilder to allow interception of Http calls and logs
@@ -456,6 +423,39 @@
             <param name="namespaceToIncludeStart">Beginning of namespaces sources of logs allow; if null, all  to sources will be included. Example: MyNamespaceName</param>
             <param name="namespaceToExcludeStart">Beginning of namespaces sources of logs disallow; if null, no exclusion will apply. Exclusions are applied AFTER inclusion filter. Example: Microsoft</param>
             <returns></returns>
+        </member>
+        <member name="T:SystemTestingTools.RecordingExtensions">
+            <summary>
+            Extensions related to recordings (sub type of Stubs, that also contain the request detail)
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.RecordingExtensions.ReSendRequest(SystemTestingTools.Recording,System.Net.Http.HttpClient)">
+            <summary>
+            Re-send the request of the recording, using exactly the same URL and headers
+            </summary>
+            <param name="recording">the recording whose request will be re-sent</param>
+            <param name="client">the httpClient to be used for the call, if none passed; a new one will be created. Pass one if you need non default configurations such as proxy or timeout</param>
+            <returns>the response for the request</returns>
+        </member>
+        <member name="M:SystemTestingTools.RecordingExtensions.ReSendRequestAndUpdateFile(System.Collections.Generic.IEnumerable{SystemTestingTools.Recording},System.Net.Http.HttpClient)">
+            <summary>
+            Re-send the request of the recording, using exactly the same URL and headers, and update the relevant file
+            </summary>
+            <param name="recordings">the list of recordings whose request will be re-sent</param>
+            <param name="client">the httpClient to be used for the calls, if none passed; a new one will be created. Pass one if you need non default configurations such as proxy or timeout</param>
+        </member>
+        <member name="T:SystemTestingTools.ServiceEndpointExtensions">
+            <summary>
+            Extensions for ServiceEndpoint (WCF) configuration
+            </summary>
+        </member>
+        <member name="M:SystemTestingTools.ServiceEndpointExtensions.EnableHttpInterception(System.ServiceModel.Description.ServiceEndpoint)">
+            <summary>
+            This enables the interception of http calls in this endpoint for stubbing:
+            - in automated testing, by calling
+            - in development environment, by calling first services.InterceptHttpCallsAfterSending
+            </summary>
+            <param name="endpoint"></param>
         </member>
         <member name="T:SystemTestingTools.CustomEndpointBehaviour">
             <summary>

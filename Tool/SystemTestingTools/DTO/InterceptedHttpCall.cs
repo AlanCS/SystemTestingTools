@@ -112,7 +112,8 @@ namespace SystemTestingTools
         {
             if (recording == null) throw new ArgumentNullException(nameof(recording));
             NewResponse = recording.Response;
-            Global.AddResponseHeader($"Recording [{recording.File}] reason {reason}");
+
+            AddResponseHeader($"Recording [{recording.File}] reason {reason}");
             return this;
         }
 
@@ -126,8 +127,13 @@ namespace SystemTestingTools
         {
             if (stub == null) throw new ArgumentNullException(nameof(stub));
             NewResponse = stub;
-            Global.AddResponseHeader($"Stub [{stub.File}] reason {reason}");
+            AddResponseHeader($"Stub [{stub.File}] reason {reason}");
             return this;
+        }
+
+        private void AddResponseHeader(string value)
+        {
+            HttpContextProxy.SetResponseHeaderValue(Constants.responseHeaderName, value);
         }
 
         /// <summary>
@@ -140,7 +146,7 @@ namespace SystemTestingTools
         {
             if (newResponse == null) throw new ArgumentNullException(nameof(newResponse));
             NewResponse = newResponse;
-            Global.AddResponseHeader($"HandCraftedResponse reason {reason}");
+            AddResponseHeader($"HandCraftedResponse reason {reason}");
             return this;
         }
 

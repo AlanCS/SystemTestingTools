@@ -50,7 +50,7 @@ namespace SystemTestingTools
             {
                 var services = c.BuildServiceProvider();
                 var context = services.GetService<IHttpContextAccessor>();
-                Global.httpContextAccessor = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
+                HttpContextProxy.httpContextAccessor = context ?? throw new ApplicationException("Could not get IHttpContextAccessor, please register it in your ServiceCollection at Startup");
                 c.AddSingleton<IHttpMessageHandlerBuilderFilter, InterceptionFilter>((_) => new InterceptionFilter(() => new HttpCallInterceptor(false)));
             });
 

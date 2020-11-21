@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SystemTestingTools
+﻿namespace SystemTestingTools
 {
     /// <summary>
     /// Reason why a stub is being returned
