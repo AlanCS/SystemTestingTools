@@ -141,7 +141,7 @@ namespace MovieProject.InterceptionTests
             outgoing[0].GetEndpoint().Should().StartWith("GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=");
             var dates = outgoing[0].GetDatesSent();
             dates.Should().HaveCount(1);
-            dates[0].Should().BeCloseTo(DateTime.Now, 700);
+            dates[0].Should().BeCloseTo(DateTime.Now, TimeSpan.FromMilliseconds(700));
 
             return outgoing;
         }
