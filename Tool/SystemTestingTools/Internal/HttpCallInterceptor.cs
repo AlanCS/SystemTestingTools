@@ -132,7 +132,11 @@ namespace SystemTestingTools.Internal
             if (match.Exception != null)
                 throw match.Exception;
 
-            return await match.Response.Clone(); // we clone because if the response is used more than one time, the content stream has been read and can't be read again
+            var clonedResponse = await match.Response.Clone(); // we clone because if the response is used more than one time, the content stream has been read and can't be read again
+            var clonedRequest = await request.Clone();
+
+            clonedResponse.RequestMessage = clonedRequest;
+            return clonedResponse;
         }
     }
 }
