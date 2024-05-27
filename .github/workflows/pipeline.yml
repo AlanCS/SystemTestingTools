@@ -39,12 +39,12 @@ jobs:
             #example refs/pull/7/merge
             $parts = $env:GITHUB_REF.Split("/")
             $version=$parts[2]
+            # remove the first letter, which is a V
+            SET $version=%version:~1%
         }
         else {
             $version="0.0.$env:GITHUB_RUN_NUMBER"
-        }   
-        #remove the letter V from teh variable
-        set $version=%$version:v=%
+        }           
         echo "::set-output name=VERSION::$version"
         Write-Host "$env:GITHUB_EVENT_NAME ($env:GITHUB_REF) generated version $version"
     - name: Setup .NET core 3.1.x
