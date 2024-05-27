@@ -43,8 +43,7 @@ namespace MovieProject.Logic.Proxy
         
         public async Task<DTO.User[]> GetSearchUsers(UserSearchModel searchModel)
         {
-            string serialisedQueryParameter = JsonSerializer.Serialize(searchModel);
-            string route = $"searchUsers?userSearchModel={serialisedQueryParameter}";
+            string route = $"searchUsers?Username={searchModel.Username}";
 
             var result = await Send(HttpMethod.Get, route, (DTO.User[] users, HttpStatusCode status) =>
             {

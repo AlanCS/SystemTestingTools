@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MovieProject.Logic.DTO.MovieProject.Logic.Proxy.DTO;
 using MovieProject.Logic.Extensions;
 using MovieProject.Logic.Service;
+using Newtonsoft.Json;
 
 namespace MovieProject.Web.Controllers
 {
@@ -26,10 +27,12 @@ namespace MovieProject.Web.Controllers
             return await _userService.GetUsers();
         }      
 
-        [HttpPost("searchUsers")]
-        public async Task<List<string>> GetSearchUsers([FromBody] UserSearchModel searchModel)
+        [HttpGet("searchUsers")]
+        public async Task<List<string>> GetSearchUsers(string jsonSearchModel)
         {
-            var proxyDtoSearchModel = searchModel.MapUserSearchModelDtoToProxyDto();
+            var proxyDtoSearchModel = JsonConvert.DeserializeObject<Logic.Proxy.DTO.UserSearchModel>(jsonSearchModel);
+
+            
             // second controller with separate dependency used for testing SystemTestingTools
             return await _userService.GetSearchUsers(proxyDtoSearchModel);
         }      

@@ -35,7 +35,7 @@ namespace SystemTestingTools.Internal
         private void SetEndpoint(HttpMethod httpMethod, Uri url)
         {
             if (url == null) throw new ArgumentNullException(nameof(url));
-            endpoint = string.Format($"{httpMethod} {url}");
+            endpoint = string.Format("{0} {1}", httpMethod, url);
         }
 
         public bool IsMatch(HttpRequestMessage request)

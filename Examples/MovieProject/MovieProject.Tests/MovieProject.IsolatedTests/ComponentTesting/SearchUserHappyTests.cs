@@ -34,19 +34,16 @@ namespace MovieProject.IsolatedTests.ComponentTesting
                 Username = "Bret",
             };
             var serialisedComplexParameters = JsonConvert.SerializeObject(complexParameter);
-            var expectedResponse = new List<string>()
-            {
-                "Leanne Graham"
-            };
             
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
             var response = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/UserApi/Real_Responses/Happy/200_SearchListUsers.txt");
 
-            client.AppendHttpCallStub(HttpMethod.Get, new System.Uri(@$"{Url}?userSearchModel={serialisedComplexParameters}"), response);
+            var uri = new System.Uri(@$"{Url}?Username=Bret");            
+            client.AppendHttpCallStub(HttpMethod.Get, uri, response);
 
             // act
-            var httpResponse = await client.GetAsync("/api/users");
+            var httpResponse = await client.GetAsync($"/api/searchUsers?jsonSearchModel={serialisedComplexParameters}");
 
             using (new AssertionScope())
             {
@@ -57,11 +54,17 @@ namespace MovieProject.IsolatedTests.ComponentTesting
                 // assert outgoing
                 var outgoingRequests = client.GetSessionOutgoingRequests();
                 outgoingRequests.Count.Should().Be(1);
-                outgoingRequests[0].GetEndpoint().Should().Be($"GET {Url}");
+                outgoingRequests[0].GetEndpoint().Should().Be($"GET {Url}?Username=Bret");
                 outgoingRequests[0].GetHeaderValue("Referer").Should().Be(MovieProject.Logic.Constants.Website);
 
                 // assert return
                 httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
+
+                var expectedResponse = new List<string>()
+            {
+                "Leanne Graham"
+            };
+
 
                 var list = await httpResponse.ReadJsonBody<List<string>>();
                 list.Count.Should().Be(1);

@@ -10,7 +10,7 @@
             [JsonPropertyName("name")]
             public string Name { get; set; }
 
-            [JsonPropertyName("username")]
+            
             public string Username { get; set; }
 
             [JsonPropertyName("email")]

@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
+﻿using Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Text.Json;
 using System.Threading.Tasks;
 using SystemTestingTools.Internal;
@@ -27,7 +29,7 @@ namespace SystemTestingTools
         /// </summary>
         public static string GetEndpoint(this HttpRequestMessage request)
         {
-            var endpoint = string.Format($"{request.Method} {request.RequestUri}");
+            var endpoint = string.Format("{0} {1}", request.Method, request.RequestUri);
             return endpoint;
         }
 
