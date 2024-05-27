@@ -2,6 +2,9 @@
 using MovieProject.Logic;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using MovieProject.Logic.DTO.MovieProject.Logic.Proxy.DTO;
+using MovieProject.Logic.Extensions;
+using MovieProject.Logic.Service;
 
 namespace MovieProject.Web.Controllers
 {
@@ -21,6 +24,14 @@ namespace MovieProject.Web.Controllers
         {
             // second controller with separate dependency used for testing SystemTestingTools
             return await _userService.GetUsers();
+        }      
+
+        [HttpPost("searchUsers")]
+        public async Task<List<string>> GetSearchUsers([FromBody] UserSearchModel searchModel)
+        {
+            var proxyDtoSearchModel = searchModel.MapUserSearchModelDtoToProxyDto();
+            // second controller with separate dependency used for testing SystemTestingTools
+            return await _userService.GetSearchUsers(proxyDtoSearchModel);
         }      
     }
 }
