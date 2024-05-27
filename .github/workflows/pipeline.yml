@@ -44,7 +44,7 @@ jobs:
             $version="0.0.$env:GITHUB_RUN_NUMBER"
         }   
         #remove the letter V from teh variable
-        set version=%version:v=%
+        set $version=%$version:v=%
         echo "::set-output name=VERSION::$version"
         Write-Host "$env:GITHUB_EVENT_NAME ($env:GITHUB_REF) generated version $version"
     - name: Setup .NET core 3.1.x
