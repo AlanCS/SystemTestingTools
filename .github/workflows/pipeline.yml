@@ -36,10 +36,11 @@ jobs:
       id: versioner
       run: |        
         if($env:GITHUB_EVENT_NAME -like "release") {
-            #example refs/pull/7/merge
+            #example refs/tags/v2.0.33
             $parts = $env:GITHUB_REF.Split("/")
             $version=$parts[2]
-            # remove the first letter, which is a V
+            # remove the V from the version, .net builder doesn't accept strings
+            $version = $version.Replace("v", "")            
             SET $version=%version:~1%
         }
         else {
