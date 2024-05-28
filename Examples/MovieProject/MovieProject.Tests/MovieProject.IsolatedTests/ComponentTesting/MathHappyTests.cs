@@ -30,12 +30,11 @@ namespace IsolatedTests.ComponentTestings
             // arrange
             var client = Fixture.Server.CreateClient();
             client.CreateSession();
-
             
-            var addResponse = ResponseFactory.FromFiddlerLikeResponseFile(Path.Combine(Fixture.StubsFolder, "MathWcf/Real_Responses/Happy/200_Add.txt"));
+            var addResponse = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/MathWCF/Real_Responses/Happy/200_Add.txt");
             client.AppendHttpCallStub(HttpMethod.Post, new System.Uri(Url), addResponse, new Dictionary<string, string>() { { "SOAPAction", @"""http://tempuri.org/Add""" } });
 
-            var minusResponse = ResponseFactory.FromFiddlerLikeResponseFile(Path.Combine(Fixture.StubsFolder, "MathWcf/Real_Responses/Happy/200_Minus.txt"));
+            var minusResponse = ResponseFactory.FromFiddlerLikeResponseFile($"{Fixture.StubsFolder}/MathWCF/Real_Responses/Happy/200_Minus.txt");
             client.AppendHttpCallStub(HttpMethod.Post, new System.Uri(Url), minusResponse, new Dictionary<string, string>() { { "SOAPAction", @"""http://tempuri.org/Subtract""" } });
 
             // act
