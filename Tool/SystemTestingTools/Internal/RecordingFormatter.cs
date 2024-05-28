@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -182,7 +183,9 @@ namespace SystemTestingTools.Internal
         private static Regex RequestRegex = new Regex(@"(.+?)\s+(.+?)(\r\n|\r|\n)(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static HttpRequestMessage GetRequest(string requestContent)
         {
-            var match = RequestRegex.Match(requestContent);
+            requestContent = requestContent.Replace("\r\n", "").Trim();
+
+            var match = RequestRegex.Match(requestContent);            
 
             if (!match.Success) throw new ApplicationException("Could not parse request data");
 
