@@ -63,7 +63,7 @@ jobs:
       if: success() || failure()   
       with:
         name: Tests Reports         
-        path: TestResults
+        path: TestResults/*
         reporter: dotnet-trx        
     - name: Copy generated nuget file
       run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
