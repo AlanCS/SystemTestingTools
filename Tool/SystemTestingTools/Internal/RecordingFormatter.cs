@@ -180,7 +180,7 @@ namespace SystemTestingTools.Internal
         // headers
         // white space
         // body (if any)
-        private static Regex RequestRegex = new Regex(@"(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RequestRegex = new Regex(@"^(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static HttpRequestMessage GetRequest(string requestContent)
         {
             var match = RequestRegex.Match(requestContent);            
@@ -189,7 +189,7 @@ namespace SystemTestingTools.Internal
 
             var result = new HttpRequestMessage();
 
-            var method = match.Groups[1].Value;
+            var method = match.Groups[1].Value.Trim();
             try
             {
                 result.Method = new HttpMethod(method);
