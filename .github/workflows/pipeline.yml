@@ -45,7 +45,7 @@ jobs:
         fi    
 
         echo "${{ github.event_name }} ${{ github.ref }} generated version $version"
-        export VERSION=$version
+        echo "::set-env name=Version::version"
 
     - name: Setup .NET core 3.1.x
       uses: actions/setup-dotnet@v4
@@ -55,7 +55,7 @@ jobs:
     - name: Install dependencies
       run:  dotnet restore --verbosity m
     - name: Build
-      run: dotnet build --no-restore  --verbosity m --configuration Release /p:Version= ${{ vars.VERSION }}
+      run: dotnet build --no-restore  --verbosity m --configuration Release /p:Version= ${{ env.Version }}
     - name: Test
       run: dotnet test --no-build --configuration Release
     - name: Copy generated nuget file
