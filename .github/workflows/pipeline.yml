@@ -45,7 +45,7 @@ jobs:
         fi    
 
         echo "${{ github.event_name }} ${{ github.ref }} generated version $version"
-        echo "::set-env name=Version::version"
+        echo "Version=${version}" >> $GITHUB_ENV
 
     - name: Setup .NET core 3.1.x
       uses: actions/setup-dotnet@v4
