@@ -57,13 +57,13 @@ jobs:
     - name: Build
       run: dotnet build --no-restore  --verbosity m --configuration Release /p:Version=${{ steps.versioner.outputs.Version }}
     - name: Test
-      run: dotnet test --no-build --configuration Release --verbosity quiet --consoleLoggerParameters:ErrorsOnly --logger "trx;LogFileName=test-results.trx" --results-directory "TestResults"
+      run: dotnet test --no-build --configuration Release --verbosity quiet --logger "trx" --results-directory "TestResults"
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: success() || failure()   
       with:
-        name: Tests Report         
-        path: TestResults/test-results.trx    
+        name: Tests Reports         
+        path: TestResults
         reporter: dotnet-trx        
     - name: Copy generated nuget file
       run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
