@@ -180,10 +180,10 @@ namespace SystemTestingTools.Internal
         // headers
         // white space
         // body (if any)
-        private static Regex RequestRegex = new Regex(@"(.+?)\s+(.+?)(\r\n|\r|\n)(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RequestRegex = new Regex(@"(.+?)\s+(.+?)\n(.+?)\n\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static HttpRequestMessage GetRequest(string requestContent)
         {
-            requestContent = requestContent.Replace("\r\n", "").Trim();
+            requestContent = requestContent.Replace("\r", "").Trim();
 
             var match = RequestRegex.Match(requestContent);            
 
