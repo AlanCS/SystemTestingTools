@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Reflection;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -153,7 +154,7 @@ namespace SystemTestingTools.Internal
         // part 1 = date time of the recording
         // part 2 = request details
         // part 3 = response details
-        private static Regex RecordingRegex = new Regex(@".+?\nDate:(.+?)\n.+?REQUEST.+?\n(.+?)--\!\?@Divider:.+?\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RecordingRegex = new Regex(@".+?\nDate:(.+?)\n.+?REQUEST.*?\n(.+?)--\!\?@Divider:.+?\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static Regex DateRegex = new Regex(@"(2.+?)\(", RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -179,16 +180,25 @@ namespace SystemTestingTools.Internal
         // headers
         // white space
         // body (if any)
-        private static Regex RequestRegex = new Regex(@"(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RequestRegex = new Regex(@"^(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static HttpRequestMessage GetRequest(string requestContent)
         {
-            var match = RequestRegex.Match(requestContent);
+            var match = RequestRegex.Match(requestContent);            
 
-            if (!match.Success) throw new ApplicationException("Could not parse request data");
+            if (!match.Success) throw new ApplicationException($"Could not parse request data");
 
             var result = new HttpRequestMessage();
 
-            result.Method = new HttpMethod(match.Groups[1].Value);
+            var method = match.Groups[1].Value.Trim();
+            try
+            {
+                result.Method = new HttpMethod(method);
+            }
+            catch (System.FormatException ex)
+            {
+                throw new Exception($"Method [{method}] is invalid", ex);
+            }
+
             result.RequestUri = new Uri(match.Groups[2].Value);
 
             result.Content = Helper.ParseHeadersAndBody(match.Groups[3].Value, match.Groups[5].Value, result.Headers);

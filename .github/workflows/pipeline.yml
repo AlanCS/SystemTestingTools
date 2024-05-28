@@ -29,55 +29,47 @@ env:
       
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
+  
     - name: Set version
       id: versioner
       run: |        
-        if($env:GITHUB_EVENT_NAME -like "release") {
-            #example refs/tags/v2.0.33
-            $parts = $env:GITHUB_REF.Split("/")
-            $version=$parts[2]
-            # remove the V from the version, .net builder doesn't accept strings
-            $version = $version.Replace("v", "")            
-            SET $version=%version:~1%
-        }
-        else {
-            $version="0.0.$env:GITHUB_RUN_NUMBER"
-        }           
-        echo "::set-output name=VERSION::$version"
-        Write-Host "$env:GITHUB_EVENT_NAME ($env:GITHUB_REF) generated version $version"
+        if [[ ${{ github.event_name }} == 'release' ]]; then
+            version="${github.ref##*/}"
+            version="${version/[^0-9.]/}"
+        else
+            version="0.0.${{ github.run_number }}"
+        # Add your commands for non-release events (command B)
+        fi    
+
+        echo "${{ github.event_name }} ${{ github.ref }} generated version $version"
+        echo "Version=${version}" >> $GITHUB_OUTPUT
+
     - name: Setup .NET core 3.1.x
-      uses: actions/setup-dotnet@v3
+      uses: actions/setup-dotnet@v4
       with:
         dotnet-version: '3.1.x'
-    - uses: actions/checkout@v2
-    - name: Create folder
-      run:  mkdir BuildReports
+    - uses: actions/checkout@v4
     - name: Install dependencies
-      run:  dotnet restore --verbosity m > BuildReports/Restore.txt
+      run:  dotnet restore --verbosity m
     - name: Build
-      run: |
-        Write-Host "Version ${{steps.versioner.outputs.VERSION}}"
-        dotnet build --no-restore  --verbosity m --configuration Release /p:Version=${{ steps.versioner.outputs.VERSION }} > BuildReports/Build.txt
+      run: dotnet build --no-restore  --verbosity m --configuration Release /p:Version=${{ steps.versioner.outputs.Version }}
     - name: Test
-      run: dotnet test --no-build --configuration Release > BuildReports/Tests.txt
-    - name: Copy generated nuget file
-      shell: bash
-      run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
-    - name: Set build report artifacts
-      if: ${{ always() }} # run this step even if previous steps failed
-      uses: actions/upload-artifact@v2
+      run: dotnet test --no-build --configuration Release --verbosity quiet --logger "trx" --results-directory "TestResults"
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: success() || failure()   
       with:
-        name: BuildReports
-        path: |
-          BuildReports/**
-        retention-days: 7
-        if-no-files-found: error
+        name: Tests Reports         
+        path: TestResults/*
+        reporter: dotnet-trx        
+    - name: Copy generated nuget file
+      run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
     - name: Set nuget package artifact
       if: ${{ success() }} # run this step even if previous steps failed
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4 
       with:
         name: NugetPackage
         path: SystemTestingTools*.nupkg
@@ -89,7 +81,7 @@ jobs:
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/download-artifact@v2
+    - uses: actions/download-artifact@v4 
       with:
         name: NugetPackage
     - name: Push to NuGet Feed

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using static SystemTestingTools.Helper;
 using static SystemTestingTools.Internal.Enums;
 
@@ -17,7 +18,30 @@ namespace SystemTestingTools
         public FileFullPath(string value) : base(value)
         {
             if (!Path.HasExtension(_value)) _value += ".txt";
-            if (!File.Exists(_value)) throw new ArgumentException($"Could not find file '{_value}'");
+
+            var folder = Path.GetDirectoryName(_value);
+
+            CheckFolderExists(folder);
+
+            if (!File.Exists(_value))
+            {
+                var filesCount = Directory.GetFiles(folder).Length;
+                throw new FileNotFoundException($"Could not find file '{_value}', there are {filesCount} other files in the folder {folder}");
+            }
+        }
+
+        private static void CheckFolderExists(string folder)
+        {
+            if (Directory.Exists(folder)) return;
+
+            string parentFolder = folder;
+            do
+            {
+                parentFolder = Path.GetDirectoryName(parentFolder);
+            } while (!Directory.Exists(parentFolder) && !string.IsNullOrEmpty(parentFolder));
+
+
+            throw new DirectoryNotFoundException($"Could not find folder '{folder}', the only folder that exist is '{parentFolder}'");
         }
 
         public string ReadContent()

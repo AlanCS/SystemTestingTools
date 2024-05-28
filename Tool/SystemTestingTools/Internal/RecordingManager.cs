@@ -62,6 +62,7 @@ namespace SystemTestingTools
                 recording.File = StandardizeFileNameForDisplay(folder, fullFilePath);
                 list.Add(recording);
             }
+            list = list.OrderBy(c => c.File).ToList(); // we sort so it's the same order in windows and linux, so we can more easily test it
             return list;
         }
 
