@@ -180,7 +180,7 @@ namespace SystemTestingTools.Internal
         // headers
         // white space
         // body (if any)
-        private static Regex RequestRegex = new Regex(@"^(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RequestRegex = new Regex(@"^([^ ]+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static HttpRequestMessage GetRequest(string requestContent)
         {
             var match = RequestRegex.Match(requestContent);            
@@ -196,7 +196,7 @@ namespace SystemTestingTools.Internal
             }
             catch (System.FormatException ex)
             {
-                throw new Exception($"Method {method} is invalid", ex);
+                throw new Exception($"Method [{method}] is invalid", ex);
             }
 
             result.RequestUri = new Uri(match.Groups[2].Value);
