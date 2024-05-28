@@ -2,6 +2,7 @@
 using FluentAssertions.Execution;
 using System;
 using System.IO;
+using System.Numerics;
 using System.Text.RegularExpressions;
 using Xunit;
 
@@ -54,13 +55,15 @@ namespace SystemTestingTools.UnitTests
         }
 
         [Fact]
-        public void FileFullPath_FileDoesntExist_Unhappy()
+        public void FileFullPath_FolderDoesntExist_Unhappy()
         {
             var fullFileName = FilesFolder + @"happy/401_InvalidKeyAAA";
 
-            var ex = Assert.Throws<ArgumentException>(() => { FileFullPath file = fullFileName; });
+            var ex = Assert.Throws<DirectoryNotFoundException>(() => { FileFullPath file = fullFileName; });
 
-            ex.Message.Should().Be($"Could not find file '{fullFileName}.txt'");
+            var folder = Path.GetDirectoryName(fullFileName);
+
+            ex.Message.Should().StartWith($"Could not find folder '{folder}', the only folder that exist is ");
         }
 
         [Fact]

@@ -1,5 +1,6 @@
 using FluentAssertions;
 using System;
+using System.IO;
 using System.Text.RegularExpressions;
 using Xunit;
 
@@ -22,8 +23,8 @@ namespace SystemTestingTools.UnitTests
 
             Action act = () => ResponseFactory.FromFiddlerLikeResponseFile(fullFileName);
 
-            var exception = Assert.Throws<ArgumentException>(act);
-            exception.Message.Should().Be($"Could not find file '{fullFileName}'");
+            var exception = Assert.Throws<FileNotFoundException>(act);
+            exception.Message.Should().StartWith($"Could not find file '{fullFileName}', there are 0 other files in the folder ");
         }
 
         [Fact]
