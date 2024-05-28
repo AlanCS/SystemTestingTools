@@ -29,7 +29,7 @@ namespace MovieProject.InterceptionTests
             client.CreateSession();
 
             var possibleErrorMessages = new string[] { "GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=matrix received exception [No such host is known.]", // windows
-                                                          "GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=gibberish received exception [Name or service not known]" }; // ubuntu
+                                                          "GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=matrix received exception [Name or service not known]" }; // ubuntu
 
 
             // act
