@@ -55,7 +55,7 @@ jobs:
     - name: Install dependencies
       run:  dotnet restore --verbosity m
     - name: Build
-      run: dotnet build --no-restore  --verbosity m --configuration Release /p:Version= ${{ env.VERSION }}
+      run: dotnet build --no-restore  --verbosity m --configuration Release /p:Version= ${{ vars.VERSION }}
     - name: Test
       run: dotnet test --no-build --configuration Release
     - name: Copy generated nuget file
