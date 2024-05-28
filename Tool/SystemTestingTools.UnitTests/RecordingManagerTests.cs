@@ -120,8 +120,8 @@ Server:Kestrel
             // asserts
             recordings.Count.Should().Be(3);
 
-            recordings[0].File.Should().Be(@"happy/200_ContainsSomeFields_PacificChallenge");
-            recordings[0].FileFullPath.Should().EndWith(@"recordings_temp\happy\200_ContainsSomeFields_PacificChallenge.txt");
+            recordings[0].File.Should().Be(@"happy/200_ContainsSomeFields_PacificChallenge");            
+            recordings[0].FileFullPath.Should().EndWith(Path.Combine("recordings_temp","happy","200_ContainsSomeFields_PacificChallenge.txt"));
 
             await AssertHappyRecording(recordings[1]);
             await AssertUnhappyRecording(recordings[2]);

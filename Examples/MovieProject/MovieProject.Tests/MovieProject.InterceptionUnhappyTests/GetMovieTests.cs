@@ -88,17 +88,22 @@ namespace MovieProject.InterceptionTests
             using (new AssertionScope())
             {
                 // assert logs
-                string errorMessage = "GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=gibberish received exception [No such host is known.]";
+                
+                string errorMessageWindows = "GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=gibberish received exception [No such host is known.]"; // windows error message
+                string errorMessageUbuntu = "GET http://www.omdbapifake.com/?apikey=863d6589&type=movie&t=gibberish received exception [Name or service not known]"; // ubuntu error message
+
                 var logs = client.GetSessionLogs();
                 logs.Should().HaveCount(1);
-                logs[0].ToString().Should().Be($"Error: {errorMessage}");
+                logs[0].ToString().Should().BeOneOf($"Error: {errorMessageWindows}", $"Error: {errorMessageUbuntu}");
 
                 // assert outgoing
                 AssertOutgoingRequests(client);
 
                 // assert return
                 httpResponse.StatusCode.Should().Be(HttpStatusCode.OK);
-                httpResponse.GetHeaderValue("SystemTestingToolsStub").Should().Be($@"Recording [omdb/pre-approved/happy/last_fallback] reason {errorMessage} and could not find better match");
+                httpResponse.GetHeaderValue("SystemTestingToolsStub").Should()
+                    .BeOneOf($@"Recording [omdb/pre-approved/happy/last_fallback] reason {errorMessageWindows} and could not find better match",
+                             $@"Recording [omdb/pre-approved/happy/last_fallback] reason {errorMessageUbuntu} and could not find better match");
 
                 var movie = await httpResponse.ReadJsonBody<Logic.DTO.Media>();
                 movie.Id.Should().Be("tt0123456");
