@@ -60,11 +60,11 @@ jobs:
       run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test-results.trx" --results-directory "TestResults"
     - name: Test Report
       uses: dorny/test-reporter@v1
-      if: success() || failure()    # run this step even if previous step failed
+      if: success() || failure()   
       with:
-        name: NUnit Tests            # Name of the check run which will be created
-        path: TestResults/test-results.trx    # Path to test results
-        reporter: dotnet-trx        # Format of test results
+        name: Tests Report         
+        path: TestResults/test-results.trx    
+        reporter: dotnet-trx        
     - name: Copy generated nuget file
       run: find . -name "SystemTestingTools*.nupkg" -exec cp "{}" ./  \;
     - name: Set nuget package artifact
