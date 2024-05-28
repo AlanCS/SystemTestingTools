@@ -188,7 +188,16 @@ namespace SystemTestingTools.Internal
 
             var result = new HttpRequestMessage();
 
-            result.Method = new HttpMethod(match.Groups[1].Value);
+            var method = match.Groups[1].Value;
+            try
+            {
+                result.Method = new HttpMethod(method);
+            }
+            catch (System.FormatException ex)
+            {
+                throw new Exception($"Method {method} is invalid", ex);
+            }
+
             result.RequestUri = new Uri(match.Groups[2].Value);
 
             result.Content = Helper.ParseHeadersAndBody(match.Groups[3].Value, match.Groups[5].Value, result.Headers);
