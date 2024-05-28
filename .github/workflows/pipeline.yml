@@ -37,7 +37,8 @@ jobs:
       id: versioner
       run: |        
         if [[ ${{ github.event_name }} == 'release' ]]; then
-            version="${github.ref##*/}"
+            version="${{ github.ref }}"
+            version="${version##*/}"
             version="${version/[^0-9.]/}"
         else
             version="0.0.${{ github.run_number }}"
