@@ -196,7 +196,7 @@ namespace SystemTestingTools.Internal
             }
             catch (System.FormatException ex)
             {
-                throw new Exception($"Method [{method}] is invalid", ex);
+                throw new Exception($"Method [{method}] is invalid, {match.Groups[0]}", ex);
             }
 
             result.RequestUri = new Uri(match.Groups[2].Value);
