@@ -154,7 +154,7 @@ namespace SystemTestingTools.Internal
         // part 1 = date time of the recording
         // part 2 = request details
         // part 3 = response details
-        private static Regex RecordingRegex = new Regex(@".+?\nDate:(.+?)\n.+?REQUEST.+?\n(.+?)--\!\?@Divider:.+?\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static Regex RecordingRegex = new Regex(@".+?\nDate:(.+?)\n.+?REQUEST.*?\n(.+?)--\!\?@Divider:.+?\n(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static Regex DateRegex = new Regex(@"(2.+?)\(", RegexOptions.Compiled | RegexOptions.Singleline);
 
@@ -183,7 +183,7 @@ namespace SystemTestingTools.Internal
         private static Regex RequestRegex = new Regex(@"^(.+?) (.+?)\n(.+?)(\r\r|\n\n|\r\n\r\n)(.*)", RegexOptions.Compiled | RegexOptions.Singleline);
         private static HttpRequestMessage GetRequest(string requestContent)
         {
-            var match = RequestRegex.Match(requestContent.TrimStart());            
+            var match = RequestRegex.Match(requestContent);            
 
             if (!match.Success) throw new ApplicationException($"Could not parse request data");
 
@@ -196,7 +196,7 @@ namespace SystemTestingTools.Internal
             }
             catch (System.FormatException ex)
             {
-                throw new Exception($"Method [{method}] is invalid, {requestContent}", ex);
+                throw new Exception($"Method [{method}] is invalid", ex);
             }
 
             result.RequestUri = new Uri(match.Groups[2].Value);
